@@ -10,16 +10,23 @@ clean:
 
 # Crée le répertoire qui acceuille les fichiers temporaires et les produits finaux.
 build:
-	mkdir -p Entreprise/build
+	mkdir -p build
 
-libEntreprise.a: Entreprise/lib/entreprise.cxx Entreprise/lib/entreprise.h | build
-	${CC} -c Entreprise/lib/entreprise.cxx -o Entreprise/build/entreprise.o
-	ar crs Entreprise/lib/libEntreprise.a Entreprise/build/entreprise.o
+libEntreprise.a: Entreprise/entreprise.cpp Entreprise/entreprise.h | build
+	${CC} -g -c Entreprise/entreprise.cpp -o build/entreprise.o
+	ar crs build/libEntreprise.a build/entreprise.o
+
+test.o: test/main.c | build
+	${CC} -g -c test/main.c -I ./Entreprise -o build/test.o
 
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
-all: libEntreprise.a
+all: libEntreprise.a test.o
+	${CC} build/test.o -Lbuild/ -lEntreprise -o build/LuminIn
 
 # Lance le programme de test.
-check:
-	false
+check: all
+	./build/LuminIn
+
+clean:
+	rm build/*
