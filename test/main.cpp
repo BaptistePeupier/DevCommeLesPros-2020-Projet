@@ -11,6 +11,7 @@
 
 #include "entreprise.h"
 #include "employe.h"
+#include "chercheur.h"
 
 int main()
 {

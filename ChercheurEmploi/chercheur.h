@@ -1,7 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
-// Classe Employee correspondant aux données d'un employé et aux différentes fonctionnalités qui lui sont liées. //
+// Classe Chercheur correspondant aux données d'un chercheur d'emploi et aux différentes fonctionnalités qui lui //
+// sont liées.                                                                                                   //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
 // Cree le 06/04/2020, modifié le 07/04/2020                                                                     //
@@ -9,24 +10,24 @@
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef _EMPLOYE_H_
-#define _EMPLOYE_H_
+#ifndef _CHERCHEUR_H_
+#define _CHERCHEUR_H_
 
 #include "personne.h"
 
-class Employe
+class Chercheur
 {
     private:
-        Personne * _EstEmploye ;
+        Personne * _EstChercheur ;
     public:
     // Les constructeurs
-        Employe(Personne & EstEmploye) ;
+        Chercheur(Personne & EstChercheur) ;
     // Le destructeur
-        ~Employe(void) ;
+        ~Chercheur(void) ;
     // Accesseur
-        Personne * EstEmploye(void) ;
+        Personne * EstChercheur(void) ;
     // Modifieur
-        void modifEstEmploye(Personne & NewEstEmploye) ;
+        void modifEstChercheur(Personne & NewEstChercheur) ;
     // Fonctionnalités
         void addAncienCollegue(Personne & NewAncienCollegue) ;
         // Transitionner le profil vers Chercheur

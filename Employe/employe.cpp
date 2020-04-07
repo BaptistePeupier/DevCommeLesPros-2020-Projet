@@ -47,3 +47,14 @@ void Employe::deleteProfile(void)
 {
     return ;
 }
+
+void Employe::addCompetence(Competence & NewCompetence)
+{
+    return ;
+}
+
+// Affiche les données des anciens collègues disposant des compétences passé en liste
+void Employe::RechercheColleguesCompetence(Competence * ListeCompetence)
+{
+    return ;
+}

@@ -99,3 +99,23 @@ void Personne::modifEntreprise(Entreprise & NewEntreprise)
 {
     return ;
 }
+
+// Fonctionnalités
+// Renvoie une liste d'entreprise avec les postes correspondant aux compétences de la personne
+void Personne::RecherchePosteCompetence(void)
+{
+    return ;
+}
+
+// Renvoie une liste d'entreprise avec les postes correspondant aux compétences et au code postal de la personne
+void Personne::RecherchePosteCompetenceCodePostal(void)
+{
+    return ;
+}
+
+// Renvoie une liste d'ancien collègue travaillant dans une entreprise donnée
+void Personne::RechercheColleguesEntreprise(char* nomEntreprise)
+{
+    return ;
+}
+

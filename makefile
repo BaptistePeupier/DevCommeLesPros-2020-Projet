@@ -24,13 +24,17 @@ libEmploye.a: libPersonne.a Employe/employe.h Employe/employe.cpp | build
 	${CC} -g -c Employe/employe.cpp -I ./Personne -I ./Entreprise -o build/employe.o
 	ar crs build/libEmploye.a build/employe.o
 
+libChercheur.a: libPersonne.a ChercheurEmploi/chercheur.h ChercheurEmploi/chercheur.cpp | build
+	${CC} -g -c ChercheurEmploi/chercheur.cpp -I ./Personne -I ./Entreprise -o build/chercheur.o
+	ar crs build/libChercheur.a build/chercheur.o
+
 test.o: test/main.cpp | build
-	${CC} -g -c test/main.cpp -I ./Entreprise -I ./Employe -I Personne -o build/test.o
+	${CC} -g -c test/main.cpp -I ./Entreprise -I Personne -I ./Employe -I ChercheurEmploi -o build/test.o
 
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
-all: libEntreprise.a libPersonne.a libEmploye.a test.o
-	${CC} build/test.o -Lbuild/ -lEntreprise -lEmploye -o build/LuminIn
+all: libEntreprise.a libPersonne.a libEmploye.a libChercheur.a test.o
+	${CC} build/test.o -Lbuild/ -lEntreprise -lEmploye -lChercheur -o build/LuminIn
 
 # Lance le programme de test.
 check: all
