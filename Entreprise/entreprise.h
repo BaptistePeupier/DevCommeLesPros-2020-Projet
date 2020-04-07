@@ -1,9 +1,3 @@
-#ifndef _V3_H_
-#define _V3_H_
-#include <iostream>
-#include <math.h>
-using namespace std ;
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
@@ -17,19 +11,34 @@ using namespace std ;
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#ifndef _ENTREPRISE_H_
+#define _ENTREPRISE_H_
+
+#include <iostream>
+using namespace std ;
+
 class Competence
 {
     private:
         char _label[128] ;
+        Competence * _next ;
+        Competence * _previous ;
     public:
     // Les constructeurs
-        Competence(char* label) ;
+        Competence(char* label, Competence * next, Competence * previous) ;
     // Le destructeur
         ~Competence(void) ;
     // Accesseurs
         char* label(void) ;
+        Competence * next(void) ;
+        Competence * previous(void) ;
     // Modifieurs
         void modifLabel(char* NewLabel) ;
+        void modifNext(char* NewNext) ;
+        void modifPrevious(char* NewPrevious) ;
+    // Fonctionnalité sur les Competences
+        void AddComptence (Competence & NewCompetence) ;
+        void delComptence (char* label) ;
 } ;
 
 class Poste
@@ -53,9 +62,6 @@ class Poste
         void modifTitre(char* NewTitre) ;
         void modifNext(char* NewNext) ;
         void modifPrevious(char* NewPrevious) ;
-    // Fonctionnalité sur les Competences
-        void AddComptence (Competence & NewCompetence) ;
-        void delComptence (char* label) ;
 } ;
 
 class Entreprise
