@@ -163,17 +163,6 @@ void Poste::modifPrevious(char* NewPrevious)
     return ;
 }
 
-// Fonctionnalité sur les Competences
-void Poste::AddComptence (Competence & NewCompetence)
-{
-    return ;
-}
-
-void Poste::delComptence (char* label)
-{
-    return ;
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
@@ -186,7 +175,7 @@ void Poste::delComptence (char* label)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Les constructeurs
-Competence::Competence(char* label)
+Competence::Competence(char* label, Competence * next, Competence * previous)
 {
     return ;
 }
@@ -203,9 +192,39 @@ char* Competence::label(void)
     return NULL ;
 }
 
+Competence * Competence::next(void)
+{
+    return NULL ;
+}
+
+Competence * Competence::previous(void)
+{
+    return NULL ;
+}
+
 // Modifieurs
 void Competence::modifLabel(char* NewLabel)
 {
     return ;
 }
 
+void Competence::modifNext(char* NewNext)
+{
+    return ;
+}
+
+void Competence::modifPrevious(char* NewPrevious)
+{
+    return ;
+}
+
+// Fonctionnalité sur les Competences
+void Competence::AddComptence (Competence & NewCompetence)
+{
+    return ;
+}
+
+void Competence::delComptence (char* label)
+{
+    return ;
+}
