@@ -29,7 +29,7 @@ class Employe
         void modifEstEmploye(Personne & NewEstEmploye) ;
     // Fonctionnalités
         void addAncienCollegue(Personne & NewAncienCollegue) ;
-        // Transitionner le profil vers Chercheur
+        Personne * TransitionChercheur(void) ;                              // Renvoie un pointeur sur une personne en supprimant l'objet, ajoute les collègues de l'entrerprise à la liste d'anciens collègue, une autre fonction attribuera ce pointeur à un objet Chercheur
         void deleteProfile(void) ;
         void addCompetence(Competence & NewCompetence) ;
         void RechercheColleguesCompetence(Competence * ListeCompetence) ;  // Affiche les données des anciens collègues disposant des compétences passé en liste

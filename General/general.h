@@ -1,19 +1,25 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
-// Programme de tests                                                                                            //
+// Effectue les transitions entre chercheur et employe.                                                          //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 06/04/2020                                                                     //
+// Cree le 08/04/2020, modifié le 08/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include "general.h"
+#ifndef _GENERAL_H_
+#define _GENERAL_H_
 
-int main()
-{
-     
-    return 0 ;
-}
+#include "chercheur.h"
+#include "employe.h"
+
+// Attribue une personne récupéré d'un Employe à un objet Chercheur
+Chercheur * AuxTransitionChercheur (Employe & ToTransit) ;
+
+// Attribue une personne récupéré d'un Chercheur à un objet Employe
+Employe * AuxTransitionEmploye (Chercheur & ToTransit) ;
+
+#endif
 

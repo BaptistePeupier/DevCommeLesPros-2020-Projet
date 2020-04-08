@@ -41,6 +41,12 @@ void Employe::addAncienCollegue(Personne & NewAncienCollegue)
     return ;
 }
 
+// Renvoie un pointeur sur une personne en supprimant l'objet, ajoute les collègues de l'entrerprise à la liste d'anciens collègue, une autre fonction attribuera ce pointeur à un objet Chercheur
+Personne * Employe::TransitionChercheur(void)
+{
+    return NULL ;
+}
+
 // Transitionner le profil vers Chercheur
 
 void Employe::deleteProfile(void)

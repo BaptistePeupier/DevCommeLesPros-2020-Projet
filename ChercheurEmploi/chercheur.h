@@ -5,7 +5,7 @@
 // sont liées.                                                                                                   //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 07/04/2020                                                                     //
+// Cree le 06/04/2020, modifié le 08/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,10 +30,10 @@ class Chercheur
         void modifEstChercheur(Personne & NewEstChercheur) ;
     // Fonctionnalités
         void addAncienCollegue(Personne & NewAncienCollegue) ;
-        // Transitionner le profil vers Chercheur
+        Personne * TransitionEmploye() ;                                    // Renvoie un pointeur sur une personne en supprimant l'objet, une autre fonction attribuera ce pointeur à un objet Employe
         void deleteProfile(void) ;
         void addCompetence(Competence & NewCompetence) ;
-        void RechercheColleguesCompetence(Competence * ListeCompetence) ;  // Affiche les données des anciens collègues disposant des compétences passé en liste
+        void RechercheColleguesCompetence(Competence * ListeCompetence) ;  // Affiche les données des anciens collègues employés dans les entreprises qui recherchent ces compétences
 } ;
 
 #endif
