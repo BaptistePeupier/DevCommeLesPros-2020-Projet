@@ -177,6 +177,16 @@ void Poste::modifPrevious(char* NewPrevious)
 // Les constructeurs
 Competence::Competence(char* label, Competence * next, Competence * previous)
 {
+    int i ;
+
+    i = -1 ;
+    do{                             // Si label vide
+        i++ ;                       // Pour mettre le '\0'
+        _label[i] = label[i] ;
+    }while (label[i] != '\0') ;
+    _next = next ;
+    _previous = previous ;
+    
     return ;
 }
 
@@ -189,7 +199,7 @@ Competence::~Competence(void)
 // Accesseurs
 char* Competence::label(void)
 {
-    return NULL ;
+    return _label ;
 }
 
 Competence * Competence::next(void)
@@ -219,12 +229,49 @@ void Competence::modifPrevious(char* NewPrevious)
 }
 
 // Fonctionnalité sur les Competences
-void Competence::AddComptence (Competence & NewCompetence)
+// Ajoute une compétence en fin de la liste des compétences
+void Competence::AddCompetence (Competence & NewCompetence)
 {
+    Competence * tmp ;
+
+    tmp = this ;
+    while(tmp->_next != NULL) tmp = tmp->_next ;
+    tmp->_next = &NewCompetence ;
+    NewCompetence._previous = tmp ;
+
     return ;
 }
 
-void Competence::delComptence (char* label)
+// Enlève une compétence dont le label est passé en paramètre
+void Competence::delCompetence (char* label)
 {
+    Competence * tmp ;
+    int i ;
+    bool mememot ;
+
+    tmp = this ;
+    if(tmp != NULL){
+        mememot = false ;
+        while (tmp!=NULL && mememot==false){
+            i = 0 ;
+            mememot = true ;
+            while (tmp->_label[i]!='\0' && label[i]!='\0'){
+                if(label[i] != tmp->_label[i]) mememot = false ;
+                i++ ;
+            }
+            if((label[i]=='\0' && tmp->_label[i]!='\0') || (tmp->_label[i]=='\0' && label[i]!='\0')) mememot = false ;        // Si les labels sont de longueur différentes
+            if(mememot == false) tmp = tmp->_next ;
+        }
+        if(tmp != NULL){                                                        // Si on a trouvé le label
+            if(tmp != this){
+                if(tmp->_previous != NULL) tmp->_previous->_next = tmp->_next ;
+                if(tmp->_next != NULL) tmp->_next->_previous = tmp->_previous ;
+            }else{                                                              // Si on supprime la première compétence, on recopie la seconde compétence et on suprime cette dernière
+                this->modifLabel(_next->_label) ;
+                this->delCompetence(_next->_label) ;
+            }
+        }
+    }
+
     return ;
 }
