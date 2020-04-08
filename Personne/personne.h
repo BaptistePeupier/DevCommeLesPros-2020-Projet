@@ -49,6 +49,11 @@ class Personne
         void modifMail(char* Newmail) ;
         void modifCodePostal(char* NewCodePostal) ;
         void modifEntreprise(Entreprise & NewEntreprise) ;
+    // Fonctionnalités
+        void RecherchePosteCompetence(void) ;                       // Affiche une liste d'entreprise avec les postes correspondant aux compétences de la personne
+        void RecherchePosteCompetenceCodePostal(void) ;             // Affiche une liste d'entreprise avec les postes correspondant aux compétences et au code postal de la personne
+        void RechercheColleguesEntreprise(char* nomEntreprise) ;    // Affiche une liste d'ancien collègue travaillant dans une entreprise donnée
+
 };
 
 #endif

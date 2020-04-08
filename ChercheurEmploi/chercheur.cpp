@@ -1,9 +1,9 @@
-#include "employe.h"
+#include "chercheur.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
-// Fonctions memrbes de la calsse Employe                                                                        //
+// Fonctions memrbes de la calsse Chercheur                                                                      //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
 // Cree le 06/04/2020, modifié le 07/04/2020                                                                     //
@@ -12,55 +12,54 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Les constructeurs
-Employe::Employe(Personne & EstEmploye)
+Chercheur::Chercheur(Personne & EstChercheur)
 {
     return ;
 }
 
 // Le destructeur
-Employe::~Employe(void)
+Chercheur::~Chercheur(void)
 {
     return ;
 }
 
 // Accesseur
-Personne * Employe::EstEmploye(void)
+Personne * Chercheur::EstChercheur(void)
 {
     return NULL ;
 }
 
 // Modifieur
-void Employe::modifEstEmploye(Personne & NewEstEmploye)
+void Chercheur::modifEstChercheur(Personne & NewEstChercheur)
 {
     return ;
 }
 
 // Fonctionnalités
-void Employe::addAncienCollegue(Personne & NewAncienCollegue)
+void Chercheur::addAncienCollegue(Personne & NewAncienCollegue)
 {
     return ;
 }
 
-// Renvoie un pointeur sur une personne en supprimant l'objet, ajoute les collègues de l'entrerprise à la liste d'anciens collègue, une autre fonction attribuera ce pointeur à un objet Chercheur
-Personne * Employe::TransitionChercheur(void)
+// Renvoie un pointeur sur une personne en supprimant l'objet, une autre fonction attribuera ce pointeur à un objet Employe
+Personne * Chercheur::TransitionEmploye()
 {
     return NULL ;
 }
 
-// Transitionner le profil vers Chercheur
-
-void Employe::deleteProfile(void)
+void Chercheur::deleteProfile(void)
 {
     return ;
 }
 
-void Employe::addCompetence(Competence & NewCompetence)
+void Chercheur::addCompetence(Competence & NewCompetence)
 {
     return ;
 }
 
-// Affiche les données des anciens collègues disposant des compétences passé en liste
-void Employe::RechercheColleguesCompetence(Competence * ListeCompetence)
+// Affiche les données des anciens collègues employés dans les entreprises qui recherchent ces compétences
+void Chercheur::RechercheColleguesCompetence(Competence * ListeCompetence)
 {
     return ;
 }
+

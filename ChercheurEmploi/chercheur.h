@@ -1,38 +1,39 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
-// Classe Employee correspondant aux données d'un employé et aux différentes fonctionnalités qui lui sont liées. //
+// Classe Chercheur correspondant aux données d'un chercheur d'emploi et aux différentes fonctionnalités qui lui //
+// sont liées.                                                                                                   //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 07/04/2020                                                                     //
+// Cree le 06/04/2020, modifié le 08/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef _EMPLOYE_H_
-#define _EMPLOYE_H_
+#ifndef _CHERCHEUR_H_
+#define _CHERCHEUR_H_
 
 #include "personne.h"
 
-class Employe
+class Chercheur
 {
     private:
-        Personne * _EstEmploye ;
+        Personne * _EstChercheur ;
     public:
     // Les constructeurs
-        Employe(Personne & EstEmploye) ;
+        Chercheur(Personne & EstChercheur) ;
     // Le destructeur
-        ~Employe(void) ;
+        ~Chercheur(void) ;
     // Accesseur
-        Personne * EstEmploye(void) ;
+        Personne * EstChercheur(void) ;
     // Modifieur
-        void modifEstEmploye(Personne & NewEstEmploye) ;
+        void modifEstChercheur(Personne & NewEstChercheur) ;
     // Fonctionnalités
         void addAncienCollegue(Personne & NewAncienCollegue) ;
-        Personne * TransitionChercheur(void) ;                              // Renvoie un pointeur sur une personne en supprimant l'objet, ajoute les collègues de l'entrerprise à la liste d'anciens collègue, une autre fonction attribuera ce pointeur à un objet Chercheur
+        Personne * TransitionEmploye() ;                                    // Renvoie un pointeur sur une personne en supprimant l'objet, une autre fonction attribuera ce pointeur à un objet Employe
         void deleteProfile(void) ;
         void addCompetence(Competence & NewCompetence) ;
-        void RechercheColleguesCompetence(Competence * ListeCompetence) ;  // Affiche les données des anciens collègues disposant des compétences passé en liste
+        void RechercheColleguesCompetence(Competence * ListeCompetence) ;  // Affiche les données des anciens collègues employés dans les entreprises qui recherchent ces compétences
 } ;
 
 #endif
