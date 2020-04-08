@@ -8,7 +8,7 @@
             "name": "test (Linux/WSL)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/test",
+            "program": "${workspaceFolder}/build/LuminIn",
             "args": [],
             "cwd": "${workspaceFolder}",
             "environment": [],
@@ -18,7 +18,7 @@
             },
             "miDebuggerArgs": "--quiet",
             "targetArchitecture": "x64",
-            "preLaunchTask": "make test"
+            "preLaunchTask": "make all"
         },
         {
             "name": "test (MacOS)",

@@ -37,8 +37,8 @@ class Competence
         void modifNext(char* NewNext) ;
         void modifPrevious(char* NewPrevious) ;
     // Fonctionnalité sur les Competences
-        void AddComptence (Competence & NewCompetence) ;
-        void delComptence (char* label) ;
+        void AddCompetence (Competence & NewCompetence) ;
+        void delCompetence (char* label) ;
 } ;
 
 class Poste
