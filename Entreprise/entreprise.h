@@ -34,8 +34,8 @@ class Competence
         Competence * previous(void) ;
     // Modifieurs
         void modifLabel(char* NewLabel) ;
-        void modifNext(char* NewNext) ;
-        void modifPrevious(char* NewPrevious) ;
+        void modifNext(Competence* NewNext) ;
+        void modifPrevious(Competence* NewPrevious) ;
     // Fonctionnalité sur les Competences
         void AddCompetence (Competence & NewCompetence) ;
         void delCompetence (char* label) ;
@@ -60,8 +60,8 @@ class Poste
         Competence * CompetencesRequises(void) ;
     // Modifieurs
         void modifTitre(char* NewTitre) ;
-        void modifNext(char* NewNext) ;
-        void modifPrevious(char* NewPrevious) ;
+        void modifNext(Poste* NewNext) ;
+        void modifPrevious(Poste* NewPrevious) ;
 } ;
 
 class Entreprise

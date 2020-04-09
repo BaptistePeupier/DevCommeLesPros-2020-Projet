@@ -13,7 +13,31 @@
 
 // Les constructeurs
 Entreprise::Entreprise(int index, char* nom, char* codePostal, char* mail, Entreprise & next, Entreprise & previous)
-{
+{ 
+    int i ;
+
+    i = -1 ;
+    do{                             // Si nom vide
+        i++ ;                       // Pour mettre le '\0'
+        _nom[i] = nom[i] ;
+    }while (nom[i] != '\0') ;
+
+    i = -1 ;
+    do{                             // Si code postal vide
+        i++ ;                       // Pour mettre le '\0'
+        _codePostal[i] = codePostal[i] ;
+    }while (codePostal[i] != '\0') ;
+
+    i = -1 ;
+    do{                             // Si mail vide
+        i++ ;                       // Pour mettre le '\0'
+        _mail[i] = mail[i] ;
+    }while (mail[i] != '\0') ;
+
+    _index = index ;
+    _next = &next ;
+    _previous = &previous ;
+
     return ;
 }
 
@@ -26,62 +50,88 @@ Entreprise::~Entreprise(void)
 // Accesseurs
 int Entreprise::index(void)
 {
-    return 0 ;
+    return _index ;
 }
 
 char* Entreprise::nom(void)
 {
-    return NULL ;
+    return _nom ;
 }
 
 char* Entreprise::codePostal(void)
 {
-    return NULL;
+    return _codePostal;
 }
 
 char* Entreprise::mail(void)
 {
-    return NULL ;
+    return _mail ;
 }
 
 Entreprise * Entreprise::next(void)
 {
-    return NULL ;
+    return _next ;
 }
 
 Entreprise * Entreprise::previous(void)
 {
-    return NULL ;
+    return _previous;
 }
 
 // Modifieurs
 void Entreprise::modifIndex(int NewIndex)
 {
+    _index = NewIndex ;
     return ;
 }
 
 void Entreprise::modifNom(char* NewNom)
 {
+    int i ;
+
+    i = -1 ;
+    do{                             // Si nom vide
+        i++ ;                       // Pour mettre le '\0'
+        _nom[i] = NewNom[i] ;
+    }while (NewNom[i] != '\0') ;
+
     return ;
 }
 
 void Entreprise::modifCodePostal(char* NewCodePostal)
 {
+    int i ;
+
+    i = -1 ;
+    do{                             // Si code postal vide
+        i++ ;                       // Pour mettre le '\0'
+        _codePostal[i] = NewCodePostal[i] ;
+    }while (NewCodePostal[i] != '\0') ;
+
     return ;
 }
 
 void Entreprise::modifMail(char * NewMail)
 {
+    int i ;
+
+    i = -1 ;
+    do{                             // Si mail vide
+        i++ ;                       // Pour mettre le '\0'
+        _mail[i] = NewMail[i] ;
+    }while (NewMail[i] != '\0') ;
     return ;
 }
 
 void Entreprise::modifNext(Entreprise & next)
 {
+    _next = &next ;
     return ;
 }
 
 void Entreprise::modifPrevious(Entreprise & previous)
 {
+    _previous = &previous ;
     return ;
 }
 
@@ -117,6 +167,16 @@ void Entreprise::deleteProfile(void)
 // Les constructeurs
 Poste::Poste(char* Titre, Poste & next, Poste & previous, Competence & CompetencesRequises)
 {
+    int i ;
+
+    i = -1 ;
+    do{                             // Si titre vide
+        i++ ;                       // Pour mettre le '\0'
+        _Titre[i] = Titre[i] ;
+    }while (Titre[i] != '\0') ;
+    _next = &next ;
+    _previous = &previous ;
+    _CompetencesRequises = &CompetencesRequises ;
     return ;
 }
 
@@ -129,37 +189,47 @@ Poste::~Poste(void)
 // Accesseurs
 char* Poste::Titre(void)
 {
-    return NULL ;
+    return _Titre ;
 }
 
 Poste * Poste::next(void)
 {
-    return NULL ;
+    return _next ;
 }
 
 Poste * Poste::previous(void)
 {
-    return NULL ;
+    return _previous ;
 }
 
 Competence * Poste::CompetencesRequises(void)
 {
-    return NULL ;
+    return _CompetencesRequises ;
 }
 
 // Modifieurs
 void Poste::modifTitre(char* NewTitre)
 {
+    int i ;
+
+    i = -1 ;
+    do{                             // Si titre vide
+        i++ ;                       // Pour mettre le '\0'
+        _Titre[i] = NewTitre[i] ;
+    }while (NewTitre[i] != '\0') ;
+
     return ;
 }
 
-void Poste::modifNext(char* NewNext)
+void Poste::modifNext(Poste* NewNext)
 {
+    _next = NewNext ;
     return ;
 }
 
-void Poste::modifPrevious(char* NewPrevious)
+void Poste::modifPrevious(Poste* NewPrevious)
 {
+    _previous = NewPrevious ;
     return ;
 }
 
@@ -204,27 +274,37 @@ char* Competence::label(void)
 
 Competence * Competence::next(void)
 {
-    return NULL ;
+    return _next ;
 }
 
 Competence * Competence::previous(void)
 {
-    return NULL ;
+    return _next ;
 }
 
 // Modifieurs
 void Competence::modifLabel(char* NewLabel)
 {
+    int i ;
+
+    i = -1 ;
+    do{                             // Si label vide
+        i++ ;                       // Pour mettre le '\0'
+        _label[i] = NewLabel[i] ;
+    }while (NewLabel[i] != '\0') ;
+
     return ;
 }
 
-void Competence::modifNext(char* NewNext)
+void Competence::modifNext(Competence* NewNext)
 {
+    _next = NewNext ;
     return ;
 }
 
-void Competence::modifPrevious(char* NewPrevious)
+void Competence::modifPrevious(Competence* NewPrevious)
 {
+    _previous = NewPrevious ;
     return ;
 }
 
