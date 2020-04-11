@@ -37,7 +37,7 @@ class Competence
         void modifNext(Competence* NewNext) ;
         void modifPrevious(Competence* NewPrevious) ;
     // Fonctionnalité sur les Competences
-        void AddCompetence (Competence & NewCompetence) ;
+        void AddCompetence (char* label) ;
         void delCompetence (char* label) ;
 } ;
 

@@ -20,11 +20,10 @@ int main()
     cout << endl ;
 
     char testchar2[128] = "test2" ;
-    Competence test2 (testchar2, NULL, NULL) ;
-    test.AddCompetence(test2) ;
+    test.AddCompetence(testchar2) ;
     cout << endl ;
 
-    // test.delCompetence(testchar) ;   // manque la fonction modifLabel
+    test.delCompetence(testchar) ;   // manque la fonction modifLabel
     cout << endl ;
 
     return 0 ;
