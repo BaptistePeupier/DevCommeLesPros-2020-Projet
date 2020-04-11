@@ -263,6 +263,17 @@ Competence::Competence(char* label, Competence * next, Competence * previous)
 // Le destructeur
 Competence::~Competence(void)
 {
+    Competence * tmp, *toDel ;
+
+    cout << "destructeur Competence" << endl ;
+    tmp = this->_next ;
+    while (tmp){
+        toDel = tmp ;
+        tmp = tmp->_next ;
+        delete toDel ;
+        cout << "destructeur Competence" << endl ;
+    }
+
     return ;
 }
 
@@ -310,14 +321,12 @@ void Competence::modifPrevious(Competence* NewPrevious)
 
 // Fonctionnalité sur les Competences
 // Ajoute une compétence en fin de la liste des compétences
-void Competence::AddCompetence (Competence & NewCompetence)
+void Competence::AddCompetence (char* label)
 {
     Competence * tmp ;
-
     tmp = this ;
     while(tmp->_next != NULL) tmp = tmp->_next ;
-    tmp->_next = &NewCompetence ;
-    NewCompetence._previous = tmp ;
+    tmp->_next = new Competence (label, NULL, tmp) ;        // Besoin d'allocation dynamique pour étendre la durée de vie des nouvelles compétences
 
     return ;
 }
@@ -326,6 +335,7 @@ void Competence::AddCompetence (Competence & NewCompetence)
 void Competence::delCompetence (char* label)
 {
     Competence * tmp ;
+    char * tmpLabel ;
     int i ;
     bool mememot ;
 
@@ -346,9 +356,11 @@ void Competence::delCompetence (char* label)
             if(tmp != this){
                 if(tmp->_previous != NULL) tmp->_previous->_next = tmp->_next ;
                 if(tmp->_next != NULL) tmp->_next->_previous = tmp->_previous ;
+                delete tmp ;
             }else{                                                              // Si on supprime la première compétence, on recopie la seconde compétence et on suprime cette dernière
-                this->modifLabel(_next->_label) ;
+                tmpLabel = _next->_label ;
                 this->delCompetence(_next->_label) ;
+                this->modifLabel(tmpLabel) ;
             }
         }
     }
