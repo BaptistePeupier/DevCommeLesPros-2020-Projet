@@ -118,4 +118,10 @@ void Personne::RechercheColleguesEntreprise(char* nomEntreprise)
 {
     return ;
 }
-
+// Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées
+// Si le pointeur vers une entrepise est null c'est un Chercheur d'emploi
+// Si le pointeur vers une entrepise est non null c'est un Employe
+void Personne::MAJDBPersonne(Personne * MAJ)
+{
+    return ;
+}
