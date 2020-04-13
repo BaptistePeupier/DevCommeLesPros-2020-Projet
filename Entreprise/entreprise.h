@@ -97,9 +97,7 @@ class Entreprise
         int Longueur(void) ;                        // Renvoie la longueur de la liste d'entreprises
     // Fonctionnalités
         void deleteProfile(void) ;                  // Supprime le profile (l'entreprise) ainsi que les postes qui lui sont lié
-        // Rechercher parmis les chercheurs par competences
-        // Rechercher parmis les chercheurs par competences et code postal
-
+        void MAJDBEntreprise(Entreprise * MAJ) ;    // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées
 } ;
 
 #endif

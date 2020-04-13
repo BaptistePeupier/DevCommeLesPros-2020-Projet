@@ -149,9 +149,11 @@ void Entreprise::deleteProfile(void)
     return ;
 }
 
-// Rechercher parmis les chercheurs par competences
-
-// Rechercher parmis les chercheurs par competences et code postal
+// Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées
+void Entreprise::MAJDBEntreprise(Entreprise * MAJ)
+{
+    return ;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
