@@ -76,7 +76,7 @@ class Entreprise
         Poste * _profilPoste ;
     public:
     // Les constructeurs
-        Entreprise(int index, char* nom, char* codePostal, char* mail, Entreprise & next, Entreprise & previous) ;
+        Entreprise(int index, char* nom, char* codePostal, char* mail, Entreprise * next, Entreprise * previous) ;
     // Le destructeur
         ~Entreprise(void) ;
     // Accesseurs

@@ -11,12 +11,44 @@
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <stdio.h>
+// #include <string.h>
+
 #include "general.h"
 
 // Construit la liste des Entreprises à partir d'une base de donnée (Entreprise + postes)
 Entreprise * CreerListeEntreprise(void)
 {
-    return NULL ;
+
+    Entreprise * ListeEntreprise = NULL, * tmp = NULL ;
+    int tmpindex ;
+    char tmpnom[128] ;
+    char tmpcodePostal[128] ;
+    char tmpmail[128] ;
+
+    // Lecture de la base de donnée des entreprises
+    FILE *db_entreprise = fopen("test/fichier_de_tests/entreprise.csv", "r");
+    // id,nom,code postal,mail -> entreprise
+    while(fscanf(db_entreprise, "%d,%127[^,],%127[^,],%127[^,]", &tmpindex, tmpnom, tmpcodePostal, tmpmail) == 4)
+    {
+        // site_amu *site = malloc(sizeof(site_amu));
+        Entreprise * NewEntreprise = new Entreprise (tmpindex, tmpnom, tmpcodePostal, tmpmail, NULL, NULL) ;
+        // l_append(&sites, l_make_node(site));
+        if(tmp == NULL){                                 // Première entreprise
+            ListeEntreprise = NewEntreprise ;
+        }else{
+            NewEntreprise->modifPrevious(*tmp) ;
+            tmp->modifNext(*NewEntreprise) ;
+            tmp = NewEntreprise ;
+        }
+    }
+    fclose(db_entreprise);
+
+    // Lecture de la base de donnée des postes
+    // id,titre,competences,entreprise -> poste
+
+
+    return ListeEntreprise ;
 }
 
 // Construit la liste des Employes à partir d'une base de donnée

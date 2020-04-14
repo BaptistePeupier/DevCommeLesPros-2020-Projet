@@ -12,7 +12,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Les constructeurs
-Entreprise::Entreprise(int index, char* nom, char* codePostal, char* mail, Entreprise & next, Entreprise & previous)
+Entreprise::Entreprise(int index, char* nom, char* codePostal, char* mail, Entreprise * next, Entreprise * previous)
 { 
     int i ;
 
@@ -35,8 +35,8 @@ Entreprise::Entreprise(int index, char* nom, char* codePostal, char* mail, Entre
     }while (mail[i] != '\0') ;
 
     _index = index ;
-    _next = &next ;
-    _previous = &previous ;
+    _next = next ;
+    _previous = previous ;
 
     return ;
 }

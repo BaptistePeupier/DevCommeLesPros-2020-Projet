@@ -13,6 +13,8 @@
 
 int main()
 {
+    Entreprise * ListeEntreprise ;
+
     // Test sur la création d'une compétence + ajout d'une compétence
     char testchar[128] = "test" ;
     Competence test (testchar, NULL, NULL) ;
@@ -23,8 +25,13 @@ int main()
     test.AddCompetence(testchar2) ;
     cout << endl ;
 
-    test.delCompetence(testchar) ;   // manque la fonction modifLabel
+    test.delCompetence(testchar) ;
     cout << endl ;
+
+    ListeEntreprise = CreerListeEntreprise() ;
+    while (ListeEntreprise != NULL){
+        printf("%d ",ListeEntreprise->index()) ;
+    }
 
     return 0 ;
 }
