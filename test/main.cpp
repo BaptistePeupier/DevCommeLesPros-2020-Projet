@@ -13,7 +13,7 @@
 
 int main()
 {
-    Entreprise * ListeEntreprise ;
+    Entreprise * ListeEntreprise, * tmp ; ;
 
     // Test sur la création d'une compétence + ajout d'une compétence
     char testchar[128] = "test" ;
@@ -29,8 +29,10 @@ int main()
     cout << endl ;
 
     ListeEntreprise = CreerListeEntreprise() ;
-    while (ListeEntreprise != NULL){
-        printf("%d ",ListeEntreprise->index()) ;
+    tmp = ListeEntreprise ;
+    while (tmp != NULL){
+        cout << tmp->index() << " " ;
+        tmp = tmp->next() ;
     }
 
     return 0 ;
