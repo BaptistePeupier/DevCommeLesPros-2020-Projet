@@ -50,7 +50,7 @@ class Poste
         Competence * _CompetencesRequises ;
     public:
     // Les constructeurs
-        Poste(char* Titre, Poste & next, Poste & previous, Competence & CompetencesRequises) ;
+        Poste(char* Titre, Poste *next, Poste * previous, Competence * CompetencesRequises) ;
     // Le destructeur
         ~Poste(void) ;
     // Accesseurs
@@ -62,6 +62,7 @@ class Poste
         void modifTitre(char* NewTitre) ;
         void modifNext(Poste* NewNext) ;
         void modifPrevious(Poste* NewPrevious) ;
+        void modifCompetencesRequises(Competence * NewListeCompetence) ;        // Modifie le pointeur vers la liste de compétence
 } ;
 
 class Entreprise
@@ -76,7 +77,7 @@ class Entreprise
         Poste * _profilPoste ;
     public:
     // Les constructeurs
-        Entreprise(int index, char* nom, char* codePostal, char* mail, Entreprise & next, Entreprise & previous) ;
+        Entreprise(int index, char* nom, char* codePostal, char* mail, Entreprise * next, Entreprise * previous) ;
     // Le destructeur
         ~Entreprise(void) ;
     // Accesseurs
@@ -86,6 +87,7 @@ class Entreprise
         char* mail(void) ;
         Entreprise * next(void) ;
         Entreprise * previous(void) ;
+        Poste * profilPoste(void) ;    
     // Modifieurs
         void modifIndex(int NewIndex) ;
         void modifNom(char* NewNom) ;
@@ -93,9 +95,11 @@ class Entreprise
         void modifMail(char * NewMail) ;
         void modifNext(Entreprise & next) ;
         void modifPrevious(Entreprise & previous) ;
+        void modifProfilPoste(Poste * NewListePoste) ;  // Modifie le pointeur vers la liste de postes à fournir
     // Fonctions de liste
         int Longueur(void) ;                        // Renvoie la longueur de la liste d'entreprises
     // Fonctionnalités
+        void addPoste(Poste * ToAdd) ;              // Ajoute un poste à la liste des postes à fournir
         void deleteProfile(void) ;                  // Supprime le profile (l'entreprise) ainsi que les postes qui lui sont lié
         void MAJDBEntreprise(Entreprise * MAJ) ;    // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées
 } ;

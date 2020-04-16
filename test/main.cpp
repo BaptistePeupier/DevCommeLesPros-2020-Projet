@@ -13,18 +13,31 @@
 
 int main()
 {
-    // Test sur la création d'une compétence + ajout d'une compétence
     char testchar[128] = "test" ;
+    char testchar2[128] = "test2" ;
+    int i ;
     Competence test (testchar, NULL, NULL) ;
-    for (int i=0 ; test.label()[i]!='\0' ; i++) cout << test.label()[i] ;
+    Entreprise * ListeEntreprise, * tmp ;
+
+    // Test sur la création d'une compétence + ajout d'une compétence
+    for (i=0 ; test.label()[i]!='\0' ; i++) cout << test.label()[i] ;
     cout << endl ;
 
-    char testchar2[128] = "test2" ;
     test.AddCompetence(testchar2) ;
     cout << endl ;
-
-    test.delCompetence(testchar) ;   // manque la fonction modifLabel
+    test.delCompetence(testchar) ;
     cout << endl ;
+
+    // Tests sur la création de la liste d'Entrerpise
+    ListeEntreprise = CreerListeEntreprise() ;
+    tmp = ListeEntreprise ;
+    while (tmp != NULL){
+        cout << tmp->index() << " " ;
+        tmp = tmp->next() ;
+    }
+    cout << endl ;
+
+    delete ListeEntreprise ;
 
     return 0 ;
 }

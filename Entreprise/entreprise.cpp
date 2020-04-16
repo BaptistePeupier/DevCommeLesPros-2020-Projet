@@ -12,7 +12,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Les constructeurs
-Entreprise::Entreprise(int index, char* nom, char* codePostal, char* mail, Entreprise & next, Entreprise & previous)
+Entreprise::Entreprise(int index, char* nom, char* codePostal, char* mail, Entreprise * next, Entreprise * previous)
 { 
     int i ;
 
@@ -35,8 +35,8 @@ Entreprise::Entreprise(int index, char* nom, char* codePostal, char* mail, Entre
     }while (mail[i] != '\0') ;
 
     _index = index ;
-    _next = &next ;
-    _previous = &previous ;
+    _next = next ;
+    _previous = previous ;
 
     return ;
 }
@@ -44,6 +44,30 @@ Entreprise::Entreprise(int index, char* nom, char* codePostal, char* mail, Entre
 // Le destructeur
 Entreprise::~Entreprise(void)
 {
+    Entreprise *ToDelE, *tmpE ;
+    Poste *ToDelP, *tmpP ;
+    Competence *ToDelC, *tmpC ;
+
+    cout << "Destructeur Entreprise" << endl ;
+    tmpE = this ;
+    while(tmpE){
+        ToDelE = tmpE ;
+        tmpE = tmpE->next() ;
+        tmpP = ToDelE->profilPoste() ;
+        while(tmpP){
+            ToDelP = tmpP ;
+            tmpP = tmpP->next() ;
+            tmpC = ToDelP->CompetencesRequises() ;
+            while(tmpC){
+                ToDelC = tmpC ;
+                tmpC = tmpC->next() ;
+                delete ToDelC ;
+            }
+            delete ToDelP ;
+        }
+        // delete ToDelE ;
+    }
+
     return ;
 }
 
@@ -77,6 +101,12 @@ Entreprise * Entreprise::previous(void)
 {
     return _previous;
 }
+
+Poste * Entreprise::profilPoste(void)
+{
+    return _profilPoste ;
+}
+
 
 // Modifieurs
 void Entreprise::modifIndex(int NewIndex)
@@ -135,6 +165,13 @@ void Entreprise::modifPrevious(Entreprise & previous)
     return ;
 }
 
+// Modifie le pointeur vers la liste de postes à fournir
+void Entreprise::modifProfilPoste(Poste * NewListePoste)
+{
+    _profilPoste = NewListePoste ;
+}
+
+
 // Fonctions de liste
 // Renvoie la longueur de la liste d'entreprises
 int Entreprise::Longueur(void)
@@ -155,6 +192,18 @@ void Entreprise::MAJDBEntreprise(Entreprise * MAJ)
     return ;
 }
 
+// Ajoute un poste à la liste des postes à fournir
+void Entreprise::addPoste(Poste * ToAdd)
+{
+    Poste * tmp ;
+    
+    tmp = this->profilPoste() ;
+    while (tmp && tmp->next()) tmp = tmp->next() ;
+    tmp->modifNext(ToAdd) ;
+    ToAdd->modifPrevious(tmp) ;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
@@ -167,7 +216,7 @@ void Entreprise::MAJDBEntreprise(Entreprise * MAJ)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Les constructeurs
-Poste::Poste(char* Titre, Poste & next, Poste & previous, Competence & CompetencesRequises)
+Poste::Poste(char* Titre, Poste *next, Poste * previous, Competence * CompetencesRequises)
 {
     int i ;
 
@@ -176,15 +225,17 @@ Poste::Poste(char* Titre, Poste & next, Poste & previous, Competence & Competenc
         i++ ;                       // Pour mettre le '\0'
         _Titre[i] = Titre[i] ;
     }while (Titre[i] != '\0') ;
-    _next = &next ;
-    _previous = &previous ;
-    _CompetencesRequises = &CompetencesRequises ;
+    _next = next ;
+    _previous = previous ;
+    _CompetencesRequises = CompetencesRequises ;
     return ;
 }
 
 // Le destructeur
+// Détruit seulement le Poste "this"
 Poste::~Poste(void)
 {
+    cout << "Destructeur Poste" << endl ;
     return ;
 }
 
@@ -235,6 +286,13 @@ void Poste::modifPrevious(Poste* NewPrevious)
     return ;
 }
 
+// Modifie le pointeur vers la liste de compétence
+void Poste::modifCompetencesRequises(Competence * NewListeCompetence)
+{
+    _CompetencesRequises = NewListeCompetence ;
+    return ;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
@@ -263,19 +321,10 @@ Competence::Competence(char* label, Competence * next, Competence * previous)
 }
 
 // Le destructeur
+// Détruit seulement la compétence "this"
 Competence::~Competence(void)
 {
-    Competence * tmp, *toDel ;
-
-    cout << "destructeur Competence" << endl ;
-    tmp = this->_next ;
-    while (tmp){
-        toDel = tmp ;
-        tmp = tmp->_next ;
-        delete toDel ;
-        cout << "destructeur Competence" << endl ;
-    }
-
+    cout << "Destructeur Competence" << endl ;   
     return ;
 }
 
@@ -323,11 +372,12 @@ void Competence::modifPrevious(Competence* NewPrevious)
 
 // Fonctionnalité sur les Competences
 // Ajoute une compétence en fin de la liste des compétences
+// Nécéssite une première compétence déjà définie (this)
 void Competence::AddCompetence (char* label)
 {
     Competence * tmp ;
     tmp = this ;
-    while(tmp->_next != NULL) tmp = tmp->_next ;
+    while(tmp->_next) tmp = tmp->_next ;
     tmp->_next = new Competence (label, NULL, tmp) ;        // Besoin d'allocation dynamique pour étendre la durée de vie des nouvelles compétences
 
     return ;
