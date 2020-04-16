@@ -95,6 +95,7 @@ class Entreprise
         void modifMail(char * NewMail) ;
         void modifNext(Entreprise & next) ;
         void modifPrevious(Entreprise & previous) ;
+        void modifProfilPoste(Poste * NewListePoste) ;  // Modifie le pointeur vers la liste de postes à fournir
     // Fonctions de liste
         int Longueur(void) ;                        // Renvoie la longueur de la liste d'entreprises
     // Fonctionnalités

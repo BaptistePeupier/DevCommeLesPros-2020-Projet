@@ -141,6 +141,13 @@ void Entreprise::modifPrevious(Entreprise & previous)
     return ;
 }
 
+// Modifie le pointeur vers la liste de postes à fournir
+void Entreprise::modifProfilPoste(Poste * NewListePoste)
+{
+    _profilPoste = NewListePoste ;
+}
+
+
 // Fonctions de liste
 // Renvoie la longueur de la liste d'entreprises
 int Entreprise::Longueur(void)
