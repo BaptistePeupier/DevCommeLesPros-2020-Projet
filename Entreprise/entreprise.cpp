@@ -44,6 +44,30 @@ Entreprise::Entreprise(int index, char* nom, char* codePostal, char* mail, Entre
 // Le destructeur
 Entreprise::~Entreprise(void)
 {
+    Entreprise *ToDelE, *tmpE ;
+    Poste *ToDelP, *tmpP ;
+    Competence *ToDelC, *tmpC ;
+
+    cout << "Destructeur Entreprise" << endl ;
+    tmpE = this ;
+    while(tmpE){
+        ToDelE = tmpE ;
+        tmpE = tmpE->next() ;
+        tmpP = ToDelE->profilPoste() ;
+        while(tmpP){
+            ToDelP = tmpP ;
+            tmpP = tmpP->next() ;
+            tmpC = ToDelP->CompetencesRequises() ;
+            while(tmpC){
+                ToDelC = tmpC ;
+                tmpC = tmpC->next() ;
+                delete ToDelC ;
+            }
+            delete ToDelP ;
+        }
+        // delete ToDelE ;
+    }
+
     return ;
 }
 
@@ -208,8 +232,10 @@ Poste::Poste(char* Titre, Poste *next, Poste * previous, Competence * Competence
 }
 
 // Le destructeur
+// Détruit seulement le Poste "this"
 Poste::~Poste(void)
 {
+    cout << "Destructeur Poste" << endl ;
     return ;
 }
 
@@ -295,19 +321,10 @@ Competence::Competence(char* label, Competence * next, Competence * previous)
 }
 
 // Le destructeur
+// Détruit seulement la compétence "this"
 Competence::~Competence(void)
 {
-    Competence * tmp, *toDel ;
-
-    cout << "destructeur Competence" << endl ;
-    tmp = this->_next ;
-    while (tmp){
-        toDel = tmp ;
-        tmp = tmp->_next ;
-        delete toDel ;
-        cout << "destructeur Competence" << endl ;
-    }
-
+    cout << "Destructeur Competence" << endl ;   
     return ;
 }
 

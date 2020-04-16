@@ -13,8 +13,6 @@
 #define _GENERAL_H_
 
 #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
 
 #include "chercheur.h"
 #include "employe.h"
