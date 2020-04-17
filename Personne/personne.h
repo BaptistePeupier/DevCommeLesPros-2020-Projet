@@ -29,7 +29,7 @@ class Personne
         Entreprise * _EntrepriseActuelle ;
     public:
     // Un constructeur
-        Personne(int index, char* nom, char* prenom, char* mail, char* codePostal, Competence & CompetencesPropres, Personne & AncienCollegueNext, Personne & AncienColleguePrevious, Entreprise & EntrepriseActuelle) ;
+        Personne(int index, char* nom, char* prenom, char* mail, char* codePostal, Competence * CompetencesPropres, Personne * AncienCollegueNext, Personne * AncienColleguePrevious, Entreprise * EntrepriseActuelle) ;
     // Le destructeur
         ~Personne(void) ;
     // Accesseurs
@@ -48,7 +48,7 @@ class Personne
         void modifPrenom(char* Newprenom) ;
         void modifMail(char* Newmail) ;
         void modifCodePostal(char* NewCodePostal) ;
-        void modifEntreprise(Entreprise & NewEntreprise) ;
+        void modifEntreprise(Entreprise * NewEntreprise) ;
     // Fonctionnalités
         void RecherchePosteCompetence(void) ;                       // Affiche une liste d'entreprise avec les postes correspondant aux compétences de la personne
         void RecherchePosteCompetenceCodePostal(void) ;             // Affiche une liste d'entreprise avec les postes correspondant aux compétences et au code postal de la personne

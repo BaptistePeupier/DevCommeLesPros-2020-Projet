@@ -38,7 +38,7 @@ test.o: test/main.cpp | build
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
 all: libGeneral.a test.o
-	${CC} build/test.o -Lbuild/ -lEntreprise -lEmploye -lChercheur -lGeneral -o build/LuminIn
+	${CC} build/test.o -Lbuild/ -lEntreprise -lEmploye -lChercheur -lPersonne -lGeneral -o build/LuminIn
 
 # Lance le programme de test.
 check: all
