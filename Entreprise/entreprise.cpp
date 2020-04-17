@@ -189,6 +189,42 @@ void Entreprise::deleteProfile(void)
 // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées
 void Entreprise::MAJDBEntreprise(Entreprise * MAJ)
 {
+    FILE *new_db = fopen("test/FichiersDeTests/entrepriseNew.csv", "w") ;
+    FILE *prev_db = fopen("test/FichiersDeTests/entreprise.csv", "r") ;
+    Entreprise * tmp ;
+    int tmpindex ;
+    char schema[128] ;
+    char tmpnom[128] ;
+    char tmpcodePostal[128] ;
+    char tmpmail[128] ;
+
+    tmp = this ;
+    while (tmp && tmp->index() != MAJ->index()) tmp = tmp->next() ;
+    if (tmp){
+        if(new_db && prev_db){
+            // Ecriture du schéma de la table
+            fscanf(prev_db, "%127[^\n\r]", schema) ;
+            fprintf(new_db, "%s", schema) ;
+            // Ecriture des tuples de donnes
+            while(fscanf(prev_db, "%d,%127[^,],%127[^,],%127[^\n\r]", &tmpindex, tmpnom, tmpcodePostal, tmpmail) == 4){
+                fprintf(new_db, "\n") ;
+                if(tmpindex != MAJ->index()){
+                    fprintf(new_db, "%d,%s,%s,%s", tmpindex, tmpnom, tmpcodePostal, tmpmail) ;
+                }else{
+                    fprintf(new_db, "%d,%s,%s,%s", MAJ->index(), MAJ->nom(), MAJ->codePostal(), MAJ->mail()) ;
+                }
+            }
+            fclose(new_db) ;
+            fclose(prev_db) ;
+            remove("test/FichiersDeTests/entreprise.csv") ;
+            rename("test/FichiersDeTests/entrepriseNew.csv", "test/FichiersDeTests/entreprise.csv") ;
+        }else{
+            cout << "Erreur d'ouverture ou de création de la nouvelle db" << endl ;
+        }
+    }else{
+        cout << "L'Entreprise n'a pas été créée" << endl ;
+    }
+
     return ;
 }
 

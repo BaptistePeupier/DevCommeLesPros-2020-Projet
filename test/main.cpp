@@ -15,6 +15,7 @@ int main()
 {
     char testchar[128] = "test" ;
     char testchar2[128] = "test2" ;
+    char newMail[128] = "eMplois@google.com" ;
     int i ;
     Competence test (testchar, NULL, NULL) ;
     Entreprise * ListeEntreprise, * tmp ;
@@ -36,6 +37,8 @@ int main()
         tmp = tmp->next() ;
     }
     cout << endl ;
+    ListeEntreprise->next()->modifMail(newMail) ;
+    ListeEntreprise->MAJDBEntreprise(ListeEntreprise->next()) ;
 
     delete ListeEntreprise ;
 
