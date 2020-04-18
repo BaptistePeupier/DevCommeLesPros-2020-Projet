@@ -5,8 +5,8 @@
 //              - transitions entre Employe et Chercheur                                                         //
 //              - interface graphique                                                                            //
 //                                                                                                               //
-// PEUPIER Baptiste                                                                                              //
-// Cree le 08/04/2020, modifié le 08/04/2020                                                                     //
+// PEUPIER Baptiste MASSELOT Nicolas                                                                             //
+// Cree le 08/04/2020, modifié le 18/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,6 @@ Entreprise * CreerListeEntreprise(void)
     Entreprise * ListeEntreprise = NULL, * tmp = NULL ;
     int tmpindex ;
     int tmpentreprise ;
-    // char pass[1] ;
     char tmpnom[128] ;
     char tmpcodePostal[128] ;
     char tmpmail[128] ;
@@ -38,8 +37,8 @@ Entreprise * CreerListeEntreprise(void)
                 ListeEntreprise = NewEntreprise ;
                 tmp = ListeEntreprise ;
             }else{
-                NewEntreprise->modifPrevious(*tmp) ;
-                tmp->modifNext(*NewEntreprise) ;
+                NewEntreprise->modifPrevious(tmp) ;
+                tmp->modifNext(NewEntreprise) ;
                 tmp = NewEntreprise ;
             }
         }
