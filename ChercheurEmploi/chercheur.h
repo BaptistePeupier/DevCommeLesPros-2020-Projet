@@ -4,7 +4,7 @@
 // Classe Chercheur correspondant aux données d'un chercheur d'emploi et aux différentes fonctionnalités qui lui //
 // sont liées.                                                                                                   //
 //                                                                                                               //
-// PEUPIER Baptiste                                                                                              //
+// PEUPIER Baptiste MASSELOT Nicolas                                                                             //
 // Cree le 06/04/2020, modifié le 08/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //

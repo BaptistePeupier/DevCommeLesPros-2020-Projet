@@ -3,7 +3,7 @@
 //                                                                                                               //
 // Classe Employee correspondant aux données d'un employé et aux différentes fonctionnalités qui lui sont liées. //
 //                                                                                                               //
-// PEUPIER Baptiste                                                                                              //
+// PEUPIER Baptiste MASSELOT Nicolas                                                                             //
 // Cree le 06/04/2020, modifié le 07/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //

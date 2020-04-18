@@ -5,14 +5,14 @@
 //                                                                                                               //
 // Fonctions memrbes de la calsse Entreprise                                                                     //
 //                                                                                                               //
-// PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 06/04/2020                                                                     //
+// PEUPIER Baptiste MASSELOT Nicolas                                                                             //
+// Cree le 06/04/2020, modifié le 18/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Les constructeurs
-Entreprise::Entreprise(int index, char* nom, char* codePostal, char* mail, Entreprise * next, Entreprise * previous)
+Entreprise::Entreprise(int index, const char* nom, const char* codePostal, const char* mail, Entreprise * next, Entreprise * previous)
 { 
     int i ;
 
@@ -115,7 +115,7 @@ void Entreprise::modifIndex(int NewIndex)
     return ;
 }
 
-void Entreprise::modifNom(char* NewNom)
+void Entreprise::modifNom(const char* NewNom)
 {
     int i ;
 
@@ -124,11 +124,12 @@ void Entreprise::modifNom(char* NewNom)
         i++ ;                       // Pour mettre le '\0'
         _nom[i] = NewNom[i] ;
     }while (NewNom[i] != '\0') ;
+    MAJDBEntreprise(this) ;
 
     return ;
 }
 
-void Entreprise::modifCodePostal(char* NewCodePostal)
+void Entreprise::modifCodePostal(const char* NewCodePostal)
 {
     int i ;
 
@@ -137,11 +138,12 @@ void Entreprise::modifCodePostal(char* NewCodePostal)
         i++ ;                       // Pour mettre le '\0'
         _codePostal[i] = NewCodePostal[i] ;
     }while (NewCodePostal[i] != '\0') ;
+    MAJDBEntreprise(this) ;
 
     return ;
 }
 
-void Entreprise::modifMail(char * NewMail)
+void Entreprise::modifMail(const char * NewMail)
 {
     int i ;
 
@@ -150,18 +152,20 @@ void Entreprise::modifMail(char * NewMail)
         i++ ;                       // Pour mettre le '\0'
         _mail[i] = NewMail[i] ;
     }while (NewMail[i] != '\0') ;
+    MAJDBEntreprise(this) ;
+
     return ;
 }
 
-void Entreprise::modifNext(Entreprise & next)
+void Entreprise::modifNext(Entreprise * next)
 {
-    _next = &next ;
+    _next = next ;
     return ;
 }
 
-void Entreprise::modifPrevious(Entreprise & previous)
+void Entreprise::modifPrevious(Entreprise * previous)
 {
-    _previous = &previous ;
+    _previous = previous ;
     return ;
 }
 
@@ -171,15 +175,21 @@ void Entreprise::modifProfilPoste(Poste * NewListePoste)
     _profilPoste = NewListePoste ;
 }
 
-
-// Fonctions de liste
-// Renvoie la longueur de la liste d'entreprises
-int Entreprise::Longueur(void)
+// Fonctionnalités
+// Ajoute une entreprise à la liste
+void Entreprise::addEntreprise(const char* nom, const char* codePostal, const char* mail)
 {
-    return 0 ;
+    Entreprise * tmp, *  NewE ;
+
+    tmp = this ;
+    while (tmp->next()) tmp = tmp->next() ;
+    NewE = new Entreprise (tmp->index()+1, nom, codePostal, mail, NULL, tmp) ;
+    MAJDBEntreprise(NewE) ;
+    tmp->modifNext(NewE) ;
+
+    return ;    
 }
 
-// Fonctionnalités
 // Supprime le profile (l'entreprise) ainsi que les postes qui lui sont lié
 void Entreprise::deleteProfile(void)
 {
@@ -189,6 +199,42 @@ void Entreprise::deleteProfile(void)
 // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées
 void Entreprise::MAJDBEntreprise(Entreprise * MAJ)
 {
+    FILE *new_db = fopen("test/FichiersDeTests/entrepriseNew.csv", "w") ;
+    FILE *prev_db = fopen("test/FichiersDeTests/entreprise.csv", "r") ;
+    Entreprise * tmp ;
+    int tmpindex = -1 ;
+    char schema[128] ;
+    char tmpnom[128] ;
+    char tmpcodePostal[128] ;
+    char tmpmail[128] ;
+
+    tmp = this ;
+    while (tmp && tmp->index() != MAJ->index()) tmp = tmp->next() ;
+    if(new_db && prev_db){
+        // Ecriture du schéma de la table
+        fscanf(prev_db, "%127[^\n\r]", schema) ;
+        fprintf(new_db, "%s", schema) ;
+        // Ecriture des tuples de donnes
+        while(fscanf(prev_db, "%d,%127[^,],%127[^,],%127[^\n\r]", &tmpindex, tmpnom, tmpcodePostal, tmpmail) == 4){
+            fprintf(new_db, "\n") ;
+            if(tmpindex != MAJ->index()){
+                fprintf(new_db, "%d,%s,%s,%s", tmpindex, tmpnom, tmpcodePostal, tmpmail) ;
+            }else{
+                fprintf(new_db, "%d,%s,%s,%s", MAJ->index(), MAJ->nom(), MAJ->codePostal(), MAJ->mail()) ;
+            }
+        }
+    }else{
+        cout << "Erreur d'ouverture ou de création de la nouvelle db" << endl ;
+    }
+    if (!tmp){              // Nouvelle entreprise a ajouter à la db
+        fprintf(new_db, "\n%d,%s,%s,%s", MAJ->index(), MAJ->nom(), MAJ->codePostal(), MAJ->mail()) ;
+    }
+    fclose(new_db) ;
+    fclose(prev_db) ;
+    remove("test/FichiersDeTests/entreprise.csv") ;
+    rename("test/FichiersDeTests/entrepriseNew.csv", "test/FichiersDeTests/entreprise.csv") ;
+
+
     return ;
 }
 
@@ -207,16 +253,16 @@ void Entreprise::addPoste(Poste * ToAdd)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
-// Fonctions memrbes de la calsse Poste                                                                         //
+// Fonctions memrbes de la calsse Poste                                                                          //
 //                                                                                                               //
-// PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 06/04/2020                                                                     //
+// PEUPIER Baptiste MASSELOT Nicolas                                                                             //
+// Cree le 06/04/2020, modifié le 18/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Les constructeurs
-Poste::Poste(char* Titre, Poste *next, Poste * previous, Competence * CompetencesRequises)
+Poste::Poste(const char* Titre, Poste *next, Poste * previous, Competence * CompetencesRequises)
 {
     int i ;
 
@@ -261,7 +307,7 @@ Competence * Poste::CompetencesRequises(void)
 }
 
 // Modifieurs
-void Poste::modifTitre(char* NewTitre)
+void Poste::modifTitre(const char* NewTitre)
 {
     int i ;
 
@@ -298,14 +344,14 @@ void Poste::modifCompetencesRequises(Competence * NewListeCompetence)
 //                                                                                                               //
 // Fonctions memrbes de la calsse Competence                                                                     //
 //                                                                                                               //
-// PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 06/04/2020                                                                     //
+// PEUPIER Baptiste MASSELOT Nicolas                                                                             //
+// Cree le 06/04/2020, modifié le 18/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Les constructeurs
-Competence::Competence(char* label, Competence * next, Competence * previous)
+Competence::Competence(const char* label, Competence * next, Competence * previous)
 {
     int i ;
 
@@ -345,7 +391,7 @@ Competence * Competence::previous(void)
 }
 
 // Modifieurs
-void Competence::modifLabel(char* NewLabel)
+void Competence::modifLabel(const char* NewLabel)
 {
     int i ;
 
@@ -373,7 +419,7 @@ void Competence::modifPrevious(Competence* NewPrevious)
 // Fonctionnalité sur les Competences
 // Ajoute une compétence en fin de la liste des compétences
 // Nécéssite une première compétence déjà définie (this)
-void Competence::AddCompetence (char* label)
+void Competence::AddCompetence (const char* label)
 {
     Competence * tmp ;
     tmp = this ;
@@ -384,7 +430,7 @@ void Competence::AddCompetence (char* label)
 }
 
 // Enlève une compétence dont le label est passé en paramètre
-void Competence::delCompetence (char* label)
+void Competence::delCompetence (const char* label)
 {
     Competence * tmp ;
     char * tmpLabel ;

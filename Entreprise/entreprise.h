@@ -5,8 +5,8 @@
 // liées. La classe utilise égalment deux autres classes Poste pour les postes à pourvoir et compétences pour les//
 // compétences recherchées pour un poste.                                                                        //
 //                                                                                                               //
-// PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 06/04/2020                                                                     //
+// PEUPIER Baptiste MASSELOT Nicolas                                                                             //
+// Cree le 06/04/2020, modifié le 18/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +25,7 @@ class Competence
         Competence * _previous ;
     public:
     // Les constructeurs
-        Competence(char* label, Competence * next, Competence * previous) ;
+        Competence(const char* label, Competence * next, Competence * previous) ;
     // Le destructeur
         ~Competence(void) ;
     // Accesseurs
@@ -33,12 +33,12 @@ class Competence
         Competence * next(void) ;
         Competence * previous(void) ;
     // Modifieurs
-        void modifLabel(char* NewLabel) ;
+        void modifLabel(const char* NewLabel) ;
         void modifNext(Competence* NewNext) ;
         void modifPrevious(Competence* NewPrevious) ;
     // Fonctionnalité sur les Competences
-        void AddCompetence (char* label) ;
-        void delCompetence (char* label) ;
+        void AddCompetence (const char* label) ;
+        void delCompetence (const char* label) ;
 } ;
 
 class Poste
@@ -50,7 +50,7 @@ class Poste
         Competence * _CompetencesRequises ;
     public:
     // Les constructeurs
-        Poste(char* Titre, Poste *next, Poste * previous, Competence * CompetencesRequises) ;
+        Poste(const char* Titre, Poste *next, Poste * previous, Competence * CompetencesRequises) ;
     // Le destructeur
         ~Poste(void) ;
     // Accesseurs
@@ -59,7 +59,7 @@ class Poste
         Poste * previous(void) ;
         Competence * CompetencesRequises(void) ;
     // Modifieurs
-        void modifTitre(char* NewTitre) ;
+        void modifTitre(const char* NewTitre) ;
         void modifNext(Poste* NewNext) ;
         void modifPrevious(Poste* NewPrevious) ;
         void modifCompetencesRequises(Competence * NewListeCompetence) ;        // Modifie le pointeur vers la liste de compétence
@@ -77,7 +77,7 @@ class Entreprise
         Poste * _profilPoste ;
     public:
     // Les constructeurs
-        Entreprise(int index, char* nom, char* codePostal, char* mail, Entreprise * next, Entreprise * previous) ;
+        Entreprise(int index, const char* nom, const char* codePostal, const char* mail, Entreprise * next, Entreprise * previous) ;
     // Le destructeur
         ~Entreprise(void) ;
     // Accesseurs
@@ -90,18 +90,18 @@ class Entreprise
         Poste * profilPoste(void) ;    
     // Modifieurs
         void modifIndex(int NewIndex) ;
-        void modifNom(char* NewNom) ;
-        void modifCodePostal(char* NewCodePostal) ;
-        void modifMail(char * NewMail) ;
-        void modifNext(Entreprise & next) ;
-        void modifPrevious(Entreprise & previous) ;
-        void modifProfilPoste(Poste * NewListePoste) ;  // Modifie le pointeur vers la liste de postes à fournir
-    // Fonctions de liste
-        int Longueur(void) ;                        // Renvoie la longueur de la liste d'entreprises
+        void modifNom(const char* NewNom) ;
+        void modifCodePostal(const char* NewCodePostal) ;
+        void modifMail(const char * NewMail) ;
+        void modifNext(Entreprise * next) ;
+        void modifPrevious(Entreprise * previous) ;
+        void modifProfilPoste(Poste * NewListePoste) ;                                      // Modifie le pointeur vers la liste de postes à fournir
     // Fonctionnalités
-        void addPoste(Poste * ToAdd) ;              // Ajoute un poste à la liste des postes à fournir
-        void deleteProfile(void) ;                  // Supprime le profile (l'entreprise) ainsi que les postes qui lui sont lié
-        void MAJDBEntreprise(Entreprise * MAJ) ;    // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées
+        void addEntreprise(const char* nom, const char* codePostal, const char* mail) ;     // Ajoute une entreprise à la liste
+        void addPoste(Poste * ToAdd) ;                                                      // Ajoute un poste à la liste des postes à fournir
+        void deleteProfile(void) ;                                                          // Supprime le profile (l'entreprise) ainsi que les postes qui lui sont lié
+        void MAJDBEntreprise(Entreprise * MAJ) ;                                            // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées
 } ;
 
 #endif
+

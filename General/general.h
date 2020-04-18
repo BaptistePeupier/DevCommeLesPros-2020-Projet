@@ -3,7 +3,7 @@
 //                                                                                                               //
 // Effectue les transitions entre chercheur et employe.                                                          //
 //                                                                                                               //
-// PEUPIER Baptiste                                                                                              //
+// PEUPIER Baptiste MASSELOT Nicolas                                                                             //
 // Cree le 08/04/2020, modifié le 08/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
