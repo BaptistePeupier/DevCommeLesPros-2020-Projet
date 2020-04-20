@@ -31,7 +31,7 @@ int main()
     cout << endl ;
 
     //test sur la création d'une personne avec l'ajout d'une compétence 
-    Personne test_pers(1,testnom,testprenom,testmail,testcodepostal,&test,NULL,NULL,NULL) ;
+    Personne test_pers(1,testnom,testprenom,testmail,testcodepostal,NULL,NULL,&test,NULL,NULL,NULL) ;
     cout << test_pers.nom() << endl;
     if (strcmp(test_pers.nom(),"onsepatro") == 0) {
         testrates++ ;

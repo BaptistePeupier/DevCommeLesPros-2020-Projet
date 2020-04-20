@@ -13,7 +13,7 @@
 
 #include "general.h"
 
-// Construit la liste des Entreprises à partir d'une base de donnée (Entreprise + postes)
+// Construit la liste des Entreprises à partir d'une base de donnée (entreprise + postes)
 Entreprise * CreerListeEntreprise(void)
 {
 
@@ -80,39 +80,8 @@ Entreprise * CreerListeEntreprise(void)
     return ListeEntreprise ;
 }
 
-// Construit la liste des Employes à partir d'une base de donnée
-Employe * CreerListeEmploye(void)
+// Construit la liste des Personnes à partir d'une base de donnée (employe + chercheurd'emplois)
+Personne * CreerListePersonne(void)
 {
     return NULL ;
 }
-
-// Construit la liste des Chercheurs à partir d'une base de donnée
-Chercheur * CreerListeChercheur(void)
-{
-    return NULL ;
-}
-
-// Attribue une personne récupéré d'un Employe à un objet Chercheur
-Chercheur * AuxTransitionChercheur (Employe & ToTransit)
-{
-    return NULL ;
-}
-
-// Attribue une personne récupéré d'un Chercheur à un objet Employe
-Employe * AuxTransitionEmploye (Chercheur & ToTransit)
-{
-    return NULL ;
-}
-
-// Rechercher parmis les chercheurs par competences, affiche les résutats
-void ChercheurCompetence (Chercheur & listeChercheur, Competence * listeComp)
-{
-    return ;
-}
-
-// Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
-void ChercheurCompetenceCodePostal (Chercheur & listeChercheur, char * CodePostalRecherche)
-{
-    return ;
-}
-
