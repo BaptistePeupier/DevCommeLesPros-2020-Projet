@@ -124,7 +124,7 @@ void Entreprise::modifNom(const char* NewNom)
         i++ ;                       // Pour mettre le '\0'
         _nom[i] = NewNom[i] ;
     }while (NewNom[i] != '\0') ;
-    MAJDBEntreprise(this) ;
+    MAJDBEntreprise() ;
 
     return ;
 }
@@ -138,7 +138,7 @@ void Entreprise::modifCodePostal(const char* NewCodePostal)
         i++ ;                       // Pour mettre le '\0'
         _codePostal[i] = NewCodePostal[i] ;
     }while (NewCodePostal[i] != '\0') ;
-    MAJDBEntreprise(this) ;
+    MAJDBEntreprise() ;
 
     return ;
 }
@@ -152,7 +152,7 @@ void Entreprise::modifMail(const char * NewMail)
         i++ ;                       // Pour mettre le '\0'
         _mail[i] = NewMail[i] ;
     }while (NewMail[i] != '\0') ;
-    MAJDBEntreprise(this) ;
+    MAJDBEntreprise() ;
 
     return ;
 }
@@ -184,8 +184,8 @@ void Entreprise::addEntreprise(const char* nom, const char* codePostal, const ch
     tmp = this ;
     while (tmp->next()) tmp = tmp->next() ;
     NewE = new Entreprise (tmp->index()+1, nom, codePostal, mail, NULL, tmp) ;
-    MAJDBEntreprise(NewE) ;
     tmp->modifNext(NewE) ;
+    MAJDBEntreprise() ;
 
     return ;    
 }
@@ -196,44 +196,32 @@ void Entreprise::deleteProfile(void)
     return ;
 }
 
-// Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées
-void Entreprise::MAJDBEntreprise(Entreprise * MAJ)
+// Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées ou ajoutées
+void Entreprise::MAJDBEntreprise(void)
 {
-    FILE *new_db = fopen("test/FichiersDeTests/entrepriseNew.csv", "w") ;
-    FILE *prev_db = fopen("test/FichiersDeTests/entreprise.csv", "r") ;
+    FILE *new_db = fopen("test/FichiersDeTests/entrepriseNew.csv", "w") ;   // A modifier lorsque l'on utilisera la vrai DB
+    FILE *prev_db = fopen("test/FichiersDeTests/entreprise.csv", "r") ;     // A modifier lorsque l'on utilisera la vrai DB
     Entreprise * tmp ;
-    int tmpindex = -1 ;
     char schema[128] ;
-    char tmpnom[128] ;
-    char tmpcodePostal[128] ;
-    char tmpmail[128] ;
 
     tmp = this ;
-    while (tmp && tmp->index() != MAJ->index()) tmp = tmp->next() ;
+    while (tmp && tmp->previous()) tmp = tmp->previous() ;          // Reviens au début de la liste des entreprises
     if(new_db && prev_db){
         // Ecriture du schéma de la table
         fscanf(prev_db, "%127[^\n\r]", schema) ;
         fprintf(new_db, "%s", schema) ;
-        // Ecriture des tuples de donnes
-        while(fscanf(prev_db, "%d,%127[^,],%127[^,],%127[^\n\r]", &tmpindex, tmpnom, tmpcodePostal, tmpmail) == 4){
-            fprintf(new_db, "\n") ;
-            if(tmpindex != MAJ->index()){
-                fprintf(new_db, "%d,%s,%s,%s", tmpindex, tmpnom, tmpcodePostal, tmpmail) ;
-            }else{
-                fprintf(new_db, "%d,%s,%s,%s", MAJ->index(), MAJ->nom(), MAJ->codePostal(), MAJ->mail()) ;
-            }
+        // Ecriture des tuples de donnes contenus dans la liste des entreprises
+        while(tmp){
+            fprintf(new_db, "\n%d,%s,%s,%s", tmp->index(), tmp->nom(), tmp->codePostal(), tmp->mail()) ;
+            tmp = tmp->next() ;
         }
     }else{
         cout << "Erreur d'ouverture ou de création de la nouvelle db" << endl ;
     }
-    if (!tmp){              // Nouvelle entreprise a ajouter à la db
-        fprintf(new_db, "\n%d,%s,%s,%s", MAJ->index(), MAJ->nom(), MAJ->codePostal(), MAJ->mail()) ;
-    }
     fclose(new_db) ;
     fclose(prev_db) ;
-    remove("test/FichiersDeTests/entreprise.csv") ;
-    rename("test/FichiersDeTests/entrepriseNew.csv", "test/FichiersDeTests/entreprise.csv") ;
-
+    remove("test/FichiersDeTests/entreprise.csv") ;                                             // A modifier lorsque l'on utilisera la vrai DB
+    rename("test/FichiersDeTests/entrepriseNew.csv", "test/FichiersDeTests/entreprise.csv") ;   // A modifier lorsque l'on utilisera la vrai DB
 
     return ;
 }
