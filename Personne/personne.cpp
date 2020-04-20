@@ -12,7 +12,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Un constructeur
-Personne::Personne(int index, char* nom, char* prenom, char* mail, char* codePostal, Competence * CompetencesPropres, Personne * AncienCollegueNext, Personne * AncienColleguePrevious, Entreprise * EntrepriseActuelle)
+Personne::Personne(int index, char* nom, char* prenom, char* mail, char* codePostal, Personne * nextP, Personne * previousP, Competence * CompetencesPropres, Personne * AncienCollegueNext, Personne * AncienColleguePrevious, Entreprise * EntrepriseActuelle)
+
 {
     int i ;
     _index = index ;
@@ -43,6 +44,8 @@ Personne::Personne(int index, char* nom, char* prenom, char* mail, char* codePos
     }while (codePostal[i] != '\0') ;
 
     _CompetencesPropres = CompetencesPropres ;
+    _nextP = nextP ;
+    _previousP = previousP ;
     _AncienCollegueNext = AncienCollegueNext ;
     _AncienColleguePrevious = AncienColleguePrevious ;
     _EntrepriseActuelle = EntrepriseActuelle ;
@@ -168,6 +171,18 @@ void Personne::modifEntreprise(Entreprise * NewEntreprise)
 }
 
 // Fonctionnalités
+// Change un employé en chercheur d'emploi et inversement
+// Ajoute les anciens collègues si besoin
+void Personne::TransitionStatut(void)
+{
+    return ;
+}
+
+void Personne::deleteProfile(void)
+{
+    return ;
+}
+
 // Renvoie une liste d'entreprise avec les postes correspondant aux compétences de la personne
 void Personne::RecherchePosteCompetence(void)
 {
@@ -194,3 +209,35 @@ void Personne::MAJDBPersonne(Personne * MAJ)
 {
     return ;
 }
+// Affiche les données des anciens collègues employés dans les entreprises qui recherchent ces compétences
+// Seulement pour les chercheurs d'emploi
+void Personne::ChercheurRechercheColleguesCompetence(Competence * ListeCompetence)
+{
+    assert(!(this->_EntrepriseActuelle)) ;
+
+
+    return ;
+}
+
+// Affiche les données des anciens collègues disposant des compétences passé en liste
+// Seulement pour les employés
+void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
+{
+    assert(this->_EntrepriseActuelle) ;
+
+
+    return ;
+}
+                                                                            
+// Rechercher parmis les chercheurs par competences, affiche les résutats
+void Personne::ChercheurCompetence (Competence * listeComp)
+{
+    return ;
+}
+
+// Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
+void Personne::ChercheurCompetenceCodePostal (char * CodePostalRecherche)
+{
+    return ;
+}
+
