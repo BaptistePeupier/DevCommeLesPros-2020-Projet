@@ -184,10 +184,29 @@ void Personne::deleteProfile(void)
     return ;
 }
 
-// Renvoie une liste d'entreprise avec les postes correspondant aux compétences de la personne
-void Personne::RecherchePosteCompetence(void)
+// Renvoie une liste d'entreprise avec les postes correspondant aux compétences de la personne 
+//on prend en paramètre le pointeur sur le début de la liste des postes
+void Personne::RecherchePosteCompetence(Poste *liste_postes)
 {
-    //récupération des entreprises et recherche dans la liste des postes
+    Poste *tmp_poste ;
+    Competence *tmp_skills_poste ;
+    Competence *tmp_skills_personne = _CompetencesPropres ;
+    bool afficher ;
+
+    while (tmp_poste) {
+        tmp_skills_poste = tmp_poste->CompetencesRequises() ;
+        while (tmp_skills_personne) {
+            while (tmp_skills_poste) {
+                if(tmp_skills_poste->label()[i] != tmp_skills_personne->label()[i]){
+                    
+                }
+                tmp_skills_poste = tmp_skills_poste->next() ;
+            }
+            tmp_skills_personne = tmp_skills_personne->next() ; 
+        }
+        tmp_poste = tmp_poste->next() ;
+    }
+    
     return ;
 }
 
