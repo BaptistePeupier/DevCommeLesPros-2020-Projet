@@ -93,7 +93,7 @@ Personne * CreerListeEmploye(Entreprise * ListeEntreprise)
 
     assert(ListeEntreprise) ;                               // On a besoin de la liste des entreprises
 
-    FILE *db_employe = fopen("test/FichiersDeTests/employe.csv", "r") ;
+    FILE *db_employe = fopen("test/FichiersDeTests/employes.csv", "r") ;
     if(db_employe){
         fscanf(db_employe, "%*s") ;
         // id,nom,prenom,mail,code_postal,entreprise,competences,collegues_employes,collegues_chercheur_d'emploi
@@ -115,16 +115,16 @@ Personne * CreerListeEmploye(Entreprise * ListeEntreprise)
 
             // Chainage
             if(ListeEmploye){
-                ListeEmploye->modifPreviousP(tmp) ;
-                tmp->modifNextP(ListeEmploye) ;
-                tmp = ListeEmploye ;
+                NewEmploye->modifPreviousP(tmp) ;
+                tmp->modifNextP(NewEmploye) ;
+                tmp = NewEmploye ;
             }else{                          // Premier Employe
                 ListeEmploye = NewEmploye ;
                 tmp = ListeEmploye ;
             }
         }
         fclose(db_employe) ;
-    }else cout << "Erreur d'ouverture de la base de donnée des employes" << endl ;
+    }else cout << "Erreur d'ouverture de la base de donnée employe" << endl ;
 
     return ListeEmploye ;
 }
@@ -160,9 +160,9 @@ Personne * CreerListeChercheurEmploi(void)
 
             // Chainage
             if(ListeChercheurEmploi){
-                ListeChercheurEmploi->modifPreviousP(tmp) ;
-                tmp->modifNextP(ListeChercheurEmploi) ;
-                tmp = ListeChercheurEmploi ;
+                NewEmploye->modifPreviousP(tmp) ;
+                tmp->modifNextP(NewEmploye) ;
+                tmp = NewEmploye ;
             }else{                                  // Premier Employe
                 ListeChercheurEmploi = NewEmploye ;
                 tmp = ListeChercheurEmploi ;
@@ -178,34 +178,93 @@ Personne * CreerListeChercheurEmploi(void)
 void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmploi)
 {
     Personne * tmp, * tmp2 ;
+    AncienCollegue * tmpA ;
     char tmpIndexCollegue[128] ;
     int indexCollegue ;
 
-    FILE *db_employe = fopen("test/FichiersDeTests/employe.csv", "r") ;
+    FILE *db_employe = fopen("test/FichiersDeTests/employes.csv", "r") ;
     FILE *db_chercheur_emploi = fopen("test/FichiersDeTests/chercheurd'emploi.csv", "r") ;
     if(db_employe && db_chercheur_emploi){
-
         fscanf(db_employe, "%*s") ;
         // id,nom,prenom,mail,code_postal,entreprise,competences,collegues_employes,collegues_chercheur_d'emploi
         tmp = ListeEmploye ;
         while(tmp){
-            fscanf(db_employe, "%*s,%*s,%*s,%*s,%*s,") ;
+            fscanf(db_employe, "%*s,%*s,%*s,%*s,%*s,") ;   //PBL ICI
             // Recherche des collegues employes
             while(fscanf(db_employe, "%127[^;,];", tmpIndexCollegue) == 1){
                 indexCollegue = atoi(tmpIndexCollegue) ;
                 tmp2 = ListeEmploye ;
-                while(tmp2 && tmp2->index()!=indexCollegue) tmp2 = tmp2->nextP() ;
-                // while(tmp->AncienCollegueNext)
+                while(tmp2 && tmp2->index()!=indexCollegue) tmp2 = tmp2->nextP() ;  // On retrouve la personne d'index recherché
+                AncienCollegue * NewAncienCollegue = new AncienCollegue(tmp2,NULL,NULL) ;
+                tmp2 = tmp ;
+                if(tmp2->ListAncienCollegues()){
+                    tmpA = tmp2->ListAncienCollegues() ;
+                    while(tmpA->nextA()) tmpA = tmpA->nextA() ;
+                    NewAncienCollegue->modifPreviousA(tmpA) ;
+                    tmpA->modifNextA(NewAncienCollegue) ;
+                }else{                                                              // Premier collegue
+                    tmp2->modifAncienCollegues(NewAncienCollegue) ;
+                }
             }
-
-            ListeEmploye->nextP() ;
+            // Recherche des collegues chercheurs d'emploi
+            while(fscanf(db_employe, "%127[^;\n];", tmpIndexCollegue) == 1){
+                indexCollegue = atoi(tmpIndexCollegue) ;
+                tmp2 = ListeChercheurEmploi ;
+                while(tmp2 && tmp2->index()!=indexCollegue) tmp2 = tmp2->nextP() ;  // On retrouve la personne d'index recherché
+                AncienCollegue * NewAncienCollegue = new AncienCollegue(tmp2,NULL,NULL) ;
+                tmp2 = tmp ;
+                if(tmp2->ListAncienCollegues()){
+                    tmpA = tmp2->ListAncienCollegues() ;
+                    while(tmpA->nextA()) tmpA = tmpA->nextA() ;
+                    NewAncienCollegue->modifPreviousA(tmpA) ;
+                    tmpA->modifNextA(NewAncienCollegue) ;
+                }else{                                                              // Premier collegue
+                    tmp2->modifAncienCollegues(NewAncienCollegue) ;
+                }
+            }
+            tmp = tmp->nextP() ;
         }
 
         fscanf(db_chercheur_emploi, "%*s") ;
         // id,nom,prenom,mail,code_postal,competences,collegues_employes,collegues_chercheur_d'emploi
-        // while(){
+        tmp = ListeChercheurEmploi ;
+        while(tmp){
+            fscanf(db_chercheur_emploi, "%*s,%*s,%*s,%*s,%*s,") ;
+            // Recherche des collegues employes
+            while(fscanf(db_chercheur_emploi, "%127[^;,];", tmpIndexCollegue) == 1){
+                indexCollegue = atoi(tmpIndexCollegue) ;
+                tmp2 = ListeEmploye ;
+                while(tmp2 && tmp2->index()!=indexCollegue) tmp2 = tmp2->nextP() ;  // On retrouve la personne d'index recherché
+                AncienCollegue * NewAncienCollegue = new AncienCollegue(tmp2,NULL,NULL) ;
+                tmp2 = tmp ;
+                if(tmp2->ListAncienCollegues()){
+                    tmpA = tmp2->ListAncienCollegues() ;
+                    while(tmpA->nextA()) tmpA = tmpA->nextA() ;
+                    NewAncienCollegue->modifPreviousA(tmpA) ;
+                    tmpA->modifNextA(NewAncienCollegue) ;
+                }else{                                                              // Premier collegue
+                    tmp2->modifAncienCollegues(NewAncienCollegue) ;
+                }
+            }
+            // Recherche des collegues chercheurs d'emploi
+            while(fscanf(db_chercheur_emploi, "%127[^;\n];", tmpIndexCollegue) == 1){
+                indexCollegue = atoi(tmpIndexCollegue) ;
+                tmp2 = ListeChercheurEmploi ;
+                while(tmp2 && tmp2->index()!=indexCollegue) tmp2 = tmp2->nextP() ;  // On retrouve la personne d'index recherché
+                AncienCollegue * NewAncienCollegue = new AncienCollegue(tmp2,NULL,NULL) ;
+                tmp2 = tmp ;
+                if(tmp2->ListAncienCollegues()){
+                    tmpA = tmp2->ListAncienCollegues() ;
+                    while(tmpA->nextA()) tmpA = tmpA->nextA() ;
+                    NewAncienCollegue->modifPreviousA(tmpA) ;
+                    tmpA->modifNextA(NewAncienCollegue) ;
+                }else{                                                              // Premier collegue
+                    tmp2->modifAncienCollegues(NewAncienCollegue) ;
+                }
+            }
+            tmp = tmp->nextP() ;
+        }
 
-        // }
         fclose(db_employe) ;
         fclose(db_chercheur_emploi) ;
     }else cout << "Erreur d'ouverture de la base de donnée employe ou chercheur d'emploi" << endl ;
