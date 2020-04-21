@@ -187,7 +187,7 @@ void Personne::deleteProfile(void)
 // Renvoie une liste d'entreprise avec les postes correspondant aux compétences de la personne
 void Personne::RecherchePosteCompetence(void)
 {
-    //récupération des entreprises et recherche dans la liste des postes
+    //récupération des entreprises après recherche dans la liste des postes
     return ;
 }
 
@@ -201,6 +201,34 @@ void Personne::RecherchePosteCompetenceCodePostal(void)
 // Renvoie une liste d'ancien collègue travaillant dans une entreprise donnée
 void Personne::RechercheColleguesEntreprise(char* nomEntreprise)
 {
+    Personne * tmp ;
+    char * entreprise_tmp ;
+    int i ;
+    bool afficher ;
+
+    tmp = this ;
+    while (tmp) {
+        if (tmp->EntrepriseActuelle()) {
+            entreprise_tmp = tmp->EntrepriseActuelle()->nom() ;
+            i = 0 ;
+            afficher = true ;
+            do
+            {
+                if (entreprise_tmp[i] != nomEntreprise[i]) {
+                    afficher = false ;
+                }
+            } while (entreprise_tmp[i] != '\0');
+
+            if (afficher) {
+                cout << "-------------------------------------------------------------------------------------------" << endl ;
+                cout << " Nom :" << tmp->nom() << "| Prenom :" << tmp->prenom() << "| Mail : " << tmp->mail() << endl;
+                cout << "--------------------------------------------------------------------------------------------" << endl ;
+            }
+        }
+        tmp = tmp->AncienCollegueNext() ;
+    }
+    
+    //chercher dans la liste des anciens collègues  vérifier si il faut chercher dans previous
     return ;
 }
 // Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées
@@ -283,8 +311,8 @@ void Personne::MAJDBPersonne(void)
 void Personne::ChercheurRechercheColleguesCompetence(Competence * ListeCompetence)
 {
     assert(!(this->_EntrepriseActuelle)) ;
-
-
+    //recherche dans les anciens collegue --> entreprise --> poste avec compétences de la personne (comparaison des listes)
+    //si il y a un poste correspondant dans l'entreprise de l'ancien collègue on affiche celui-ci
     return ;
 }
 
@@ -301,12 +329,14 @@ void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
 // Rechercher parmis les chercheurs par competences, affiche les résutats
 void Personne::ChercheurCompetence (Competence * listeComp)
 {
+    //comparer les personnes dans la liste et comparer leur compétences avec la liste fournie
     return ;
 }
 
 // Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
 void Personne::ChercheurCompetenceCodePostal (char * CodePostalRecherche)
 {
+    //d'abord avoir les chercheurs d'emploi ayant le code postal et ensuite rechercher les compétences
     return ;
 }
 
