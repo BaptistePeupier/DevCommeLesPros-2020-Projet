@@ -56,6 +56,7 @@ class Personne
         void modifPreviousP(Personne * NewPreviousP) ;
         void modifNextP(Personne * NewNextP) ;
         void modifEntreprise(Entreprise * NewEntreprise) ;
+        void modifCompetencePropres(Competence * NewListeCompetence) ;
     // Fonctionnalités
         void TransitionStatut(void) ;                                       // Change un employé en chercheur d'emploi et inversement
                                                                             // Ajoute les anciens collègues si besoin

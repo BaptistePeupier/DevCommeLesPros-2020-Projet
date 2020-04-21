@@ -7,7 +7,7 @@
 // Fonctions memrbes de la classe Personne                                                                       //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 17/04/2020                                                                     //
+// Cree le 06/04/2020, modifié le 21/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -189,6 +189,11 @@ void Personne::modifEntreprise(Entreprise * NewEntreprise)
 {
     _EntrepriseActuelle = NewEntreprise ;
     return ;
+}
+
+void Personne::modifCompetencePropres(Competence * NewListeCompetence)
+{
+    _CompetencesPropres = NewListeCompetence ;
 }
 
 // Fonctionnalités
