@@ -184,10 +184,10 @@ void Personne::deleteProfile(void)
     return ;
 }
 
-// Renvoie une liste d'entreprise avec les postes correspondant aux compétences de la personne
+// Renvoie une liste d'entreprise avec les postes correspondant aux compétences de la personne 
+//on prend en paramètre le pointeur sur le début de la liste des postes
 void Personne::RecherchePosteCompetence(void)
 {
-    //récupération des entreprises et recherche dans la liste des postes
     return ;
 }
 
@@ -201,6 +201,35 @@ void Personne::RecherchePosteCompetenceCodePostal(void)
 // Renvoie une liste d'ancien collègue travaillant dans une entreprise donnée
 void Personne::RechercheColleguesEntreprise(char* nomEntreprise)
 {
+     Personne * tmp ;
+    char * entreprise_tmp ;
+    int i ;
+    bool afficher ;
+
+    tmp = this ;
+    while (tmp) {
+        if (tmp->EntrepriseActuelle()) {
+            entreprise_tmp = tmp->EntrepriseActuelle()->nom() ;
+            i = 0 ;
+            afficher = true ;
+            do
+            {
+                if (entreprise_tmp[i] != nomEntreprise[i]) {
+                    afficher = false ;
+                }
+                i++ ;
+            } while (entreprise_tmp[i] != '\0');
+
+            if (afficher) {
+                cout << "-------------------------------------------------------------------------------------------" << endl ;
+                cout << " Nom :" << tmp->nom() << "| Prenom :" << tmp->prenom() << "| Mail : " << tmp->mail() << endl;
+                cout << "--------------------------------------------------------------------------------------------" << endl ;
+            }
+        }
+        tmp = tmp->AncienCollegueNext() ;
+    }
+
+    //chercher dans la liste des anciens collègues  vérifier si il faut chercher dans previous
     return ;
 }
 // Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées
