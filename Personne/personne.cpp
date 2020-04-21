@@ -1,4 +1,5 @@
 #include "personne.h"
+#include <string.h>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
@@ -207,6 +208,100 @@ void Personne::RechercheColleguesEntreprise(char* nomEntreprise)
 // Si le pointeur vers une entrepise est non null c'est un Employe
 void Personne::MAJDBPersonne(void)
 {
+    Personne * tmp ;
+    Competence *tmp_skill ;
+    Personne * tmp_collegue ;
+    FILE *prev_db ;
+    FILE *new_db ;
+    char schema_db[128] ;
+    string skills_to_write ;
+    string collegues_to_write ;
+
+    tmp = this ;
+    while (tmp->_previousP != NULL) {           //retour au début de la liste des personnes 
+        tmp = tmp->_previousP ; 
+    }
+    
+    if (_EntrepriseActuelle == NULL) {
+        new_db = fopen("test/FichiersDeTests/chercheurd'emploi_new.csv", "w") ;   // A modifier lorsque l'on utilisera la vrai DB
+        prev_db = fopen("test/FichiersDeTests/chercheurd'emploi.csv", "r") ;     // A modifier lorsque l'on utilisera la vrai DB
+        if (new_db && prev_db) {
+            fscanf(prev_db, "%127[^\n\r]", schema_db) ;                         //on recopie le schema de la base de données 
+            fprintf(new_db, "%s", schema_db) ;
+
+            while(tmp) {
+                
+                tmp_skill = tmp->CompetencePropres() ;               //on parcours les compétences de la personne et on les concatène dans une string qui sera mise dans le csv
+                while (tmp_skill) {
+                    skills_to_write += tmp_skill->label();
+                    tmp_skill = tmp_skill->next() ;
+                    if (tmp_skill) {
+                        skills_to_write += ";" ;
+                    }
+                }
+
+                tmp_collegue = tmp->AncienCollegueNext() ;      //idem pour les anciens collegues 
+                while (tmp_collegue) {
+                    collegues_to_write += tmp_collegue->index() ;
+                    tmp_collegue = tmp_collegue->AncienCollegueNext() ;
+                    if (tmp_collegue) {
+                        collegues_to_write += ";" ;
+                    }
+                }       // à tester après la lecture de la db
+                
+
+                fprintf(new_db, "\n%d,%s,%s,%s,%s,%s,%s", tmp->index(), tmp->nom(), tmp->prenom(), tmp->mail(),tmp->codePostal(),skills_to_write.c_str(),collegues_to_write.c_str()) ; //il faut convertir la string en char* avec c_str pour utiliser fprintf
+                skills_to_write.clear() ; //on réinitialise les string avant de passer à la personne suivante
+                collegues_to_write.clear() ;
+                tmp = tmp->_nextP ;
+            }
+            remove("test/FichiersDeTests/chercheurd'emploi.csv") ;                                             // A modifier lorsque l'on utilisera la vrai DB
+            rename("test/FichiersDeTests/chercheurd'emploi_new.csv", "test/FichiersDeTests/chercheurd'emploi.csv") ;   // A modifier lorsque l'on utilisera la vrai DB
+        }else{
+            cout << "Erreur d'ouverture ou de création de la nouvelle db" << endl ;
+        }
+           
+    } else {
+        new_db = fopen("test/FichiersDeTests/employes_new.csv", "w") ;   // A modifier lorsque l'on utilisera la vrai DB
+        prev_db = fopen("test/FichiersDeTests/employes.csv", "r") ;     // A modifier lorsque l'on utilisera la vrai DB   
+        if (new_db && prev_db) {
+            fscanf(prev_db, "%127[^\n\r]", schema_db) ;                         //on recopie le schema de la base de données 
+            fprintf(new_db, "%s", schema_db) ;
+
+            while(tmp) {
+                
+                tmp_skill = tmp->CompetencePropres() ;               //on parcours les compétences de la personne et on les concatène dans une string qui sera mise dans le csv
+                while (tmp_skill) {
+                    skills_to_write += tmp_skill->label();
+                    tmp_skill = tmp_skill->next() ;
+                    if (tmp_skill) {
+                        skills_to_write += ";" ;
+                    }
+                }
+
+                tmp_collegue = tmp->AncienCollegueNext() ;      //idem pour les anciens collegues 
+                while (tmp_collegue) {
+                    collegues_to_write += tmp_collegue->index() ;
+                    tmp_collegue = tmp_collegue->AncienCollegueNext() ;
+                    if (tmp_collegue) {
+                        collegues_to_write += ";" ;
+                    }
+                }       // à tester après la lecture de la db
+                
+                fprintf(new_db, "\n%d,%s,%s,%s,%s,%s,%s,%d", tmp->index(), tmp->nom(), tmp->prenom(), tmp->mail(),tmp->codePostal(),skills_to_write.c_str(),collegues_to_write.c_str(),tmp->EntrepriseActuelle()->index()) ; //il faut convertir la string en char* avec c_str pour utiliser fprintf
+                skills_to_write.clear() ; //on réinitialise les string avant de passer à la personne suivante
+                collegues_to_write.clear() ;
+                tmp = tmp->_nextP ;
+            }
+            remove("test/FichiersDeTests/employes.csv") ;                                             // A modifier lorsque l'on utilisera la vrai DB
+            rename("test/FichiersDeTests/employes_new.csv", "test/FichiersDeTests/employes.csv") ;   // A modifier lorsque l'on utilisera la vrai DB
+        }else{
+            cout << "Erreur d'ouverture ou de création de la nouvelle db" << endl ;
+        }
+    }
+    fclose(new_db) ;
+    fclose(prev_db) ;
+    
     return ;
 }
 // Affiche les données des anciens collègues employés dans les entreprises qui recherchent ces compétences
