@@ -32,6 +32,8 @@ int main()
 
     //test sur la création d'une personne avec l'ajout d'une compétence 
     Personne test_pers(1,testnom,testprenom,testmail,testcodepostal,NULL,NULL,&test,NULL,NULL,NULL) ;
+    test.AddCompetence(testchar2) ;
+    cout << endl ;
     cout << test_pers.nom() << endl;
     if (strcmp(test_pers.nom(),"onsepatro") == 0) {
         testrates++ ;
@@ -55,9 +57,10 @@ int main()
     }
 
     cout << "tests reussis sur la classe personne " << testrates << "/5" << endl ;
+
+    test_pers.MAJDBPersonne() ;
     
-    test.AddCompetence(testchar2) ;
-    cout << endl ;
+    
     test.delCompetence(testchar) ;
     cout << endl ;
 
