@@ -11,7 +11,7 @@
 // pour pouvoir faciliter la transition entre Employe et Chercheur.                                              //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 07/04/2020                                                                     //
+// Cree le 06/04/2020, modifié le 21/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,6 +41,8 @@ class Personne
         char* prenom(void) ;
         char* mail(void) ;
         char* codePostal() ;
+        Personne * previousP(void) ;
+        Personne * nextP(void) ;
         Competence * CompetencePropres(void) ;
         Personne * AncienCollegueNext(void) ;
         Personne * AncienColleguePrevious(void) ;
@@ -51,6 +53,8 @@ class Personne
         void modifPrenom(char* Newprenom) ;
         void modifMail(char* Newmail) ;
         void modifCodePostal(char* NewCodePostal) ;
+        void modifPreviousP(Personne * NewPreviousP) ;
+        void modifNextP(Personne * NewNextP) ;
         void modifEntreprise(Entreprise * NewEntreprise) ;
     // Fonctionnalités
         void TransitionStatut(void) ;                                       // Change un employé en chercheur d'emploi et inversement

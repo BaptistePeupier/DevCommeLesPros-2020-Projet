@@ -1,1 +1,1 @@
-id,nom,prenom,mail,code_postal,competences,collegues,entreprise
+id,nom,prenom,mail,code_postal,entreprise,competences,collegues_employes,collegues_chercheur_d'emploi
