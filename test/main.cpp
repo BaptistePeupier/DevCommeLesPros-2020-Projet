@@ -31,7 +31,7 @@ int main()
     cout << endl ;
 
     //test sur la création d'une personne avec l'ajout d'une compétence 
-    Personne test_pers(1,testnom,testprenom,testmail,testcodepostal,NULL,NULL,&test,NULL,NULL,NULL) ;
+    Personne test_pers(1,testnom,testprenom,testmail,testcodepostal,NULL,NULL,&test,NULL,NULL) ;
     test.AddCompetence(testchar2) ;
     cout << endl ;
     cout << test_pers.nom() << endl;

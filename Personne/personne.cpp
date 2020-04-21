@@ -13,8 +13,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Un constructeur
-Personne::Personne(int index, char* nom, char* prenom, char* mail, char* codePostal, Personne * nextP, Personne * previousP, Competence * CompetencesPropres, Personne * AncienCollegueNext, Personne * AncienColleguePrevious, Entreprise * EntrepriseActuelle)
-
+Personne::Personne(int index, char* nom, char* prenom, char* mail, char* codePostal, Personne * nextP, Personne * previousP, Competence * CompetencesPropres, AncienCollegue * ListAncienCollegues, Entreprise * EntrepriseActuelle)
 {
     int i ;
     _index = index ;
@@ -47,8 +46,7 @@ Personne::Personne(int index, char* nom, char* prenom, char* mail, char* codePos
     _CompetencesPropres = CompetencesPropres ;
     _nextP = nextP ;
     _previousP = previousP ;
-    _AncienCollegueNext = AncienCollegueNext ;
-    _AncienColleguePrevious = AncienColleguePrevious ;
+    _ListAncienCollegues = ListAncienCollegues ;
     _EntrepriseActuelle = EntrepriseActuelle ;
 
     return ;
@@ -102,14 +100,9 @@ Competence * Personne::CompetencePropres(void)
     return _CompetencesPropres ;
 }
 
-Personne * Personne::AncienCollegueNext(void)
+AncienCollegue * Personne::ListAncienCollegues(void)
 {
-    return _AncienCollegueNext ;
-}
-
-Personne * Personne::AncienColleguePrevious(void)
-{
-    return _AncienColleguePrevious ;
+    return _ListAncienCollegues ;
 }
 
 Entreprise * Personne::EntrepriseActuelle(void)
@@ -196,6 +189,12 @@ void Personne::modifCompetencePropres(Competence * NewListeCompetence)
     _CompetencesPropres = NewListeCompetence ;
 }
 
+void Personne::modifAncienCollegues(AncienCollegue * NewListCollegues)
+{
+    _ListAncienCollegues = NewListCollegues ;
+}
+
+
 // Fonctionnalités
 // Change un employé en chercheur d'emploi et inversement
 // Ajoute les anciens collègues si besoin
@@ -235,7 +234,7 @@ void Personne::MAJDBPersonne(void)
 {
     Personne * tmp ;
     Competence *tmp_skill ;
-    Personne * tmp_collegue ;
+    AncienCollegue * tmp_collegue ;
     FILE *prev_db_chercheurs ;
     FILE *new_db_chercheurs ;
     FILE *prev_db_employes ;
@@ -266,11 +265,11 @@ void Personne::MAJDBPersonne(void)
                 }
             }
 
-            tmp_collegue = tmp->AncienCollegueNext() ;          //idem pour les anciens collegues employes
+            tmp_collegue = tmp->ListAncienCollegues() ;          //idem pour les anciens collegues employes
             while (tmp_collegue) {
-                if(tmp_collegue->EntrepriseActuelle()){
-                    collegues_to_write += tmp_collegue->index() ;
-                    tmp_collegue = tmp_collegue->AncienCollegueNext() ;
+                if(tmp_collegue->currentA()->EntrepriseActuelle()){
+                    collegues_to_write += tmp_collegue->currentA()->index() ;
+                    tmp_collegue = tmp_collegue->nextA() ;
                     if (tmp_collegue) {
                         collegues_to_write += ";" ;
                     }
@@ -278,11 +277,11 @@ void Personne::MAJDBPersonne(void)
             }       // à tester après la lecture de la db
             collegues_to_write += "," ;
 
-            tmp_collegue = tmp->AncienCollegueNext() ;          //on rajoute les anciens collegues chercheur d'emploi
+            tmp_collegue = tmp->ListAncienCollegues() ;          //on rajoute les anciens collegues chercheur d'emploi
             while (tmp_collegue) {
-                if(!(tmp_collegue->EntrepriseActuelle())){
-                    collegues_to_write += tmp_collegue->index() ;
-                    tmp_collegue = tmp_collegue->AncienCollegueNext() ;
+                if(!(tmp_collegue->currentA()->EntrepriseActuelle())){
+                    collegues_to_write += tmp_collegue->currentA()->index() ;
+                    tmp_collegue = tmp_collegue->nextA() ;
                     if (tmp_collegue) {
                         collegues_to_write += ";" ;
                     }
@@ -348,3 +347,75 @@ void Personne::ChercheurCompetenceCodePostal (char * CodePostalRecherche)
     return ;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Projet DCLP                                                                                                   //
+//                                                                                                               //
+// Classe AncienCollegue étant une liste de personnes.                                                           //
+//                                                                                                               //
+// PEUPIER Baptiste                                                                                              //
+// Cree le 06/04/2020, modifié le 21/04/2020                                                                     //
+//                                                                                                               //
+// Polytech Marseille, informatique 3A                                                                           //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Un constructeur
+AncienCollegue::AncienCollegue(Personne * currentA, AncienCollegue * nextA, AncienCollegue * previousA)
+{
+    _currentA = currentA ;
+    _nextA = nextA ;
+    _previousA = previousA ;
+
+    return ;
+}
+
+// Le destructeur
+AncienCollegue::~AncienCollegue(void)
+{
+    return ;
+}
+
+// Accesseurs
+Personne * AncienCollegue::currentA(void)
+{
+    return NULL ;
+}
+
+AncienCollegue * AncienCollegue::nextA(void)
+{
+    return NULL ;
+}
+
+AncienCollegue * AncienCollegue::previousA(void)
+{
+    return NULL ;
+}
+
+// Modifieurs
+void AncienCollegue::modifCurrentA(Personne * NewCurrent)
+{
+    return ;
+}
+
+void AncienCollegue::modifNextA(AncienCollegue * NewNextA)
+{
+    return ;
+}
+
+void AncienCollegue::modifPreviousA(AncienCollegue * NewPreviousA)
+{
+    return ;
+}
+
+// Fonctionnalités
+// Ajoute une personne à la liste
+void AncienCollegue::addAncienCollegue(Personne * NewAncienCollegue)
+{
+    return ;
+}
+
+// Retire une personne de la liste
+void AncienCollegue::dellAncienCollegue(Personne * AncienCollegueToDell)
+{
+    return ;
+}

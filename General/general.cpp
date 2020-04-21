@@ -101,7 +101,7 @@ Personne * CreerListeEmploye(Entreprise * ListeEntreprise)
         {
             tmpentreprise = ListeEntreprise ;
             while (tmpentreprise && tmpentreprise->index()!=tmpindexentreprise) tmpentreprise = tmpentreprise->next() ;
-            Personne * NewEmploye = new Personne (tmpindex,tmpnom,tmpprenom,tmpmail,tmpcodePostal,NULL,NULL,NULL,NULL,NULL,tmpentreprise) ;
+            Personne * NewEmploye = new Personne (tmpindex,tmpnom,tmpprenom,tmpmail,tmpcodePostal,NULL,NULL,NULL,NULL,tmpentreprise) ;
 
             // Lecture des compétences
             while(fscanf(db_employe, "%127[^;,];", tmpcompetence) == 1){
@@ -146,7 +146,7 @@ Personne * CreerListeChercheurEmploi(void)
         // id,nom,prenom,mail,code_postal,competences,collegues_employes,collegues_chercheur_d'emploi
         while(fscanf(db_chercheur_emploi, "%d,%127[^,],%127[^,],%127[^,],%127[^,],", &tmpindex,tmpnom,tmpprenom,tmpmail,tmpcodePostal) == 5)
         {
-            Personne * NewEmploye = new Personne (tmpindex,tmpnom,tmpprenom,tmpmail,tmpcodePostal,NULL,NULL,NULL,NULL,NULL,NULL) ;
+            Personne * NewEmploye = new Personne (tmpindex,tmpnom,tmpprenom,tmpmail,tmpcodePostal,NULL,NULL,NULL,NULL,NULL) ;
 
             // Lecture des compétences
             while(fscanf(db_chercheur_emploi, "%127[^;,];", tmpcompetence) == 1){
@@ -177,6 +177,39 @@ Personne * CreerListeChercheurEmploi(void)
 // Effectue la lisaison entre la liste des Employes et chercheur d'emploi
 void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmploi)
 {
+    Personne * tmp, * tmp2 ;
+    char tmpIndexCollegue[128] ;
+    int indexCollegue ;
+
+    FILE *db_employe = fopen("test/FichiersDeTests/employe.csv", "r") ;
+    FILE *db_chercheur_emploi = fopen("test/FichiersDeTests/chercheurd'emploi.csv", "r") ;
+    if(db_employe && db_chercheur_emploi){
+
+        fscanf(db_employe, "%*s") ;
+        // id,nom,prenom,mail,code_postal,entreprise,competences,collegues_employes,collegues_chercheur_d'emploi
+        tmp = ListeEmploye ;
+        while(tmp){
+            fscanf(db_employe, "%*s,%*s,%*s,%*s,%*s,") ;
+            // Recherche des collegues employes
+            while(fscanf(db_employe, "%127[^;,];", tmpIndexCollegue) == 1){
+                indexCollegue = atoi(tmpIndexCollegue) ;
+                tmp2 = ListeEmploye ;
+                while(tmp2 && tmp2->index()!=indexCollegue) tmp2 = tmp2->nextP() ;
+                // while(tmp->AncienCollegueNext)
+            }
+
+            ListeEmploye->nextP() ;
+        }
+
+        fscanf(db_chercheur_emploi, "%*s") ;
+        // id,nom,prenom,mail,code_postal,competences,collegues_employes,collegues_chercheur_d'emploi
+        // while(){
+
+        // }
+        fclose(db_employe) ;
+        fclose(db_chercheur_emploi) ;
+    }else cout << "Erreur d'ouverture de la base de donnée employe ou chercheur d'emploi" << endl ;
+
     return ;
 }
 
@@ -184,5 +217,10 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
 // Créer les listes et fait les liens avec les entreprises et ancien collègues
 void Creer_listes(Entreprise ** ListeEntreprise, Personne ** ListeEmploye, Personne ** ListeChercheurEmploi)
 {
+    *ListeEntreprise = CreerListeEntreprise() ;
+    *ListeEmploye = CreerListeEmploye(*ListeEntreprise) ;
+    *ListeChercheurEmploi = CreerListeChercheurEmploi() ;
+    InitAnciensCollegues(*ListeEmploye, *ListeChercheurEmploi) ;
+
     return ;
 }
