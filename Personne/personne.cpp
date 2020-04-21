@@ -185,28 +185,48 @@ void Personne::deleteProfile(void)
 }
 
 // Renvoie une liste d'entreprise avec les postes correspondant aux compétences de la personne 
-//on prend en paramètre le pointeur sur le début de la liste des postes
-void Personne::RecherchePosteCompetence(Poste *liste_postes)
+//on prend en paramètre le pointeur sur le début de la liste des entreprises
+void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
 {
     Poste *tmp_poste ;
+    Entreprise *tmp_entreprise = listeEntreprises ;
     Competence *tmp_skills_poste ;
     Competence *tmp_skills_personne = _CompetencesPropres ;
     bool afficher ;
-
-    while (tmp_poste) {
-        tmp_skills_poste = tmp_poste->CompetencesRequises() ;
-        while (tmp_skills_personne) {
-            while (tmp_skills_poste) {
-                if(tmp_skills_poste->label()[i] != tmp_skills_personne->label()[i]){
-                    
-                }
-                tmp_skills_poste = tmp_skills_poste->next() ;
-            }
-            tmp_skills_personne = tmp_skills_personne->next() ; 
-        }
-        tmp_poste = tmp_poste->next() ;
-    }
+    int i ;
     
+    while (tmp_entreprise) //parcours de la liste des entreprises 
+    {
+        tmp_poste = tmp_entreprise->profilPoste() ;
+        while (tmp_poste) {
+            tmp_skills_poste = tmp_poste->CompetencesRequises() ;               //on compare les compétences requises avec celles de la personne
+            afficher = true ;
+            while (tmp_skills_personne) {
+                
+                while (tmp_skills_poste) {
+                    i = 0 ;
+                    do
+                    {
+                        if (tmp_skills_poste->label()[i] != tmp_skills_personne->label()[i]) {
+                            afficher = false ;
+                        }
+                        i++ ;
+                    } while (tmp_skills_poste->label()[i] != '\0');
+                    tmp_skills_poste = tmp_skills_poste->next() ;
+                }
+                tmp_skills_personne = tmp_skills_personne->next() ; 
+            }
+            if (afficher) {
+                cout << "-----------------------------------------------" << endl ;
+                cout << "titre : " << tmp_poste->Titre() << " | Entreprise : " << tmp_entreprise->nom() << " | mail :" << tmp_entreprise->mail() << " | code Postal :" << tmp_entreprise->codePostal() ;
+                cout << "-----------------------------------------------" << endl ;
+            }
+            
+            tmp_poste = tmp_poste->next() ;
+        }
+        tmp_entreprise = tmp_entreprise->next() ;
+    }
+
     return ;
 }
 
