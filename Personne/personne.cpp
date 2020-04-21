@@ -184,10 +184,10 @@ void Personne::deleteProfile(void)
     return ;
 }
 
-// Renvoie une liste d'entreprise avec les postes correspondant aux compétences de la personne
+// Renvoie une liste d'entreprise avec les postes correspondant aux compétences de la personne 
+//on prend en paramètre le pointeur sur le début de la liste des postes
 void Personne::RecherchePosteCompetence(void)
 {
-    //récupération des entreprises après recherche dans la liste des postes
     return ;
 }
 
@@ -201,7 +201,7 @@ void Personne::RecherchePosteCompetenceCodePostal(void)
 // Renvoie une liste d'ancien collègue travaillant dans une entreprise donnée
 void Personne::RechercheColleguesEntreprise(char* nomEntreprise)
 {
-    Personne * tmp ;
+     Personne * tmp ;
     char * entreprise_tmp ;
     int i ;
     bool afficher ;
@@ -217,6 +217,7 @@ void Personne::RechercheColleguesEntreprise(char* nomEntreprise)
                 if (entreprise_tmp[i] != nomEntreprise[i]) {
                     afficher = false ;
                 }
+                i++ ;
             } while (entreprise_tmp[i] != '\0');
 
             if (afficher) {
@@ -227,7 +228,7 @@ void Personne::RechercheColleguesEntreprise(char* nomEntreprise)
         }
         tmp = tmp->AncienCollegueNext() ;
     }
-    
+
     //chercher dans la liste des anciens collègues  vérifier si il faut chercher dans previous
     return ;
 }
@@ -311,8 +312,8 @@ void Personne::MAJDBPersonne(void)
 void Personne::ChercheurRechercheColleguesCompetence(Competence * ListeCompetence)
 {
     assert(!(this->_EntrepriseActuelle)) ;
-    //recherche dans les anciens collegue --> entreprise --> poste avec compétences de la personne (comparaison des listes)
-    //si il y a un poste correspondant dans l'entreprise de l'ancien collègue on affiche celui-ci
+
+
     return ;
 }
 
@@ -329,14 +330,12 @@ void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
 // Rechercher parmis les chercheurs par competences, affiche les résutats
 void Personne::ChercheurCompetence (Competence * listeComp)
 {
-    //comparer les personnes dans la liste et comparer leur compétences avec la liste fournie
     return ;
 }
 
 // Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
 void Personne::ChercheurCompetenceCodePostal (char * CodePostalRecherche)
 {
-    //d'abord avoir les chercheurs d'emploi ayant le code postal et ensuite rechercher les compétences
     return ;
 }
 
