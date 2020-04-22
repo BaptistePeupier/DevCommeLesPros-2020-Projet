@@ -16,6 +16,7 @@ int main()
 {
     char testchar[128] = "test" ;
     char testchar2[128] = "test2" ;
+    char testchar3[128] = "C" ;
     char newMail[128] = "eMplois@google.com" ;
     char newCodePostal[128] = "777007707" ;
     char testnom[128] = "onsepatro" ;
@@ -33,6 +34,7 @@ int main()
     //test sur la création d'une personne avec l'ajout d'une compétence 
     Personne test_pers(1,testnom,testprenom,testmail,testcodepostal,NULL,NULL,&test,NULL,NULL,NULL) ;
     test.AddCompetence(testchar2) ;
+    test.AddCompetence(testchar3) ;
     cout << endl ;
     cout << test_pers.nom() << endl;
     if (strcmp(test_pers.nom(),"onsepatro") == 0) {
@@ -64,6 +66,13 @@ int main()
     test.delCompetence(testchar) ;
     cout << endl ;
 
+    Competence * test_comp ;
+
+    for ( test_comp = test_pers.CompetencePropres(); test_comp != NULL; test_comp = test_comp->next()) {
+        cout << test_comp->label() << endl ;
+    }
+    
+    
     // Tests sur la création de la liste d'Entrerpise
     ListeEntreprise = CreerListeEntreprise() ;
     tmp = ListeEntreprise ;
@@ -72,6 +81,7 @@ int main()
         tmp = tmp->next() ;
     }
     cout << endl ;
+    test_pers.RecherchePosteCompetence(ListeEntreprise) ;
 
     // Tests sur la MAJ de la db entreprise
     ListeEntreprise->next()->modifMail(newMail) ;

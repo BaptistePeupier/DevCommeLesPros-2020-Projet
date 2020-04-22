@@ -111,6 +111,8 @@ Entreprise * Personne::EntrepriseActuelle(void)
 void Personne::modifIndex(int Newindex)
 {
     _index = Newindex ;
+    MAJDBPersonne();
+
     return ;
 }
 
@@ -123,6 +125,8 @@ void Personne::modifNom(char* Newnom)
         i++ ;                       // Pour mettre le '\0'
         _nom[i] = Newnom[i] ;
     }while (Newnom[i] != '\0') ;
+    MAJDBPersonne() ;
+
     return ;
 }
 
@@ -135,6 +139,7 @@ void Personne::modifPrenom(char* Newprenom)
         i++ ;                       // Pour mettre le '\0'
         _prenom[i] = Newprenom[i] ;
     }while (Newprenom[i] != '\0') ;
+    MAJDBPersonne();
 
     return ;
 }
@@ -148,6 +153,7 @@ void Personne::modifMail(char* Newmail)
         i++ ;                       // Pour mettre le '\0'
         _mail[i] = Newmail[i] ;
     }while (Newmail[i] != '\0') ;
+    MAJDBPersonne() ;
 
     return ;
 }
@@ -161,6 +167,7 @@ void Personne::modifCodePostal(char* NewCodePostal)
         i++ ;                       // Pour mettre le '\0'
         _codePostal[i] = NewCodePostal[i] ;
     }while (NewCodePostal[i] != '\0') ;
+    MAJDBPersonne() ;
 
     return ;
 }
@@ -168,6 +175,7 @@ void Personne::modifCodePostal(char* NewCodePostal)
 void Personne::modifEntreprise(Entreprise * NewEntreprise)
 {
     _EntrepriseActuelle = NewEntreprise ;
+    MAJDBPersonne() ;
     return ;
 }
 
@@ -193,7 +201,7 @@ void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
     Competence *tmp_skills_poste ;
     Competence *tmp_skills_personne = _CompetencesPropres ;
     bool afficher ;
-    int i ;
+    int i ; 
     
     while (tmp_entreprise) //parcours de la liste des entreprises 
     {
@@ -216,9 +224,10 @@ void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
                 }
                 tmp_skills_personne = tmp_skills_personne->next() ; 
             }
+            tmp_skills_personne = _CompetencesPropres ;
             if (afficher) {
                 cout << "-----------------------------------------------" << endl ;
-                cout << "titre : " << tmp_poste->Titre() << " | Entreprise : " << tmp_entreprise->nom() << " | mail :" << tmp_entreprise->mail() << " | code Postal :" << tmp_entreprise->codePostal() ;
+                cout << "titre : " << tmp_poste->Titre() << " | Entreprise : " << tmp_entreprise->nom() << " | mail :" << tmp_entreprise->mail() << " | code Postal :" << tmp_entreprise->codePostal() << endl ;
                 cout << "-----------------------------------------------" << endl ;
             }
             
