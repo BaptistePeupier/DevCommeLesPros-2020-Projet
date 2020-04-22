@@ -65,13 +65,6 @@ int main()
     
     test.delCompetence(testchar) ;
     cout << endl ;
-
-    Competence * test_comp ;
-
-    for ( test_comp = test_pers.CompetencePropres(); test_comp != NULL; test_comp = test_comp->next()) {
-        cout << test_comp->label() << endl ;
-    }
-    
     
     // Tests sur la création de la liste d'Entrerpise
     ListeEntreprise = CreerListeEntreprise() ;
