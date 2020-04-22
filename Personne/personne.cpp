@@ -200,31 +200,31 @@ void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
     Entreprise *tmp_entreprise = listeEntreprises ;
     Competence *tmp_skills_poste ;
     Competence *tmp_skills_personne = _CompetencesPropres ;
+    string label_skill_personne , label_skill_poste ;
     bool afficher ;
-    int i ; 
     
     while (tmp_entreprise) //parcours de la liste des entreprises 
     {
         tmp_poste = tmp_entreprise->profilPoste() ;
         while (tmp_poste) {
             tmp_skills_poste = tmp_poste->CompetencesRequises() ;               //on compare les compétences requises avec celles de la personne
-            afficher = true ;
-            while (tmp_skills_personne) {
-                
-                while (tmp_skills_poste) {
-                    i = 0 ;
-                    do
-                    {
-                        if (tmp_skills_poste->label()[i] != tmp_skills_personne->label()[i]) {
-                            afficher = false ;
-                        }
-                        i++ ;
-                    } while (tmp_skills_poste->label()[i] != '\0');
-                    tmp_skills_poste = tmp_skills_poste->next() ;
+            
+            while (tmp_skills_poste) {
+                tmp_skills_personne = _CompetencesPropres ;
+                while (tmp_skills_personne)
+                {
+                    afficher = false ;
+                    label_skill_personne = string(tmp_skills_personne->label()) ;
+                    label_skill_poste = string(tmp_skills_poste->label()) ;
+                    if (label_skill_personne == label_skill_poste) {
+                        afficher = true ;
+                    }
+                    tmp_skills_personne = tmp_skills_personne->next() ;
                 }
-                tmp_skills_personne = tmp_skills_personne->next() ; 
+                
+                tmp_skills_poste = tmp_skills_poste->next() ;
             }
-            tmp_skills_personne = _CompetencesPropres ;
+            
             if (afficher) {
                 cout << "-----------------------------------------------" << endl ;
                 cout << "titre : " << tmp_poste->Titre() << " | Entreprise : " << tmp_entreprise->nom() << " | mail :" << tmp_entreprise->mail() << " | code Postal :" << tmp_entreprise->codePostal() << endl ;
