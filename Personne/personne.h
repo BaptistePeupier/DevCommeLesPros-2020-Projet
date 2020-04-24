@@ -56,7 +56,7 @@ class Personne
         void TransitionStatut(void) ;                                       // Change un employé en chercheur d'emploi et inversement
                                                                             // Ajoute les anciens collègues si besoin
         void deleteProfile(void) ;
-        void RecherchePosteCompetence(void) ;                               // Affiche une liste d'entreprise avec les postes correspondant aux compétences de la personne
+        void RecherchePosteCompetence(Entreprise * listeEntreprises) ;                               // Affiche une liste d'entreprise avec les postes correspondant aux compétences de la personne
         void RecherchePosteCompetenceCodePostal(void) ;                     // Affiche une liste d'entreprise avec les postes correspondant aux compétences et au code postal de la personne
         void RechercheColleguesEntreprise(char* nomEntreprise) ;            // Affiche une liste d'ancien collègue travaillant dans une entreprise donnée
         void MAJDBPersonne(void) ;                                          // Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées

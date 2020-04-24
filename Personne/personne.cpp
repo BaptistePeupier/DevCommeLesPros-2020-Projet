@@ -111,6 +111,8 @@ Entreprise * Personne::EntrepriseActuelle(void)
 void Personne::modifIndex(int Newindex)
 {
     _index = Newindex ;
+    MAJDBPersonne();
+
     return ;
 }
 
@@ -123,6 +125,8 @@ void Personne::modifNom(char* Newnom)
         i++ ;                       // Pour mettre le '\0'
         _nom[i] = Newnom[i] ;
     }while (Newnom[i] != '\0') ;
+    MAJDBPersonne() ;
+
     return ;
 }
 
@@ -135,6 +139,7 @@ void Personne::modifPrenom(char* Newprenom)
         i++ ;                       // Pour mettre le '\0'
         _prenom[i] = Newprenom[i] ;
     }while (Newprenom[i] != '\0') ;
+    MAJDBPersonne();
 
     return ;
 }
@@ -148,6 +153,7 @@ void Personne::modifMail(char* Newmail)
         i++ ;                       // Pour mettre le '\0'
         _mail[i] = Newmail[i] ;
     }while (Newmail[i] != '\0') ;
+    MAJDBPersonne() ;
 
     return ;
 }
@@ -161,6 +167,7 @@ void Personne::modifCodePostal(char* NewCodePostal)
         i++ ;                       // Pour mettre le '\0'
         _codePostal[i] = NewCodePostal[i] ;
     }while (NewCodePostal[i] != '\0') ;
+    MAJDBPersonne() ;
 
     return ;
 }
@@ -168,6 +175,7 @@ void Personne::modifCodePostal(char* NewCodePostal)
 void Personne::modifEntreprise(Entreprise * NewEntreprise)
 {
     _EntrepriseActuelle = NewEntreprise ;
+    MAJDBPersonne() ;
     return ;
 }
 
@@ -185,9 +193,55 @@ void Personne::deleteProfile(void)
 }
 
 // Renvoie une liste d'entreprise avec les postes correspondant aux compétences de la personne 
-//on prend en paramètre le pointeur sur le début de la liste des postes
-void Personne::RecherchePosteCompetence(void)
+//on prend en paramètre le pointeur sur le début de la liste des entreprises
+void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
 {
+    Poste *tmp_poste ;
+    Entreprise *tmp_entreprise = listeEntreprises ;
+    Competence *tmp_skills_poste ;
+    Competence *tmp_skills_personne = _CompetencesPropres ;
+    string label_skill_personne , label_skill_poste ;
+    int nbcompetences_poste = 0 ,  competences_dispo_pers ;
+    
+    while (tmp_entreprise) //parcours de la liste des entreprises 
+    {
+        tmp_poste = tmp_entreprise->profilPoste() ;
+        while (tmp_poste) {
+            tmp_skills_poste = tmp_poste->CompetencesRequises() ;               //on compte les compétences du poste
+            while (tmp_skills_poste) {
+                nbcompetences_poste++ ;
+                tmp_skills_poste = tmp_skills_poste->next() ;
+            }
+            
+            tmp_skills_poste = tmp_poste->CompetencesRequises() ; 
+            while (tmp_skills_poste) {
+                tmp_skills_personne = _CompetencesPropres ;         //on compare les compétences du poste avec celles de la personne
+                while (tmp_skills_personne)
+                {
+                    label_skill_personne = string(tmp_skills_personne->label()) ;
+                    label_skill_poste = string(tmp_skills_poste->label()) ;
+                    if (label_skill_personne == label_skill_poste) {
+                        competences_dispo_pers++ ;
+                    }
+                    tmp_skills_personne = tmp_skills_personne->next() ;
+                }
+                
+                tmp_skills_poste = tmp_skills_poste->next() ;
+            }
+            
+            if (competences_dispo_pers == nbcompetences_poste) {
+                cout << "-----------------------------------------------" << endl ;
+                cout << "titre : " << tmp_poste->Titre() << " | Entreprise : " << tmp_entreprise->nom() << " | mail :" << tmp_entreprise->mail() << " | code Postal :" << tmp_entreprise->codePostal() << endl ;
+                cout << "-----------------------------------------------" << endl ;
+            }
+            
+            competences_dispo_pers = 0 ;
+            nbcompetences_poste = 0 ;
+            tmp_poste = tmp_poste->next() ;
+        }
+        tmp_entreprise = tmp_entreprise->next() ;
+    }
+
     return ;
 }
 
