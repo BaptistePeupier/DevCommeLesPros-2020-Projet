@@ -201,7 +201,7 @@ void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
     Competence *tmp_skills_poste ;
     Competence *tmp_skills_personne = _CompetencesPropres ;
     string label_skill_personne , label_skill_poste ;
-    int nbcompetences_poste = 0 ,  competences_dispo_pers ;
+    int nbcompetences_poste = 0 ,  competences_dispo_pers = 0 ;
     
     while (tmp_entreprise) //parcours de la liste des entreprises 
     {
@@ -216,8 +216,7 @@ void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
             tmp_skills_poste = tmp_poste->CompetencesRequises() ; 
             while (tmp_skills_poste) {
                 tmp_skills_personne = _CompetencesPropres ;         //on compare les compétences du poste avec celles de la personne
-                while (tmp_skills_personne)
-                {
+                while (tmp_skills_personne) {
                     label_skill_personne = string(tmp_skills_personne->label()) ;
                     label_skill_poste = string(tmp_skills_poste->label()) ;
                     if (label_skill_personne == label_skill_poste) {
@@ -246,9 +245,58 @@ void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
 }
 
 // Renvoie une liste d'entreprise avec les postes correspondant aux compétences et au code postal de la personne
-void Personne::RecherchePosteCompetenceCodePostal(void)
+void Personne::RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises)
 {
-    //idem avec comparaison avec le code postal 
+    Poste *tmp_poste ;
+    Entreprise *tmp_entreprise = listeEntreprises ;
+    Competence *tmp_skills_poste ;
+    Competence *tmp_skills_personne = _CompetencesPropres ;
+    string label_skill_personne , label_skill_poste , cp_entreprise , cp_personne = string(this->codePostal()) ;
+    int nbcompetences_poste = 0 ,  competences_dispo_pers = 0 ;
+    
+    while (tmp_entreprise) //parcours de la liste des entreprises 
+    {
+        cp_entreprise = string(tmp_entreprise->codePostal()) ;
+        tmp_poste = tmp_entreprise->profilPoste() ;
+
+        if (cp_entreprise == cp_personne) {
+            while (tmp_poste) {
+                tmp_skills_poste = tmp_poste->CompetencesRequises() ;               //on compte les compétences du poste
+                while (tmp_skills_poste) {
+                    nbcompetences_poste++ ;
+                    tmp_skills_poste = tmp_skills_poste->next() ;
+                }
+            
+                tmp_skills_poste = tmp_poste->CompetencesRequises() ; 
+                while (tmp_skills_poste) {
+                    tmp_skills_personne = _CompetencesPropres ;         //on compare les compétences du poste avec celles de la personne
+                    while (tmp_skills_personne) {
+                        label_skill_personne = string(tmp_skills_personne->label()) ;
+                        label_skill_poste = string(tmp_skills_poste->label()) ;
+                        if (label_skill_personne == label_skill_poste) {
+                            competences_dispo_pers++ ;
+                        }
+                        tmp_skills_personne = tmp_skills_personne->next() ;
+                    }
+                    
+                    tmp_skills_poste = tmp_skills_poste->next() ;
+                }
+                
+                if (competences_dispo_pers == nbcompetences_poste) {
+                    cout << "-----------------------------------------------" << endl ;
+                    cout << "titre : " << tmp_poste->Titre() << " | Entreprise : " << tmp_entreprise->nom() << " | mail :" << tmp_entreprise->mail() << " | code Postal :" << tmp_entreprise->codePostal() << endl ;
+                    cout << "-----------------------------------------------" << endl ;
+                }
+                
+                competences_dispo_pers = 0 ;
+                nbcompetences_poste = 0 ;
+                tmp_poste = tmp_poste->next() ;
+            }
+        }
+        
+        tmp_entreprise = tmp_entreprise->next() ;
+    }
+
     return ;
 }
 
