@@ -25,7 +25,7 @@ int main()
     char testcodepostal[128] = "75009" ;
     int i , testrates = 0 ;
     Competence test (testchar, NULL, NULL) ;
-    Entreprise * ListeEntreprise, * tmp , *tmp_next;
+    Entreprise * ListeEntreprise, * tmp ;
 
     // Test sur la création d'une compétence + ajout d'une compétence
     for (i=0 ; test.label()[i]!='\0' ; i++) cout << test.label()[i] ;
@@ -83,13 +83,7 @@ int main()
     ListeEntreprise->modifCodePostal(newCodePostal) ;
     ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;
 
-    tmp = ListeEntreprise ;
-    while (tmp) {
-        tmp_next = tmp->next() ; //suppression de ListeEntreprise élément par élément car delete ListeEntreprise supprime que la tête de la liste
-        delete tmp ;
-        tmp = tmp_next ;
-    }
-
+    delete ListeEntreprise ;
     
     return 0 ;
 }
