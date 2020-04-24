@@ -201,23 +201,27 @@ void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
     Competence *tmp_skills_poste ;
     Competence *tmp_skills_personne = _CompetencesPropres ;
     string label_skill_personne , label_skill_poste ;
-    bool afficher ;
+    int nbcompetences_poste = 0 ,  competences_dispo_pers ;
     
     while (tmp_entreprise) //parcours de la liste des entreprises 
     {
         tmp_poste = tmp_entreprise->profilPoste() ;
         while (tmp_poste) {
-            tmp_skills_poste = tmp_poste->CompetencesRequises() ;               //on compare les compétences requises avec celles de la personne
-            
+            tmp_skills_poste = tmp_poste->CompetencesRequises() ;               //on compte les compétences du poste
             while (tmp_skills_poste) {
-                tmp_skills_personne = _CompetencesPropres ;
+                nbcompetences_poste++ ;
+                tmp_skills_poste = tmp_skills_poste->next() ;
+            }
+            
+            tmp_skills_poste = tmp_poste->CompetencesRequises() ; 
+            while (tmp_skills_poste) {
+                tmp_skills_personne = _CompetencesPropres ;         //on compare les compétences du poste avec celles de la personne
                 while (tmp_skills_personne)
                 {
-                    afficher = false ;
                     label_skill_personne = string(tmp_skills_personne->label()) ;
                     label_skill_poste = string(tmp_skills_poste->label()) ;
                     if (label_skill_personne == label_skill_poste) {
-                        afficher = true ;
+                        competences_dispo_pers++ ;
                     }
                     tmp_skills_personne = tmp_skills_personne->next() ;
                 }
@@ -225,12 +229,14 @@ void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
                 tmp_skills_poste = tmp_skills_poste->next() ;
             }
             
-            if (afficher) {
+            if (competences_dispo_pers == nbcompetences_poste) {
                 cout << "-----------------------------------------------" << endl ;
                 cout << "titre : " << tmp_poste->Titre() << " | Entreprise : " << tmp_entreprise->nom() << " | mail :" << tmp_entreprise->mail() << " | code Postal :" << tmp_entreprise->codePostal() << endl ;
                 cout << "-----------------------------------------------" << endl ;
             }
             
+            competences_dispo_pers = 0 ;
+            nbcompetences_poste = 0 ;
             tmp_poste = tmp_poste->next() ;
         }
         tmp_entreprise = tmp_entreprise->next() ;

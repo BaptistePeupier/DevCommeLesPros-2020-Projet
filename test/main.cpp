@@ -14,9 +14,9 @@
 
 int main()
 {
-    char testchar[128] = "test" ;
-    char testchar2[128] = "test2" ;
-    char testchar3[128] = "C" ;
+    char testchar[128] = "SQL" ;
+    char testchar2[128] = "C" ;
+    char testchar3[128] = "Python" ;
     char newMail[128] = "eMplois@google.com" ;
     char newCodePostal[128] = "777007707" ;
     char testnom[128] = "onsepatro" ;
@@ -63,8 +63,8 @@ int main()
     test_pers.MAJDBPersonne() ;
     
     
-    test.delCompetence(testchar) ;
-    cout << endl ;
+    /*test.delCompetence(testchar) ;
+    cout << endl ;*/
     
     // Tests sur la création de la liste d'Entrerpise
     ListeEntreprise = CreerListeEntreprise() ;
