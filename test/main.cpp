@@ -22,10 +22,10 @@ int main()
     char testnom[128] = "onsepatro" ;
     char testprenom[128] = "mister" ;
     char testmail[128] = "mronsepatro@gmail.com" ;
-    char testcodepostal[128] = "69420" ;
+    char testcodepostal[128] = "75009" ;
     int i , testrates = 0 ;
     Competence test (testchar, NULL, NULL) ;
-    Entreprise * ListeEntreprise, * tmp ;
+    Entreprise * ListeEntreprise, * tmp , *tmp_next;
 
     // Test sur la création d'une compétence + ajout d'une compétence
     for (i=0 ; test.label()[i]!='\0' ; i++) cout << test.label()[i] ;
@@ -50,11 +50,11 @@ int main()
     }
     
     cout << test_pers.codePostal() << endl ;
-    if (strcmp(test_pers.codePostal(),"69420" ) == 0) {
+    if (strcmp(test_pers.codePostal(),"75009" ) == 0) {
         testrates++ ;
     }
     cout << test_pers.CompetencePropres()->label() << endl ;
-    if (strcmp(test_pers.CompetencePropres()->label(),"test" ) == 0) {
+    if (strcmp(test_pers.CompetencePropres()->label(),"SQL" ) == 0) {
         testrates++ ;
     }
 
@@ -75,13 +75,20 @@ int main()
     }
     cout << endl ;
     test_pers.RecherchePosteCompetence(ListeEntreprise) ;
+    cout << endl ;
+    test_pers.RecherchePosteCompetenceCodePostal(ListeEntreprise) ;
 
     // Tests sur la MAJ de la db entreprise
     ListeEntreprise->next()->modifMail(newMail) ;
     ListeEntreprise->modifCodePostal(newCodePostal) ;
     ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;
 
-    delete ListeEntreprise ;
+    tmp = ListeEntreprise ;
+    while (tmp) {
+        tmp_next = tmp->next() ; //suppression de ListeEntreprise élément par élément car delete ListeEntreprise supprime que la tête de la liste
+        delete tmp ;
+        tmp = tmp_next ;
+    }
 
     
     return 0 ;
