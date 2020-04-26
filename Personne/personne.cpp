@@ -372,38 +372,45 @@ AncienCollegue::AncienCollegue(Personne * currentA, AncienCollegue * nextA, Anci
 // Le destructeur
 AncienCollegue::~AncienCollegue(void)
 {
+    cout << "Destructeur AncienCollegue" << endl ;
     return ;
 }
 
 // Accesseurs
 Personne * AncienCollegue::currentA(void)
 {
-    return NULL ;
+    return _currentA ;
 }
 
 AncienCollegue * AncienCollegue::nextA(void)
 {
-    return NULL ;
+    return _nextA ;
 }
 
 AncienCollegue * AncienCollegue::previousA(void)
 {
-    return NULL ;
+    return _previousA ;
 }
 
 // Modifieurs
 void AncienCollegue::modifCurrentA(Personne * NewCurrent)
 {
+    _currentA = NewCurrent ;
+
     return ;
 }
 
 void AncienCollegue::modifNextA(AncienCollegue * NewNextA)
 {
+    _nextA = NewNextA ;
+
     return ;
 }
 
 void AncienCollegue::modifPreviousA(AncienCollegue * NewPreviousA)
 {
+    _previousA = NewPreviousA ;
+
     return ;
 }
 

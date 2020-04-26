@@ -189,7 +189,7 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
         // id,nom,prenom,mail,code_postal,entreprise,competences,collegues_employes,collegues_chercheur_d'emploi
         tmp = ListeEmploye ;
         while(tmp){
-            fscanf(db_employe, "%*s,%*s,%*s,%*s,%*s,") ;   //PBL ICI
+            fscanf(db_employe, "%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],") ;
             // Recherche des collegues employes
             while(fscanf(db_employe, "%127[^;,];", tmpIndexCollegue) == 1){
                 indexCollegue = atoi(tmpIndexCollegue) ;
@@ -206,6 +206,7 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
                     tmp2->modifAncienCollegues(NewAncienCollegue) ;
                 }
             }
+            fscanf(db_employe, "%1[,]", tmpIndexCollegue) ;
             // Recherche des collegues chercheurs d'emploi
             while(fscanf(db_employe, "%127[^;\n];", tmpIndexCollegue) == 1){
                 indexCollegue = atoi(tmpIndexCollegue) ;
@@ -229,7 +230,7 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
         // id,nom,prenom,mail,code_postal,competences,collegues_employes,collegues_chercheur_d'emploi
         tmp = ListeChercheurEmploi ;
         while(tmp){
-            fscanf(db_chercheur_emploi, "%*s,%*s,%*s,%*s,%*s,") ;
+            fscanf(db_chercheur_emploi, "%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],") ;
             // Recherche des collegues employes
             while(fscanf(db_chercheur_emploi, "%127[^;,];", tmpIndexCollegue) == 1){
                 indexCollegue = atoi(tmpIndexCollegue) ;
@@ -246,6 +247,7 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
                     tmp2->modifAncienCollegues(NewAncienCollegue) ;
                 }
             }
+            fscanf(db_chercheur_emploi, "%1[,]", tmpIndexCollegue) ;
             // Recherche des collegues chercheurs d'emploi
             while(fscanf(db_chercheur_emploi, "%127[^;\n];", tmpIndexCollegue) == 1){
                 indexCollegue = atoi(tmpIndexCollegue) ;
