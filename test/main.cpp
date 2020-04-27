@@ -14,14 +14,15 @@
 
 int main()
 {
-    char testchar[128] = "test" ;
-    char testchar2[128] = "test2" ;
+    char testchar[128] = "SQL" ;
+    char testchar2[128] = "C" ;
+    char testchar3[128] = "Python" ;
     char newMail[128] = "eMplois@google.com" ;
     char newCodePostal[128] = "777007707" ;
     char testnom[128] = "onsepatro" ;
     char testprenom[128] = "mister" ;
     char testmail[128] = "mronsepatro@gmail.com" ;
-    char testcodepostal[128] = "69420" ;
+    char testcodepostal[128] = "75009" ;
     int i , testrates = 0 ;
     Competence test (testchar, NULL, NULL) ;
 
@@ -38,6 +39,7 @@ int main()
     //test sur la création d'une personne avec l'ajout d'une compétence 
     Personne test_pers(1,testnom,testprenom,testmail,testcodepostal,NULL,NULL,&test,NULL,NULL) ;
     test.AddCompetence(testchar2) ;
+    test.AddCompetence(testchar3) ;
     cout << endl ;
     cout << test_pers.nom() << endl;
     if (strcmp(test_pers.nom(),"onsepatro") == 0) {
@@ -53,11 +55,11 @@ int main()
     }
     
     cout << test_pers.codePostal() << endl ;
-    if (strcmp(test_pers.codePostal(),"69420" ) == 0) {
+    if (strcmp(test_pers.codePostal(),"75009" ) == 0) {
         testrates++ ;
     }
     cout << test_pers.CompetencePropres()->label() << endl ;
-    if (strcmp(test_pers.CompetencePropres()->label(),"test" ) == 0) {
+    if (strcmp(test_pers.CompetencePropres()->label(),"SQL" ) == 0) {
         testrates++ ;
     }
 
@@ -66,9 +68,9 @@ int main()
     test_pers.MAJDBPersonne() ;
     
     
-    test.delCompetence(testchar) ;
-    cout << endl ;
-
+    /*test.delCompetence(testchar) ;
+    cout << endl ;*/
+    
     // Tests sur la création de la liste d'Entrerpise
     // ListeEntreprise = CreerListeEntreprise() ;
     tmp = ListeEntreprise ;
@@ -77,6 +79,9 @@ int main()
         tmp = tmp->next() ;
     }
     cout << endl ;
+    test_pers.RecherchePosteCompetence(ListeEntreprise) ;
+    cout << endl ;
+    test_pers.RecherchePosteCompetenceCodePostal(ListeEntreprise) ;
 
     // Tests sur la MAJ de la db entreprise
     ListeEntreprise->next()->modifMail(newMail) ;
@@ -84,7 +89,6 @@ int main()
     ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;
 
     delete ListeEntreprise ;
-
     
     return 0 ;
 }
