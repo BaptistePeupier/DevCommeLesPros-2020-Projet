@@ -25,14 +25,19 @@ int main()
     char testcodepostal[128] = "75009" ;
     int i , testrates = 0 ;
     Competence test (testchar, NULL, NULL) ;
+
     Entreprise * ListeEntreprise, * tmp ;
+    Personne * ListeEmploye, * ListeChercheurEmploi;
+
+    Creer_listes(&ListeEntreprise, &ListeEmploye, &ListeChercheurEmploi) ;
+
 
     // Test sur la création d'une compétence + ajout d'une compétence
     for (i=0 ; test.label()[i]!='\0' ; i++) cout << test.label()[i] ;
     cout << endl ;
 
     //test sur la création d'une personne avec l'ajout d'une compétence 
-    Personne test_pers(1,testnom,testprenom,testmail,testcodepostal,NULL,NULL,&test,NULL,NULL,NULL) ;
+    Personne test_pers(1,testnom,testprenom,testmail,testcodepostal,NULL,NULL,&test,NULL,NULL) ;
     test.AddCompetence(testchar2) ;
     test.AddCompetence(testchar3) ;
     cout << endl ;
@@ -67,7 +72,7 @@ int main()
     cout << endl ;*/
     
     // Tests sur la création de la liste d'Entrerpise
-    ListeEntreprise = CreerListeEntreprise() ;
+    // ListeEntreprise = CreerListeEntreprise() ;
     tmp = ListeEntreprise ;
     while (tmp != NULL){
         cout << tmp->index() << " " ;
