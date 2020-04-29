@@ -460,6 +460,7 @@ void Personne::ChercheurRechercheColleguesCompetence(Competence * ListeCompetenc
     tmp_comp = ListeCompetence ;
     tmp_collegue = _ListAncienCollegues ;               //initialisation des pointeurs
     while (tmp_comp) {
+        cout << ">>>>collegues travaillant dans les entreprise qui recherchent la competence " << tmp_comp->label() << endl;
         label_skill_liste = string(tmp_comp->label()) ;                 //recherche dans la liste des compétence fournie
         while (tmp_collegue) {
             displayed = false ;
@@ -495,29 +496,47 @@ void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
 {
     assert(this->_EntrepriseActuelle) ;
     AncienCollegue * tmp_collegue = _ListAncienCollegues;
-    Competence * tmp_comp_collegue , *tmp_comp = ListeCompetence;           //initialisation des pointeurs
-    string label_skill_collegue, label_skill_liste ;
+    Competence * tmp_comp_collegue , *tmp_comp;           //initialisation des pointeurs
+    string label_skill_collegue, label_skill_liste , entreprise_pers , entreprise_collegue;
+    int nb_skill_collegue ,  nb_skill_match;
 
-    while (tmp_comp) {
-        label_skill_liste = string(tmp_comp->label()) ;
-        cout << ">>>>> Anciens collegues disposant de la competence " << label_skill_liste << endl ;              //on affiche la liste par compétence
-        while (tmp_collegue) {
-            if (tmp_collegue->currentA()) {                                                 //attention à la donnée membre currentA qui peut être NULL
+    entreprise_pers = string(_EntrepriseActuelle->nom()) ;
+    while (tmp_collegue) {
+        nb_skill_match = 0 ;
+        nb_skill_collegue = 0 ;
+        tmp_comp = ListeCompetence ;
+
+        if (tmp_collegue->currentA()) {                                                 //attention à la donnée membre currentA qui peut être NULL
+            entreprise_collegue = string(tmp_collegue->currentA()->EntrepriseActuelle()->nom()) ;
+            if (entreprise_pers != entreprise_collegue) {
                 tmp_comp_collegue = tmp_collegue->currentA()->CompetencePropres() ;
                 while (tmp_comp_collegue) {
+                    nb_skill_collegue++ ;
+                    tmp_comp_collegue = tmp_comp_collegue->next() ; 
+                }
+                tmp_comp_collegue = tmp_collegue->currentA()->CompetencePropres() ;
+
+                while (tmp_comp_collegue) {
+                    tmp_comp = ListeCompetence ;                //réinitialisation du parcours de la liste des compétences
                     label_skill_collegue = string(tmp_comp_collegue->label()) ;
-                    if (label_skill_collegue == label_skill_liste) {
-                        cout << "-------------------------------------------------------------------------------------------" << endl ;
-                        cout << " Nom : " << tmp_collegue->currentA()->nom() << "| Prenom : " << tmp_collegue->currentA()->prenom() << "| Mail : " << tmp_collegue->currentA()->mail() << endl;
-                        cout << "--------------------------------------------------------------------------------------------" << endl ;
+                    while (tmp_comp) {
+                        label_skill_liste = string(tmp_comp->label()) ;
+                        if (label_skill_collegue == label_skill_liste) {
+                            nb_skill_match++ ;
+                        }
+                        tmp_comp = tmp_comp->next() ;
                     }
                     tmp_comp_collegue = tmp_comp_collegue->next() ; 
                 }
+
+                if (nb_skill_collegue == nb_skill_match) {
+                    cout << "-------------------------------------------------------------------------------------------" << endl ;
+                    cout << " Nom : " << tmp_collegue->currentA()->nom() << "| Prenom : " << tmp_collegue->currentA()->prenom() << "| Mail : " << tmp_collegue->currentA()->mail() << endl;
+                    cout << "--------------------------------------------------------------------------------------------" << endl ;
+                }
             }
-            tmp_collegue = tmp_collegue->nextA() ;
         }
-        tmp_collegue = _ListAncienCollegues;
-        tmp_comp = tmp_comp->next() ;
+        tmp_collegue = tmp_collegue->nextA() ;
     }
 
     return ;

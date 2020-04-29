@@ -16,6 +16,7 @@ int main()
 {
     char testchar[128] = "SQL" ;
     char testchar2[128] = "C" ;
+    char testchar2_5[128] = "C++" ;
     char testchar3[128] = "Python" ;
     char newMail[128] = "eMplois@google.com" ;
     char newCodePostal[128] = "777007707" ;
@@ -89,8 +90,7 @@ int main()
     //test sur la dernière de la liste des employés
     cout << "test de la recherche d'anciens collegues disposant des competences dans une liste " << endl ;
     cout << endl ;
-    Competence test_liste(testchar , NULL,NULL) ;
-    test_liste.AddCompetence(testchar2) ;
+    Competence test_liste(testchar2_5 , NULL,NULL) ;
     test_liste.AddCompetence(testchar3) ;
     test_employes = ListeEmploye ;
     while (test_employes->nextP()) {
