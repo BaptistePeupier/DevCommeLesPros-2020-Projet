@@ -502,7 +502,7 @@ void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
         label_skill_liste = string(tmp_comp->label()) ;
         cout << ">>>>> Anciens collegues disposant de la competence " << label_skill_liste << endl ;              //on affiche la liste par compétence
         while (tmp_collegue) {
-            if (tmp_collegue->currentA()) {
+            if (tmp_collegue->currentA()) {                                                 //attention à la donnée membre currentA qui peut être NULL
                 tmp_comp_collegue = tmp_collegue->currentA()->CompetencePropres() ;
                 while (tmp_comp_collegue) {
                     label_skill_collegue = string(tmp_comp_collegue->label()) ;
