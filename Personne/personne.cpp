@@ -327,15 +327,15 @@ void Personne::RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises)
 // Renvoie une liste d'ancien collègue travaillant dans une entreprise donnée
 void Personne::RechercheColleguesEntreprise(char* nomEntreprise)
 {
-     Personne * tmp ;
+    AncienCollegue * tmp ;
     char * entreprise_tmp ;
     int i ;
     bool afficher ;
 
-    tmp = this ;
+    tmp = this->ListAncienCollegues() ;
     while (tmp) {
-        if (tmp->EntrepriseActuelle()) {
-            entreprise_tmp = tmp->EntrepriseActuelle()->nom() ;
+        if (tmp->currentA()->EntrepriseActuelle()) {
+            entreprise_tmp = tmp->currentA()->EntrepriseActuelle()->nom() ;
             i = 0 ;
             afficher = true ;
             do
@@ -348,11 +348,11 @@ void Personne::RechercheColleguesEntreprise(char* nomEntreprise)
 
             if (afficher) {
                 cout << "-------------------------------------------------------------------------------------------" << endl ;
-                cout << " Nom :" << tmp->nom() << "| Prenom :" << tmp->prenom() << "| Mail : " << tmp->mail() << endl;
+                cout << " Nom : " << tmp->currentA()->nom() << "| Prenom : " << tmp->currentA()->prenom() << "| Mail : " << tmp->currentA()->mail() << endl;
                 cout << "--------------------------------------------------------------------------------------------" << endl ;
             }
         }
-        //tmp = tmp->AncienCollegueNext() ;
+        tmp = tmp->nextA() ;
     }
 
     //chercher dans la liste des anciens collègues  vérifier si il faut chercher dans previous
@@ -451,8 +451,41 @@ void Personne::MAJDBPersonne(void)
 void Personne::ChercheurRechercheColleguesCompetence(Competence * ListeCompetence)
 {
     assert(!(this->_EntrepriseActuelle)) ;
+    Competence * tmp_comp , *tmp_comp_entreprise;
+    AncienCollegue * tmp_collegue ;
+    Poste * tmp_poste ;
+    string label_skill_entreprise, label_skill_liste ;
+    bool displayed ;
 
-
+    tmp_comp = ListeCompetence ;
+    tmp_collegue = _ListAncienCollegues ;               //initialisation des pointeurs
+    while (tmp_comp) {
+        label_skill_liste = string(tmp_comp->label()) ;                 //recherche dans la liste des compétence fournie
+        while (tmp_collegue) {
+            displayed = false ;
+            if (tmp_collegue->currentA()->EntrepriseActuelle()) {               //recherche dans la liste des anciens collègues seulement sur ceux qui sont employés
+                tmp_poste = tmp_collegue->currentA()->EntrepriseActuelle()->profilPoste() ;
+                while (tmp_poste) {
+                    tmp_comp_entreprise = tmp_poste->CompetencesRequises() ;            //parcours des compétences requises pour un poste
+                    while (tmp_comp_entreprise) {
+                        label_skill_entreprise = string(tmp_comp_entreprise->label()) ;
+                        if (label_skill_entreprise == label_skill_liste && !displayed) {
+                            cout << "-------------------------------------------------------------------------------------------" << endl ;
+                            cout << " Nom : " << tmp_collegue->currentA()->nom() << "| Prenom : " << tmp_collegue->currentA()->prenom() << "| Mail : " << tmp_collegue->currentA()->mail() << endl;
+                            cout << "--------------------------------------------------------------------------------------------" << endl ;
+                            displayed = true ; //on évite d'afficher plusieurs fois le même collègue si il y a plusieurs postes recherchant la compétence
+                        }
+                        tmp_comp_entreprise = tmp_comp_entreprise->next() ;
+                    }
+                    tmp_poste = tmp_poste->next() ;
+                }   
+            }
+            tmp_collegue = tmp_collegue->nextA() ;
+        }
+        tmp_collegue = _ListAncienCollegues ; //quand on a recherché pour une compétence on réinitialise le pointeur vers les anciens collègues
+        tmp_comp = tmp_comp->next() ;
+    }
+    
     return ;
 }
 
@@ -461,18 +494,42 @@ void Personne::ChercheurRechercheColleguesCompetence(Competence * ListeCompetenc
 void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
 {
     assert(this->_EntrepriseActuelle) ;
+    AncienCollegue * tmp_collegue = _ListAncienCollegues;
+    Competence * tmp_comp_collegue , *tmp_comp = ListeCompetence;           //initialisation des pointeurs
+    string label_skill_collegue, label_skill_liste ;
 
+    while (tmp_comp) {
+        label_skill_liste = string(tmp_comp->label()) ;
+        cout << ">>>>> Anciens collegues disposant de la competence " << label_skill_liste << endl ;              //on affiche la liste par compétence
+        while (tmp_collegue) {
+            if (tmp_collegue->currentA()) {
+                tmp_comp_collegue = tmp_collegue->currentA()->CompetencePropres() ;
+                while (tmp_comp_collegue) {
+                    label_skill_collegue = string(tmp_comp_collegue->label()) ;
+                    if (label_skill_collegue == label_skill_liste) {
+                        cout << "-------------------------------------------------------------------------------------------" << endl ;
+                        cout << " Nom : " << tmp_collegue->currentA()->nom() << "| Prenom : " << tmp_collegue->currentA()->prenom() << "| Mail : " << tmp_collegue->currentA()->mail() << endl;
+                        cout << "--------------------------------------------------------------------------------------------" << endl ;
+                    }
+                    tmp_comp_collegue = tmp_comp_collegue->next() ; 
+                }
+            }
+            tmp_collegue = tmp_collegue->nextA() ;
+        }
+        tmp_collegue = _ListAncienCollegues;
+        tmp_comp = tmp_comp->next() ;
+    }
 
     return ;
 }
                                                                             
-// Rechercher parmis les chercheurs par competences, affiche les résutats
+// Rechercher parmis les chercheurs par competences, affiche les résultats
 void Personne::ChercheurCompetence (Competence * listeComp)
 {
     return ;
 }
 
-// Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
+// Rechercher parmis les chercheurs par competences et code postal, affiche les résultats
 void Personne::ChercheurCompetenceCodePostal (char * CodePostalRecherche)
 {
     return ;
