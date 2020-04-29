@@ -101,6 +101,7 @@ class Entreprise
         void addPoste(Poste * ToAdd) ;                                                      // Ajoute un poste à la liste des postes à fournir
         void deleteProfile(void) ;                                                          // Supprime le profile (l'entreprise) ainsi que les postes qui lui sont lié
         void MAJDBEntreprise(void) ;                                                        // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées ou ajoutées
+                                                                                            // Met également à jour la base de données des postes
 } ;
 
 #endif

@@ -72,13 +72,14 @@ int main()
     cout << endl ;*/
     
     // Tests sur la création de la liste d'Entrerpise
-    // ListeEntreprise = CreerListeEntreprise() ;
     tmp = ListeEntreprise ;
     while (tmp != NULL){
         cout << tmp->index() << " " ;
         tmp = tmp->next() ;
     }
     cout << endl ;
+
+    
     test_pers.RecherchePosteCompetence(ListeEntreprise) ;
     cout << endl ;
     test_pers.RecherchePosteCompetenceCodePostal(ListeEntreprise) ;
