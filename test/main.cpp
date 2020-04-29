@@ -16,6 +16,7 @@ int main()
 {
     char testchar[128] = "SQL" ;
     char testchar2[128] = "C" ;
+    char testchar2_5[128] = "C++" ;
     char testchar3[128] = "Python" ;
     char newMail[128] = "eMplois@google.com" ;
     char newCodePostal[128] = "777007707" ;
@@ -23,11 +24,12 @@ int main()
     char testprenom[128] = "mister" ;
     char testmail[128] = "mronsepatro@gmail.com" ;
     char testcodepostal[128] = "75009" ;
-    int i , testrates = 0 ;
+    char test_recherche_entreprise[128] = "Google" ;
+    int i , testreussis = 0 ;
     Competence test (testchar, NULL, NULL) ;
 
     Entreprise * ListeEntreprise, * tmp ;
-    Personne * ListeEmploye, * ListeChercheurEmploi;
+    Personne * ListeEmploye, * ListeChercheurEmploi , *test_chercheur , *test_employes;
 
     Creer_listes(&ListeEntreprise, &ListeEmploye, &ListeChercheurEmploi) ;
 
@@ -35,6 +37,7 @@ int main()
     // Test sur la création d'une compétence + ajout d'une compétence
     for (i=0 ; test.label()[i]!='\0' ; i++) cout << test.label()[i] ;
     cout << endl ;
+    
 
     //test sur la création d'une personne avec l'ajout d'une compétence 
     Personne test_pers(1,testnom,testprenom,testmail,testcodepostal,NULL,NULL,&test,NULL,NULL) ;
@@ -43,33 +46,57 @@ int main()
     cout << endl ;
     cout << test_pers.nom() << endl;
     if (strcmp(test_pers.nom(),"onsepatro") == 0) {
-        testrates++ ;
+        testreussis++ ;
     }
     cout << test_pers.prenom() << endl ;
     if (strcmp(test_pers.prenom(),"mister") == 0) {
-        testrates++ ;
+        testreussis++ ;
     }
     cout << test_pers.mail() << endl ;
     if (strcmp(test_pers.mail(),"mronsepatro@gmail.com") == 0) {
-        testrates++ ;
+        testreussis++ ;
     }
     
     cout << test_pers.codePostal() << endl ;
     if (strcmp(test_pers.codePostal(),"75009" ) == 0) {
-        testrates++ ;
+        testreussis++ ;
     }
     cout << test_pers.CompetencePropres()->label() << endl ;
     if (strcmp(test_pers.CompetencePropres()->label(),"SQL" ) == 0) {
-        testrates++ ;
+        testreussis++ ;
     }
 
-    cout << "tests reussis sur la classe personne " << testrates << "/5" << endl ;
-
-    test_pers.MAJDBPersonne() ;
+    cout << "tests reussis sur la classe personne " << testreussis << "/5" << endl ;
     
     
     /*test.delCompetence(testchar) ;
     cout << endl ;*/
+    
+    //tests sur la recherche d'anciens colllègues
+    //sur la dernière personne de la liste des chercheurs d'emploi
+    cout << "test de la recherche d'anciens collegues chez google " << endl ;
+    test_chercheur = ListeChercheurEmploi ;
+    while (test_chercheur->nextP()) {
+        test_chercheur = test_chercheur->nextP() ;
+    }
+    test_chercheur->CompetencePropres()->AddCompetence(testchar) ;    //ajout d'une compétence 
+    test_chercheur->RechercheColleguesEntreprise(test_recherche_entreprise) ;
+
+    //la liste des compétences est celle de la personne pour tester
+    cout << "test de la recherche d'anciens collegues dans les entreprise recherchant les competences dans une liste " << endl ;
+    test_chercheur->ChercheurRechercheColleguesCompetence(test_chercheur->CompetencePropres()) ;
+    
+
+    //test sur la dernière de la liste des employés
+    cout << "test de la recherche d'anciens collegues disposant des competences dans une liste " << endl ;
+    cout << endl ;
+    Competence test_liste(testchar2_5 , NULL,NULL) ;
+    test_liste.AddCompetence(testchar3) ;
+    test_employes = ListeEmploye ;
+    while (test_employes->nextP()) {
+        test_employes = test_employes->nextP() ;
+    }
+    test_employes->EmployeRechercheColleguesCompetence(&test_liste) ;
     
     // Tests sur la création de la liste d'Entrerpise
     tmp = ListeEntreprise ;
