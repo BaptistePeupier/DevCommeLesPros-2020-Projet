@@ -13,11 +13,10 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Un constructeur
-Personne::Personne(int index, char* nom, char* prenom, char* mail, char* codePostal, Personne * nextP, Personne * previousP, Competence * CompetencesPropres, AncienCollegue * ListAncienCollegues, Entreprise * EntrepriseActuelle)
+Personne::Personne(int index, const char* nom, const char* prenom, const char* mail, const char* codePostal, Personne * nextP, Personne * previousP, Competence * CompetencesPropres, AncienCollegue * ListAncienCollegues, Entreprise * EntrepriseActuelle)
 {
     int i ;
     _index = index ;
-    
 
     i = -1 ;
     do{                             // Si nom vide
@@ -119,7 +118,7 @@ void Personne::modifIndex(int Newindex)
     return ;
 }
 
-void Personne::modifNom(char* Newnom)
+void Personne::modifNom(const char* Newnom)
 {
     int i ;
 
@@ -133,7 +132,7 @@ void Personne::modifNom(char* Newnom)
     return ;
 }
 
-void Personne::modifPrenom(char* Newprenom)
+void Personne::modifPrenom(const char* Newprenom)
 {
     int i ;
 
@@ -147,7 +146,7 @@ void Personne::modifPrenom(char* Newprenom)
     return ;
 }
 
-void Personne::modifMail(char* Newmail)
+void Personne::modifMail(const char* Newmail)
 {
     int i ;
     
@@ -161,7 +160,7 @@ void Personne::modifMail(char* Newmail)
     return ;
 }
 
-void Personne::modifCodePostal(char* NewCodePostal)
+void Personne::modifCodePostal(const char* NewCodePostal)
 {
     int i ;
     
@@ -325,7 +324,7 @@ void Personne::RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises)
 }
 
 // Renvoie une liste d'ancien collègue travaillant dans une entreprise donnée
-void Personne::RechercheColleguesEntreprise(char* nomEntreprise)
+void Personne::RechercheColleguesEntreprise(const char* nomEntreprise)
 {
     AncienCollegue * tmp ;
     char * entreprise_tmp ;
@@ -549,7 +548,7 @@ void Personne::ChercheurCompetence (Competence * listeComp)
 }
 
 // Rechercher parmis les chercheurs par competences et code postal, affiche les résultats
-void Personne::ChercheurCompetenceCodePostal (char * CodePostalRecherche)
+void Personne::ChercheurCompetenceCodePostal (const char * CodePostalRecherche)
 {
     return ;
 }

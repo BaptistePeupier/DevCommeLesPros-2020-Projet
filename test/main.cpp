@@ -11,11 +11,12 @@
 
 #include "general.h"
 #include <string.h>
-#include <signal.h>
 // #include <stddef.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
+#include <stdlib.h>
+
+#include <fstream>
+#include <iostream>
+#include <string>
 
 // Nombre total de tests exécutés. 
 int nbtests = 0 ;
@@ -34,7 +35,7 @@ int testreussis = 0 ;
         testreussis++ ;                             \
         cout << "[SUCCES] " ;                       \
         printf(STRINGIZE(__FILE__) ", " STRINGIZE(__LINE__) ": " STRINGIZE(a) " == " STRINGIZE(b) "\n") ; \
-    }else cout << "[ECHEC] " ;                      \
+    }else cout << "[ECHEC]\n" ;                      \
 }                                                   \
 
 #define TEST(x) nbtests++ ;                         \
@@ -43,22 +44,55 @@ int testreussis = 0 ;
         testreussis++ ;                             \
         cout << "[SUCCES] " ;                       \
         printf(STRINGIZE(__FILE__) ", " STRINGIZE(__LINE__) ": " STRINGIZE(x) "\n") ; \
-    }else cout << "[ECHEC] " ;                      \
+    }else cout << "[ECHEC]\n" ;                      \
 }                                                   \
 
-// Fonction à executer lors d'une segmentation fault.
-// On imprime les résultats obtenus jusqu'à lors et on arrête immédiatement le programme.
-void segfault_sigaction(int signal, siginfo_t *si, void *arg)
-{
-    printf("[SEGFAULT]\n");
-    printf("%d/%d\n", testreussis, nbtests);
-    exit(testreussis - nbtests);
-}
+// Compare le contenu de deux fichiers aux chemins a et b avec la commande diff. Incrémente test_reussis si les fichiers sont pareils.
+// Réinitialise ensuite la DB en question
+#define TEST_MAJ_DB(New_db, Expected_db) nbtests++ ;\
+{                                                   \
+    int const r = system("diff --text --strip-trailing-cr " New_db " " Expected_db " > /dev/null");    \
+    if(!WEXITSTATUS(r)){                            \
+        testreussis++ ;                             \
+        cout << "[SUCCES] " ;                       \
+        printf(STRINGIZE(__FILE__) ", " STRINGIZE(__LINE__) ": Succes MAJ " STRINGIZE(New_db) " Reinitialisation\n") ; \
+        if(strcmp(New_db,"test/FichiersDeTests/chercheurd'emploi.csv") == 0){\
+            ofstream N(New_db) ;                    \
+            ifstream S("test/db_backup/chercheurd'emploi.csv") ;\
+            string line ;                           \
+            getline(S, line) ;                      \
+            N << line ;                             \
+            while(getline(S, line)) N << endl << line ;\
+        }                                           \
+        else if(strcmp(New_db,"test/FichiersDeTests/employes.csv") == 0){\
+            ofstream N(New_db) ;                    \
+            ifstream S("test/db_backup/employes.csv") ;\
+            string line ;                           \
+            getline(S, line) ;                      \
+            N << line ;                             \
+            while(getline(S, line)) N << endl << line ;\
+        }                                           \
+        else if(strcmp(New_db,"test/FichiersDeTests/entreprise.csv") == 0){\
+            ofstream N(New_db) ;                    \
+            ifstream S("test/db_backup/entreprise.csv") ;\
+            string line ;                           \
+            getline(S, line) ;                      \
+            N << line ;                             \
+            while(getline(S, line)) N << endl << line ;\
+        }                                           \
+        else if(strcmp(New_db,"test/FichiersDeTests/poste.csv") == 0){\
+            ofstream N(New_db) ;                    \
+            ifstream S("test/db_backup/poste.csv") ;\
+            string line ;                           \
+            getline(S, line) ;                      \
+            N << line ;                             \
+            while(getline(S, line)) N << endl << line ;\
+        }                                           \
+    }else cout << "[ECHEC]\n" ;                     \
+}                                                   \
 
 int main()
 {
-    char test_recherche_entreprise[128] = "" ;
-    int i ;
     Competence test ("SQL", NULL, NULL) ;
 
     Entreprise * ListeEntreprise ;
@@ -80,17 +114,15 @@ int main()
     TEST_STR(test_pers.codePostal(),"75009") ;
     TEST_STR(test_pers.CompetencePropres()->label(),"SQL") ;
     
-    /*test.delCompetence(testchar) ;
-    cout << endl ;*/
+    // test.delCompetence(testchar) ;
+    // cout << endl ;
     
     // Tests sur la recherche d'anciens colllègues
     // Sur la dernière personne de la liste des chercheurs d'emploi
     cout << "test de la recherche d'anciens collegues chez google " << endl ;
     test_chercheur = ListeChercheurEmploi ;
-    while (test_chercheur->nextP()) {
-        test_chercheur = test_chercheur->nextP() ;
-    }
-    test_chercheur->CompetencePropres()->AddCompetence(testchar) ;    //ajout d'une compétence 
+    while (test_chercheur->nextP()) test_chercheur = test_chercheur->nextP() ;
+    test_chercheur->CompetencePropres()->AddCompetence("SQL") ;                 //ajout d'une compétence 
     test_chercheur->RechercheColleguesEntreprise("Google") ;
 
     // La liste des compétences est celle de la personne pour tester
@@ -103,9 +135,7 @@ int main()
     Competence test_liste("C++" , NULL,NULL) ;
     test_liste.AddCompetence("Python") ;
     test_employes = ListeEmploye ;
-    while (test_employes->nextP()) {
-        test_employes = test_employes->nextP() ;
-    }
+    while (test_employes->nextP()) test_employes = test_employes->nextP() ;
     test_employes->EmployeRechercheColleguesCompetence(&test_liste) ;
 
     test_pers.RecherchePosteCompetence(ListeEntreprise) ;
@@ -116,6 +146,7 @@ int main()
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;
     ListeEntreprise->modifCodePostal("777007707") ;
     ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;
+    TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_tests_expected/entreprise.csv") ;                   
 
     delete ListeEntreprise ;
     

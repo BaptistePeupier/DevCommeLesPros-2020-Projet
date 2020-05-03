@@ -33,7 +33,7 @@ class Personne
         AncienCollegue * _ListAncienCollegues ;                                       // Pointeur vers la liste d'ancien collègue
     public:
     // Un constructeur
-        Personne(int index, char* nom, char* prenom, char* mail, char* codePostal, Personne * nextP, Personne * previousP, Competence * CompetencesPropres, AncienCollegue * ListAncienCollegues, Entreprise * EntrepriseActuelle) ;
+        Personne(int index, const char* nom, const char* prenom, const char* mail, const char* codePostal, Personne * nextP, Personne * previousP, Competence * CompetencesPropres, AncienCollegue * ListAncienCollegues, Entreprise * EntrepriseActuelle) ;
     // Le destructeur
         ~Personne(void) ;
     // Accesseurs
@@ -49,10 +49,10 @@ class Personne
         Entreprise * EntrepriseActuelle(void) ;
     // Modifieurs
         void modifIndex(int Newindex) ;
-        void modifNom(char* Newnom) ;
-        void modifPrenom(char* Newprenom) ;
-        void modifMail(char* Newmail) ;
-        void modifCodePostal(char* NewCodePostal) ;
+        void modifNom(const char* Newnom) ;
+        void modifPrenom(const char* Newprenom) ;
+        void modifMail(const char* Newmail) ;
+        void modifCodePostal(const char* NewCodePostal) ;
         void modifPreviousP(Personne * NewPreviousP) ;
         void modifNextP(Personne * NewNextP) ;
         void modifEntreprise(Entreprise * NewEntreprise) ;
@@ -64,7 +64,7 @@ class Personne
         void deleteProfile(void) ;
         void RecherchePosteCompetence(Entreprise * listeEntreprises) ;                               // Affiche une liste d'entreprise avec les postes correspondant aux compétences de la personne
         void RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises) ;                     // Affiche une liste d'entreprise avec les postes correspondant aux compétences et au code postal de la personne
-        void RechercheColleguesEntreprise(char* nomEntreprise) ;            // Affiche une liste d'ancien collègue travaillant dans une entreprise donnée
+        void RechercheColleguesEntreprise(const char* nomEntreprise) ;            // Affiche une liste d'ancien collègue travaillant dans une entreprise donnée
         void MAJDBPersonne(void) ;                                          // Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées
                                                                             // Si le pointeur vers une entrepise est null c'est un Chercheur d'emploi
                                                                             // Si le pointeur vers une entrepise est non null c'est un Employe
@@ -73,7 +73,7 @@ class Personne
         void EmployeRechercheColleguesCompetence(Competence * ListeCompetence) ;    // Affiche les données des anciens collègues disposant des compétences passé en liste
                                                                                     // Seulement pour les employés
         void ChercheurCompetence (Competence * listeComp) ;                 // Rechercher parmis les chercheurs par competences, affiche les résutats
-        void ChercheurCompetenceCodePostal (char * CodePostalRecherche) ;   // Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
+        void ChercheurCompetenceCodePostal (const char * CodePostalRecherche) ;   // Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
 } ;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
