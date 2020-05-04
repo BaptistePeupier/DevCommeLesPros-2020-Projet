@@ -111,6 +111,8 @@ int main()
     cout << endl ;
     test_pers.RecherchePosteCompetenceCodePostal(ListeEntreprise) ;
 
+    test_employes->ListAncienCollegues()->addAncienCollegue(test_chercheur) ;
+
     // Tests sur la MAJ de la db entreprise
     ListeEntreprise->next()->modifMail(newMail) ;
     ListeEntreprise->modifCodePostal(newCodePostal) ;
