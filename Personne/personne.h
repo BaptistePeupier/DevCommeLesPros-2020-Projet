@@ -73,7 +73,7 @@ class Personne
         void EmployeRechercheColleguesCompetence(Competence * ListeCompetence) ;    // Affiche les données des anciens collègues disposant des compétences passé en liste
                                                                                     // Seulement pour les employés
         void ChercheurCompetence (Competence * listeComp) ;                 // Rechercher parmis les chercheurs par competences, affiche les résutats
-        void ChercheurCompetenceCodePostal (char * CodePostalRecherche) ;   // Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
+        void ChercheurCompetenceCodePostal (Competence * listeComp , char * CodePostalRecherche) ;   // Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
 } ;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

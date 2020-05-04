@@ -18,8 +18,10 @@ int main()
     char testchar2[128] = "C" ;
     char testchar2_5[128] = "C++" ;
     char testchar3[128] = "Python" ;
+    char testchar4[128] = "comedie" ;
     char newMail[128] = "eMplois@google.com" ;
     char newCodePostal[128] = "777007707" ;
+    char cp_recherche_pers[128] = "77700" ;
     char testnom[128] = "onsepatro" ;
     char testprenom[128] = "mister" ;
     char testmail[128] = "mronsepatro@gmail.com" ;
@@ -97,6 +99,16 @@ int main()
         test_employes = test_employes->nextP() ;
     }
     test_employes->EmployeRechercheColleguesCompetence(&test_liste) ;
+
+    //tests sur la recherche de chercheurs d'emploi par compétence
+    cout << "test de la recherche des chercheurs d'emplois disposant des competences dans une liste " << endl ;
+    Competence test_recherche_list(testchar4 ,NULL , NULL) ;
+    test_recherche_list.AddCompetence(testchar3) ;
+    test_chercheur->ChercheurCompetence(&test_recherche_list) ;
+
+    //tests sur la recherche de chercheurs d'emploi par compétence et par code postal
+    cout << "test de la recherche des chercheurs d'emplois disposant des competences dans une liste avec le code postal recherche " << endl ;
+    test_chercheur->ChercheurCompetenceCodePostal(&test_recherche_list,cp_recherche_pers);
     
     // Tests sur la création de la liste d'Entrerpise
     tmp = ListeEntreprise ;

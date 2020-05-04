@@ -496,24 +496,23 @@ void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
 {
     assert(this->_EntrepriseActuelle) ;
     AncienCollegue * tmp_collegue = _ListAncienCollegues;
-    Competence * tmp_comp_collegue , *tmp_comp;           //initialisation des pointeurs
+    Competence * tmp_comp_collegue , *tmp_comp = ListeCompetence;           //initialisation des pointeurs
     string label_skill_collegue, label_skill_liste , entreprise_pers , entreprise_collegue;
-    int nb_skill_collegue ,  nb_skill_match;
+    int nb_skill_liste = 0 ,  nb_skill_match;
 
     entreprise_pers = string(_EntrepriseActuelle->nom()) ;
+
+    while (tmp_comp) {
+        nb_skill_liste++ ;
+        tmp_comp = tmp_comp->next() ; 
+    }
+
     while (tmp_collegue) {
         nb_skill_match = 0 ;
-        nb_skill_collegue = 0 ;
-        tmp_comp = ListeCompetence ;
 
         if (tmp_collegue->currentA()) {                                                 //attention à la donnée membre currentA qui peut être NULL
             entreprise_collegue = string(tmp_collegue->currentA()->EntrepriseActuelle()->nom()) ;
             if (entreprise_pers != entreprise_collegue) {
-                tmp_comp_collegue = tmp_collegue->currentA()->CompetencePropres() ;
-                while (tmp_comp_collegue) {
-                    nb_skill_collegue++ ;
-                    tmp_comp_collegue = tmp_comp_collegue->next() ; 
-                }
                 tmp_comp_collegue = tmp_collegue->currentA()->CompetencePropres() ;
 
                 while (tmp_comp_collegue) {
@@ -529,7 +528,7 @@ void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
                     tmp_comp_collegue = tmp_comp_collegue->next() ; 
                 }
 
-                if (nb_skill_collegue == nb_skill_match) {
+                if (nb_skill_liste == nb_skill_match) {
                     cout << "-------------------------------------------------------------------------------------------" << endl ;
                     cout << " Nom : " << tmp_collegue->currentA()->nom() << "| Prenom : " << tmp_collegue->currentA()->prenom() << "| Mail : " << tmp_collegue->currentA()->mail() << endl;
                     cout << "--------------------------------------------------------------------------------------------" << endl ;
@@ -545,12 +544,86 @@ void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
 // Rechercher parmis les chercheurs par competences, affiche les résultats
 void Personne::ChercheurCompetence (Competence * listeComp)
 {
+    Competence * tmp_comp = listeComp , *tmp_comp_pers;
+    Personne * tmp_pers = this ;
+    string label_skill_pers, label_skill_liste ;
+    int nb_skill_match , nb_skill_liste = 0;
+    assert(!(this->_EntrepriseActuelle)) ;
+
+    while (tmp_pers->_previousP != NULL) tmp_pers = tmp_pers->previousP() ; //retour au début de la liste des personnes
+    while (tmp_comp) {
+        nb_skill_liste++ ;
+        tmp_comp = tmp_comp->next() ; //on compte le nombre de compétences de la liste
+    }
+    
+    while (tmp_pers) {
+        nb_skill_match = 0 ;
+        tmp_comp_pers = tmp_pers->CompetencePropres() ;     
+
+        while (tmp_comp_pers) {
+            tmp_comp = listeComp ;                //réinitialisation du parcours de la liste des compétences
+            label_skill_pers = string(tmp_comp_pers->label()) ;
+            while (tmp_comp) {
+                label_skill_liste = string(tmp_comp->label()) ;
+                if (label_skill_pers == label_skill_liste) {
+                    nb_skill_match++ ;
+                }
+                tmp_comp = tmp_comp->next() ;
+            }
+            tmp_comp_pers = tmp_comp_pers->next() ; 
+        }
+        if (nb_skill_liste == nb_skill_match) {
+            cout << "-------------------------------------------------------------------------------------------" << endl ;
+            cout << " Nom : " << tmp_pers->nom() << "| Prenom : " << tmp_pers->prenom() << "| Mail : " << tmp_pers->mail() << endl;
+            cout << "--------------------------------------------------------------------------------------------" << endl ;
+        }
+        
+        tmp_pers = tmp_pers->nextP() ;
+    }
     return ;
 }
 
 // Rechercher parmis les chercheurs par competences et code postal, affiche les résultats
-void Personne::ChercheurCompetenceCodePostal (char * CodePostalRecherche)
+void Personne::ChercheurCompetenceCodePostal (Competence * listeComp , char * CodePostalRecherche)
 {
+    Competence * tmp_comp = listeComp , *tmp_comp_pers;
+    Personne * tmp_pers = this ;
+    string label_skill_pers, label_skill_liste , cp_recherche = string(CodePostalRecherche), cp_pers ;
+    int nb_skill_match , nb_skill_liste = 0;
+    assert(!(this->_EntrepriseActuelle)) ;
+
+    while (tmp_pers->_previousP != NULL) tmp_pers = tmp_pers->previousP() ; //retour au début de la liste des personnes
+    while (tmp_comp) {
+        nb_skill_liste++ ;
+        tmp_comp = tmp_comp->next() ; //on compte le nombre de compétences de la liste
+    }
+    
+    while (tmp_pers) {
+        cp_pers = string(tmp_pers->codePostal()) ;
+        if (cp_pers == cp_recherche) {                          //si le code postal est pas celui recherché on passe à la personne suivante dans la liste
+            nb_skill_match = 0 ;
+            tmp_comp_pers = tmp_pers->CompetencePropres() ;     
+
+            while (tmp_comp_pers) {
+                tmp_comp = listeComp ;                //réinitialisation du parcours de la liste des compétences
+                label_skill_pers = string(tmp_comp_pers->label()) ;
+                while (tmp_comp) {
+                    label_skill_liste = string(tmp_comp->label()) ;
+                    if (label_skill_pers == label_skill_liste) {
+                        nb_skill_match++ ;
+                    }
+                    tmp_comp = tmp_comp->next() ;
+                }
+                tmp_comp_pers = tmp_comp_pers->next() ; 
+            }
+            if (nb_skill_liste == nb_skill_match) {
+                cout << "-------------------------------------------------------------------------------------------" << endl ;
+                cout << " Nom : " << tmp_pers->nom() << "| Prenom : " << tmp_pers->prenom() << "| Mail : " << tmp_pers->mail() << endl;
+                cout << "--------------------------------------------------------------------------------------------" << endl ;
+            }
+        }
+        tmp_pers = tmp_pers->nextP() ;
+    }
     return ;
 }
 
