@@ -405,7 +405,7 @@ void Personne::MAJDBPersonne(void)
             tmp_collegue = tmp->ListAncienCollegues() ;          //idem pour les anciens collegues employes
             while (tmp_collegue) {
                 if(tmp_collegue->currentA() && tmp_collegue->currentA()->EntrepriseActuelle()){                             //attention à CurrentA qui peut être NULL et causer une segfault
-                    if (tmp_collegue->previousA() && tmp_collegue->previousA()->currentA()->EntrepriseActuelle()) {
+                    if (collegues_to_write.length() != 0 && collegues_to_write[collegues_to_write.length()-1] != ',') {
                         collegues_to_write += ";" ;
                     }
                     collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;
@@ -419,7 +419,7 @@ void Personne::MAJDBPersonne(void)
             tmp_collegue = tmp->ListAncienCollegues() ;          //on rajoute les anciens collegues chercheur d'emploi
             while (tmp_collegue) {
                 if(tmp_collegue->currentA() && !(tmp_collegue->currentA()->EntrepriseActuelle())){                          //idem
-                    if (tmp_collegue->previousA() && !(tmp_collegue->previousA()->currentA()->EntrepriseActuelle())) {
+                    if (collegues_to_write.length() != 0 && collegues_to_write[collegues_to_write.length()-1] != ',') {
                         collegues_to_write += ";" ;
                     }
                     collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;   
@@ -644,7 +644,7 @@ void AncienCollegue::addAncienCollegue(Personne * NewAncienCollegue)
     AncienCollegue * tmp_collegue = this ;
     while (tmp_collegue->nextA()) tmp_collegue = tmp_collegue->nextA() ;
     tmp_collegue->modifNextA(new AncienCollegue(NewAncienCollegue,NULL,tmp_collegue)) ;
-    _currentA->MAJDBPersonne() ; //boucle infinie
+    _currentA->MAJDBPersonne() ;
     return ;
 }
 
