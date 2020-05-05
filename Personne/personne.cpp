@@ -213,6 +213,8 @@ void Personne::TransitionStatut(void)
 
 void Personne::deleteProfile(void)
 {
+    //suppression de cette même personne dans les anciens collègues
+    //suppression de la personne dans la liste
     return ;
 }
 
@@ -376,16 +378,20 @@ void Personne::MAJDBPersonne(void)
 
     tmp = this ;
     while (tmp->_previousP != NULL) tmp = tmp->previousP() ;                    //retour au début de la liste des personnes
-    new_db_employes = fopen("test/FichiersDeTests/employes_new.csv", "w") ;             // A modifier lorsque l'on utilisera la vrai DB
-    prev_db_employes = fopen("test/FichiersDeTests/employes.csv", "r") ;                // A modifier lorsque l'on utilisera la vrai DB
-    new_db_chercheurs = fopen("test/FichiersDeTests/chercheurd'emploi_new.csv", "w") ;  // A modifier lorsque l'on utilisera la vrai DB
-    prev_db_chercheurs = fopen("test/FichiersDeTests/chercheurd'emploi.csv", "r") ;     // A modifier lorsque l'on utilisera la vrai DB 
-    fscanf(prev_db_employes, "%127[^\n\r]", schema_db) ;                         //on recopie le schema de la base de données 
-    fprintf(new_db_employes, "%s", schema_db) ;
-    fscanf(prev_db_chercheurs, "%127[^\n\r]", schema_db) ;                       //on recopie le schema de la base de données 
-    fprintf(new_db_chercheurs, "%s", schema_db) ;
-
-    if (new_db_employes && prev_db_employes && new_db_chercheurs && prev_db_chercheurs) {
+    if (this->EntrepriseActuelle()) {                                                               //ouverture du csv chercheurd'emploi ou employes selon la liste où se trouve la personne
+        new_db_employes = fopen("test/FichiersDeTests/employes_new.csv", "w") ;             // A modifier lorsque l'on utilisera la vrai DB
+        prev_db_employes = fopen("test/FichiersDeTests/employes.csv", "r") ;                // A modifier lorsque l'on utilisera la vrai DB
+        fscanf(prev_db_employes, "%127[^\n\r]", schema_db) ;                         //on recopie le schema de la base de données 
+        fprintf(new_db_employes, "%s", schema_db) ;
+    }else {
+        new_db_chercheurs = fopen("test/FichiersDeTests/chercheurd'emploi_new.csv", "w") ;  // A modifier lorsque l'on utilisera la vrai DB
+        prev_db_chercheurs = fopen("test/FichiersDeTests/chercheurd'emploi.csv", "r") ;     // A modifier lorsque l'on utilisera la vrai DB 
+        
+        fscanf(prev_db_chercheurs, "%127[^\n\r]", schema_db) ;                       //on recopie le schema de la base de données 
+        fprintf(new_db_chercheurs, "%s", schema_db) ;
+    }
+    
+    if ((new_db_employes && prev_db_employes) || (new_db_chercheurs && prev_db_chercheurs)) {
         while (tmp) {
             tmp_skill = tmp->CompetencePropres() ;               //on parcours les compétences de la personne et on les concatène dans une string qui sera mise dans le csv
             while (tmp_skill) {
@@ -398,26 +404,29 @@ void Personne::MAJDBPersonne(void)
 
             tmp_collegue = tmp->ListAncienCollegues() ;          //idem pour les anciens collegues employes
             while (tmp_collegue) {
-                if(tmp_collegue->currentA()->EntrepriseActuelle()){
-                    collegues_to_write += tmp_collegue->currentA()->index() ;
-                    tmp_collegue = tmp_collegue->nextA() ;
-                    if (tmp_collegue) {
+                if(tmp_collegue->currentA() && tmp_collegue->currentA()->EntrepriseActuelle()){                             //attention à CurrentA qui peut être NULL et causer une segfault
+                    if (collegues_to_write.length() != 0 && collegues_to_write[collegues_to_write.length()-1] != ',') {
                         collegues_to_write += ";" ;
                     }
+                    collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;
                 }
+                tmp_collegue = tmp_collegue->nextA() ;
+                
+                
             }       // à tester après la lecture de la db
             collegues_to_write += "," ;
 
             tmp_collegue = tmp->ListAncienCollegues() ;          //on rajoute les anciens collegues chercheur d'emploi
             while (tmp_collegue) {
-                if(!(tmp_collegue->currentA()->EntrepriseActuelle())){
-                    collegues_to_write += tmp_collegue->currentA()->index() ;
-                    tmp_collegue = tmp_collegue->nextA() ;
-                    if (tmp_collegue) {
+                if(tmp_collegue->currentA() && !(tmp_collegue->currentA()->EntrepriseActuelle())){                          //idem
+                    if (collegues_to_write.length() != 0 && collegues_to_write[collegues_to_write.length()-1] != ',') {
                         collegues_to_write += ";" ;
                     }
+                    collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;   
                 }
+                tmp_collegue = tmp_collegue->nextA() ;
             }       // à tester après la lecture de la db
+
                     
             if (tmp->EntrepriseActuelle()) {
                 fprintf(new_db_employes, "\n%d,%s,%s,%s,%s,%d,%s,%s", tmp->index(), tmp->nom(), tmp->prenom(), tmp->mail(),tmp->codePostal(),tmp->EntrepriseActuelle()->index(),skills_to_write.c_str(),collegues_to_write.c_str()) ; //il faut convertir la string en char* avec c_str pour utiliser fprintf
@@ -435,14 +444,17 @@ void Personne::MAJDBPersonne(void)
         cout << "Erreur d'ouverture ou de création de la nouvelle db" << endl ;
     }
     
-    fclose(new_db_chercheurs) ;
-    fclose(prev_db_chercheurs) ;
-    fclose(new_db_employes);
-    fclose(prev_db_employes) ;
-    remove("test/FichiersDeTests/employes.csv") ;                                                               // A modifier lorsque l'on utilisera la vrai DB
-    rename("test/FichiersDeTests/employes_new.csv", "test/FichiersDeTests/employes.csv") ;                      // A modifier lorsque l'on utilisera la vrai DB
-    remove("test/FichiersDeTests/chercheurd'emploi.csv") ;                                                      // A modifier lorsque l'on utilisera la vrai DB
-    rename("test/FichiersDeTests/chercheurd'emploi_new.csv", "test/FichiersDeTests/chercheurd'emploi.csv") ;    // A modifier lorsque l'on utilisera la vrai DB
+    if (this->EntrepriseActuelle()) {
+        fclose(new_db_employes);
+        fclose(prev_db_employes) ;
+        remove("test/FichiersDeTests/employes.csv") ;                                                               // A modifier lorsque l'on utilisera la vrai DB
+        rename("test/FichiersDeTests/employes_new.csv", "test/FichiersDeTests/employes.csv") ;                      // A modifier lorsque l'on utilisera la vrai DB
+    } else {
+        fclose(new_db_chercheurs) ;
+        fclose(prev_db_chercheurs) ;
+        remove("test/FichiersDeTests/chercheurd'emploi.csv") ;                                                      // A modifier lorsque l'on utilisera la vrai DB
+        rename("test/FichiersDeTests/chercheurd'emploi_new.csv", "test/FichiersDeTests/chercheurd'emploi.csv") ;    // A modifier lorsque l'on utilisera la vrai DB
+    }
     
     return ;
 }
@@ -511,7 +523,11 @@ void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
         nb_skill_match = 0 ;
 
         if (tmp_collegue->currentA()) {                                                 //attention à la donnée membre currentA qui peut être NULL
-            entreprise_collegue = string(tmp_collegue->currentA()->EntrepriseActuelle()->nom()) ;
+            if (tmp_collegue->currentA()->EntrepriseActuelle()) {
+                entreprise_collegue = string(tmp_collegue->currentA()->EntrepriseActuelle()->nom()) ;
+            }else {
+                entreprise_collegue = "" ;
+            }
             if (entreprise_pers != entreprise_collegue) {
                 tmp_comp_collegue = tmp_collegue->currentA()->CompetencePropres() ;
 
@@ -698,6 +714,10 @@ void AncienCollegue::modifPreviousA(AncienCollegue * NewPreviousA)
 // Ajoute une personne à la liste
 void AncienCollegue::addAncienCollegue(Personne * NewAncienCollegue)
 {
+    AncienCollegue * tmp_collegue = this ;
+    while (tmp_collegue->nextA()) tmp_collegue = tmp_collegue->nextA() ;
+    tmp_collegue->modifNextA(new AncienCollegue(NewAncienCollegue,NULL,tmp_collegue)) ;
+    _currentA->MAJDBPersonne() ;
     return ;
 }
 
