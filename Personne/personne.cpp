@@ -404,28 +404,29 @@ void Personne::MAJDBPersonne(void)
 
             tmp_collegue = tmp->ListAncienCollegues() ;          //idem pour les anciens collegues employes
             while (tmp_collegue) {
-                if(tmp_collegue->currentA()->EntrepriseActuelle()){
-                    collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;
-                    
-                    if (tmp_collegue->nextA() && tmp_collegue->nextA()->currentA()->EntrepriseActuelle()) {
+                if(tmp_collegue->currentA() && tmp_collegue->currentA()->EntrepriseActuelle()){                             //attention à CurrentA qui peut être NULL et causer une segfault
+                    if (tmp_collegue->previousA() && tmp_collegue->previousA()->currentA()->EntrepriseActuelle()) {
                         collegues_to_write += ";" ;
                     }
+                    collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;
                 }
                 tmp_collegue = tmp_collegue->nextA() ;
+                
+                
             }       // à tester après la lecture de la db
             collegues_to_write += "," ;
 
             tmp_collegue = tmp->ListAncienCollegues() ;          //on rajoute les anciens collegues chercheur d'emploi
             while (tmp_collegue) {
-                if(!(tmp_collegue->currentA()->EntrepriseActuelle())){
-                    collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;
-                    
-                    if (tmp_collegue->nextA()&& !(tmp_collegue->nextA()->currentA()->EntrepriseActuelle())) {
+                if(tmp_collegue->currentA() && !(tmp_collegue->currentA()->EntrepriseActuelle())){                          //idem
+                    if (tmp_collegue->previousA() && !(tmp_collegue->previousA()->currentA()->EntrepriseActuelle())) {
                         collegues_to_write += ";" ;
                     }
+                    collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;   
                 }
                 tmp_collegue = tmp_collegue->nextA() ;
             }       // à tester après la lecture de la db
+
                     
             if (tmp->EntrepriseActuelle()) {
                 fprintf(new_db_employes, "\n%d,%s,%s,%s,%s,%d,%s,%s", tmp->index(), tmp->nom(), tmp->prenom(), tmp->mail(),tmp->codePostal(),tmp->EntrepriseActuelle()->index(),skills_to_write.c_str(),collegues_to_write.c_str()) ; //il faut convertir la string en char* avec c_str pour utiliser fprintf
@@ -518,7 +519,11 @@ void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
         tmp_comp = ListeCompetence ;
 
         if (tmp_collegue->currentA()) {                                                 //attention à la donnée membre currentA qui peut être NULL
-            entreprise_collegue = string(tmp_collegue->currentA()->EntrepriseActuelle()->nom()) ;
+            if (tmp_collegue->currentA()->EntrepriseActuelle()) {
+                entreprise_collegue = string(tmp_collegue->currentA()->EntrepriseActuelle()->nom()) ;
+            }else {
+                entreprise_collegue = "" ;
+            }
             if (entreprise_pers != entreprise_collegue) {
                 tmp_comp_collegue = tmp_collegue->currentA()->CompetencePropres() ;
                 while (tmp_comp_collegue) {
