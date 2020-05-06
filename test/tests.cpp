@@ -4,19 +4,12 @@
 // Programme de tests                                                                                            //
 //                                                                                                               //
 // PEUPIER Baptiste MASSELOT Nicolas                                                                             //
-// Cree le 06/04/2020, modifié le 18/04/2020                                                                     //
+// Cree le 06/04/2020, modifié le 06/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include "general.h"
-#include <string.h>
-// #include <stddef.h>
-#include <stdlib.h>
-
-#include <fstream>
-#include <iostream>
-#include <string>
+#include "tests.h"
 
 // Nombre total de tests exécutés. 
 int nbtests = 0 ;
@@ -91,7 +84,7 @@ int testreussis = 0 ;
     }else cout << "[ECHEC]\n" ;                     \
 }                                                   \
 
-int main()
+int tests(void)
 {
     Competence test ("SQL", NULL, NULL) ;
 
@@ -148,7 +141,16 @@ int main()
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;
     ListeEntreprise->modifCodePostal("777007707") ;
     ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;
-    TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_tests_expected/entreprise.csv") ;                   
+    TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_tests_expected/entreprise.csv") ;
+
+    // Tests sur la MAJ de la db poste
+
+
+    // Tests sur la MAJ de la db employe
+    ListeEmploye->nextP()->nextP()->modifNom("Souris") ;
+    TEST_MAJ_DB("test/FichiersDeTests/employes.csv", "test/db_tests_expected/employes.csv") ;
+
+    // Tests sur la MAJ de la db chercheurd'emploi
 
     delete ListeEntreprise ;
     
@@ -156,4 +158,3 @@ int main()
 
     return testreussis - nbtests ;
 }
-

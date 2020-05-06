@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
-// Effectue les transitions entre chercheur et employe.                                                          //
+// Fonctions générales entre les classes Entreprise et Personne.                                                 //
 //                                                                                                               //
 // PEUPIER Baptiste MASSELOT Nicolas                                                                             //
 // Cree le 08/04/2020, modifié le 21/04/2020                                                                     //
