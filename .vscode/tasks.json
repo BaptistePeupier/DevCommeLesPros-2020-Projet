@@ -27,5 +27,16 @@
             },
             "problemMatcher": []
         }
+
+        {
+            "label": "make check",
+            "type": "shell",
+            "command": "make check",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        }
     ]
 }

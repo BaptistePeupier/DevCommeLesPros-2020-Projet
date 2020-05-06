@@ -4,6 +4,10 @@
         "entreprise.h": "c",
         "iostream": "cpp",
         "ostream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "*.tcc": "cpp",
+        "string_view": "cpp",
+        "iosfwd": "cpp",
+        "istream": "cpp"
     }
 }
