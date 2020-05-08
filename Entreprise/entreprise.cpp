@@ -44,29 +44,11 @@ Entreprise::Entreprise(int index, const char* nom, const char* codePostal, const
 // Le destructeur
 Entreprise::~Entreprise(void)
 {
-    Entreprise *ToDelE, *tmpE ;
-    Poste *ToDelP, *tmpP ;
-    Competence *ToDelC, *tmpC ;
-
     cout << "Destructeur Entreprise" << endl ;
-    tmpE = this ;
-    while(tmpE){
-        ToDelE = tmpE ;
-        tmpE = tmpE->next() ;
-        tmpP = ToDelE->profilPoste() ;
-        while(tmpP){
-            ToDelP = tmpP ;
-            tmpP = tmpP->next() ;
-            tmpC = ToDelP->CompetencesRequises() ;
-            while(tmpC){
-                ToDelC = tmpC ;
-                tmpC = tmpC->next() ;
-                delete ToDelC ;
-            }
-            delete ToDelP ;
-        }
-        // delete ToDelE ;
-    }
+    if(_profilPoste) delete _profilPoste ;
+    if(_next) delete _next ;
+    _profilPoste = nullptr ;
+    _next = _previous = nullptr ;
 
     return ;
 }
@@ -291,6 +273,11 @@ Poste::Poste(const char* Titre, Poste *next, Poste * previous, Competence * Comp
 Poste::~Poste(void)
 {
     cout << "Destructeur Poste" << endl ;
+    if (_CompetencesRequises) delete _CompetencesRequises ;
+    if (_next) delete _next ;
+    _CompetencesRequises = nullptr ;
+    _next = _previous = nullptr ;
+
     return ;
 }
 
@@ -376,10 +363,13 @@ Competence::Competence(const char* label, Competence * next, Competence * previo
 }
 
 // Le destructeur
-// Détruit seulement la compétence "this"
+// Détruit seulement la liste de compétence
 Competence::~Competence(void)
 {
-    cout << "Destructeur Competence" << endl ;   
+    cout << "Destructeur Competence" << endl ;
+    if(_next) delete _next ;
+    _next = _previous = nullptr ;
+
     return ;
 }
 
@@ -433,7 +423,7 @@ void Competence::AddCompetence (const char* label)
     Competence * tmp ;
     tmp = this ;
     while(tmp->_next) tmp = tmp->_next ;
-    tmp->_next = new Competence (label, NULL, tmp) ;        // Besoin d'allocation dynamique pour étendre la durée de vie des nouvelles compétences
+    tmp->_next = new Competence (label, NULL, tmp) ;    // Besoin d'allocation dynamique pour étendre la durée de vie des nouvelles compétences
 
     return ;
 }
@@ -463,6 +453,8 @@ void Competence::delCompetence (const char* label)
             if(tmp != this){
                 if(tmp->_previous != NULL) tmp->_previous->_next = tmp->_next ;
                 if(tmp->_next != NULL) tmp->_next->_previous = tmp->_previous ;
+                tmp->modifNext(NULL) ;
+                tmp->modifPrevious(NULL) ;
                 delete tmp ;
             }else{                                                              // Si on supprime la première compétence, on recopie la seconde compétence et on suprime cette dernière
                 tmpLabel = _next->_label ;

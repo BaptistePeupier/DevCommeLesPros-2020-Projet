@@ -30,12 +30,12 @@ class Personne
         Personne * _previousP ;
         Entreprise * _EntrepriseActuelle ;                                              // Si NULL est un chercheur d'emploi, sinon un employé
         Competence * _CompetencesPropres ;
-        AncienCollegue * _ListAncienCollegues ;                                       // Pointeur vers la liste d'ancien collègue
+        AncienCollegue * _ListAncienCollegues ;                                         // Pointeur vers la liste d'ancien collègue
     public:
     // Un constructeur
         Personne(int index, const char* nom, const char* prenom, const char* mail, const char* codePostal, Personne * nextP, Personne * previousP, Competence * CompetencesPropres, AncienCollegue * ListAncienCollegues, Entreprise * EntrepriseActuelle) ;
     // Le destructeur
-        ~Personne(void) ;
+        virtual ~Personne(void) ;
     // Accesseurs
         int index(void) ;
         char* nom(void) ;
@@ -97,7 +97,7 @@ class AncienCollegue
     // Un constructeur
         AncienCollegue(Personne * currentA, AncienCollegue * nextA, AncienCollegue * previousA) ;
     // Le destructeur
-        ~AncienCollegue(void) ;
+        virtual ~AncienCollegue(void) ;
     // Accesseurs
         Personne * currentA(void) ;
         AncienCollegue * nextA(void) ;

@@ -27,7 +27,7 @@ class Competence
     // Les constructeurs
         Competence(const char* label, Competence * next, Competence * previous) ;
     // Le destructeur
-        ~Competence(void) ;
+        virtual ~Competence(void) ;
     // Accesseurs
         char* label(void) ;
         Competence * next(void) ;
@@ -52,7 +52,7 @@ class Poste
     // Les constructeurs
         Poste(const char* Titre, Poste *next, Poste * previous, Competence * CompetencesRequises) ;
     // Le destructeur
-        ~Poste(void) ;
+        virtual ~Poste(void) ;
     // Accesseurs
         char* Titre(void) ;
         Poste * next(void) ;
@@ -79,7 +79,7 @@ class Entreprise
     // Les constructeurs
         Entreprise(int index, const char* nom, const char* codePostal, const char* mail, Entreprise * next, Entreprise * previous) ;
     // Le destructeur
-        ~Entreprise(void) ;
+        virtual ~Entreprise(void) ;
     // Accesseurs
         int index(void) ;
         char* nom(void) ;
