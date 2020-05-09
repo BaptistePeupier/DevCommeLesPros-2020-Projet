@@ -1,12 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
-// Fonctions générales d'utilisation du programme :                                                              //
-//              - transitions entre Employe et Chercheur                                                         //
-//              - interface graphique                                                                            //
+// Fonctions générales entre les classes Entreprise et Personne.                                                 //
 //                                                                                                               //
 // PEUPIER Baptiste MASSELOT Nicolas                                                                             //
-// Cree le 08/04/2020, modifié le 18/04/2020                                                                     //
+// Cree le 08/04/2020, modifié le 21/04/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

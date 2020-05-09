@@ -24,14 +24,18 @@ libGeneral.a: libEntreprise.a libPersonne.a General/general.h General/general.cp
 	${CC} -g -c General/general.cpp -I ./Entreprise -I ./Personne -o build/general.o
 	ar crs build/libGeneral.a build/general.o
 
-test.o: test/main.cpp | build
-	${CC} -g -c test/main.cpp -I ./Entreprise -I ./Personne -I ./General -o build/test.o
+tests.o: test/tests.cpp test/tests.h | build
+	${CC} -g -c test/tests.cpp -I ./Entreprise -I ./Personne -I ./General -o build/tests.o
+
+main.o: main.cpp tests.o | build
+	${CC} -g -c main.cpp -I ./Entreprise -I ./Personne -I ./General -I ./test -o build/main.o
 
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
-all: libGeneral.a test.o
-	${CC} build/test.o -Lbuild/ -lEntreprise -lPersonne -lGeneral -o build/LuminIn
+all: libGeneral.a main.o
+	${CC} build/main.o build/tests.o -Lbuild/ -lEntreprise -lPersonne -lGeneral -o build/LuminIn
 
 # Lance le programme de test.
 check: all
 	./build/LuminIn
+

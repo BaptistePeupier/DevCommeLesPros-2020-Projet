@@ -4,19 +4,12 @@
 // Programme de tests                                                                                            //
 //                                                                                                               //
 // PEUPIER Baptiste MASSELOT Nicolas                                                                             //
-// Cree le 06/04/2020, modifié le 18/04/2020                                                                     //
+// Cree le 06/04/2020, modifié le 06/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include "general.h"
-#include <string.h>
-// #include <stddef.h>
-#include <stdlib.h>
-
-#include <fstream>
-#include <iostream>
-#include <string>
+#include "tests.h"
 
 // Nombre total de tests exécutés. 
 int nbtests = 0 ;
@@ -35,7 +28,7 @@ int testreussis = 0 ;
         testreussis++ ;                             \
         cout << "[SUCCES] " ;                       \
         printf(STRINGIZE(__FILE__) ", " STRINGIZE(__LINE__) ": " STRINGIZE(a) " == " STRINGIZE(b) "\n") ; \
-    }else cout << "[ECHEC]\n" ;                      \
+    }else cout << "[ECHEC] (val : "<<a<<")"<< endl ;\
 }                                                   \
 
 #define TEST(x) nbtests++ ;                         \
@@ -91,10 +84,8 @@ int testreussis = 0 ;
     }else cout << "[ECHEC]\n" ;                     \
 }                                                   \
 
-int main()
+int tests(void)
 {
-    Competence test ("SQL", NULL, NULL) ;
-
     Entreprise * ListeEntreprise ;
     Personne * ListeEmploye, * ListeChercheurEmploi , *test_chercheur , *test_employes;
 
@@ -105,32 +96,42 @@ int main()
     TEST(ListeChercheurEmploi) ;
       
     // Test sur la création d'une personne avec l'ajout d'une compétence 
-    Personne test_pers(1,"onsepatro","mister","mronsepatro@gmail.com","75009",NULL,NULL,&test,NULL,NULL) ;
-    test.AddCompetence("C") ;
-    test.AddCompetence("C++") ;
+    Personne test_pers(1,"onsepatro","mister","mronsepatro@gmail.com","75009",NULL,NULL,new Competence ("SQL", NULL, NULL),NULL,NULL) ;
+    test_pers.CompetencePropres()->AddCompetence("C") ;
+    test_pers.CompetencePropres()->AddCompetence("C++") ;
     TEST_STR(test_pers.nom(),"onsepatro") ;
     TEST_STR(test_pers.prenom(),"mister") ;
     TEST_STR(test_pers.mail(),"mronsepatro@gmail.com") ;
     TEST_STR(test_pers.codePostal(),"75009") ;
     TEST_STR(test_pers.CompetencePropres()->label(),"SQL") ;
-    
-    // test.delCompetence(testchar) ;
-    // cout << endl ;
+    TEST_STR(test_pers.CompetencePropres()->next()->label(),"C") ;
+    TEST_STR(test_pers.CompetencePropres()->next()->next()->label(),"C++") ;
+
+    // Test pour la suppression de compétence
+    // Au milieu de la chaine
+    test_pers.CompetencePropres()->delCompetence("C") ;
+    TEST_STR(test_pers.CompetencePropres()->label(),"SQL") ;
+    TEST_STR(test_pers.CompetencePropres()->next()->label(),"C++") ;
+    TEST(!test_pers.CompetencePropres()->next()->next()) ;
+    // En début de chaine
+    test_pers.CompetencePropres()->delCompetence("SQL") ;
+    TEST_STR(test_pers.CompetencePropres()->label(),"C++") ;
+    TEST(!test_pers.CompetencePropres()->next()) ;
     
     // Tests sur la recherche d'anciens colllègues
     // Sur la dernière personne de la liste des chercheurs d'emploi
-    cout << "test de la recherche d'anciens collegues chez google " << endl ;
+    cout << "Test de la recherche d'anciens collegues chez google :" << endl ;
     test_chercheur = ListeChercheurEmploi ;
     while (test_chercheur->nextP()) test_chercheur = test_chercheur->nextP() ;
     test_chercheur->CompetencePropres()->AddCompetence("SQL") ;                 //ajout d'une compétence 
     test_chercheur->RechercheColleguesEntreprise("Google") ;
 
     // La liste des compétences est celle de la personne pour tester
-    cout << "test de la recherche d'anciens collegues dans les entreprise recherchant les competences dans une liste " << endl ;
+    cout << "Test de la recherche d'anciens collegues dans les entreprise recherchant les competences dans une liste :" << endl ;
     test_chercheur->ChercheurRechercheColleguesCompetence(test_chercheur->CompetencePropres()) ;
 
     // Test sur la dernière de la liste des employés
-    cout << "test de la recherche d'anciens collegues disposant des competences dans une liste " << endl ;
+    cout << "Test de la recherche d'anciens collegues disposant des competences dans une liste :" << endl ;
     cout << endl ;
     Competence test_liste("C++" , NULL,NULL) ;
     test_liste.AddCompetence("Python") ;
@@ -148,12 +149,23 @@ int main()
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;
     ListeEntreprise->modifCodePostal("777007707") ;
     ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;
-    TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_tests_expected/entreprise.csv") ;                   
+    TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_tests_expected/entreprise.csv") ;
 
+    // Tests sur la MAJ de la db poste
+
+
+    // Tests sur la MAJ de la db employe
+    ListeEmploye->nextP()->nextP()->modifNom("Souris") ;
+    TEST_MAJ_DB("test/FichiersDeTests/employes.csv", "test/db_tests_expected/employes.csv") ;
+
+    // Tests sur la MAJ de la db chercheurd'emploi
+
+    cout << endl << "Appel des destructeurs :" << endl ;
     delete ListeEntreprise ;
+    delete ListeEmploye ;
+    delete ListeChercheurEmploi ;
     
     cout << "Tests reussis : " << testreussis << "/" << nbtests << endl ;
 
     return testreussis - nbtests ;
 }
-

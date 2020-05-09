@@ -54,7 +54,15 @@ Personne::Personne(int index, const char* nom, const char* prenom, const char* m
 // Le destructeur
 Personne::~Personne(void)
 {
-    cout << "Destructeur Personne" << endl ; 
+    cout << "Destructeur Personne" << endl ;
+    if(_CompetencesPropres) delete _CompetencesPropres ;
+    if(_ListAncienCollegues) delete _ListAncienCollegues ;
+    if(_nextP) delete _nextP ;
+    _CompetencesPropres = nullptr ;
+    _ListAncienCollegues = nullptr ;
+    _nextP = _previousP = nullptr ;
+    _EntrepriseActuelle = nullptr ;
+
     return ;
 }
 
@@ -668,6 +676,10 @@ AncienCollegue::AncienCollegue(Personne * currentA, AncienCollegue * nextA, Anci
 AncienCollegue::~AncienCollegue(void)
 {
     cout << "Destructeur AncienCollegue" << endl ;
+    if(_nextA) delete _nextA ;
+    _nextA = _previousA = nullptr ;
+    _currentA = nullptr ;
+
     return ;
 }
 
