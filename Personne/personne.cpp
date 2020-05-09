@@ -737,10 +737,11 @@ void AncienCollegue::addAncienCollegue(Personne * NewAncienCollegue,Personne * b
 // Retire une personne de la liste
 void AncienCollegue::dellAncienCollegue(Personne * AncienCollegueToDell,Personne *base_pers)
 {
-    AncienCollegue * tmp_collegue = this ;
-    AncienCollegue * collegue_to_delete ;
+    AncienCollegue * tmp_collegue ;
+    AncienCollegue * collegue_to_delete = NULL ;
     Personne * tmp_pers ; 
 
+    tmp_collegue = this ;
     while (tmp_collegue) {
         if (tmp_collegue->currentA() == AncienCollegueToDell) {     //recherche en avant dans la liste 
             collegue_to_delete = tmp_collegue ;
