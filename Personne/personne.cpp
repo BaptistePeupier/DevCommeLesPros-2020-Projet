@@ -723,17 +723,57 @@ void AncienCollegue::modifPreviousA(AncienCollegue * NewPreviousA)
 
 // Fonctionnalités
 // Ajoute une personne à la liste
-void AncienCollegue::addAncienCollegue(Personne * NewAncienCollegue)
+void AncienCollegue::addAncienCollegue(Personne * NewAncienCollegue,Personne * base_pers)
 {
     AncienCollegue * tmp_collegue = this ;
-    while (tmp_collegue->nextA()) tmp_collegue = tmp_collegue->nextA() ;
-    tmp_collegue->modifNextA(new AncienCollegue(NewAncienCollegue,NULL,tmp_collegue)) ;
-    _currentA->MAJDBPersonne() ;
+    while (tmp_collegue->nextA()) tmp_collegue = tmp_collegue->nextA() ;                //parcours jusqu'à la fin de la liste
+    tmp_collegue->modifNextA(new AncienCollegue(NewAncienCollegue,NULL,tmp_collegue)) ; //ajout du nouveau collègue
+    base_pers->MAJDBPersonne() ;                                                        //mise à jour de la base de données à partir de la personne qui a la liste d'anciens collègues 
+                                                                                        //pour éviter de mettre à jour le mauvais csv 
+                                                                                        //on passe en paramètre l'addresse de celle-ci pour éviter de faire des parcours de liste
     return ;
 }
 
 // Retire une personne de la liste
-void AncienCollegue::dellAncienCollegue(Personne * AncienCollegueToDell)
+void AncienCollegue::dellAncienCollegue(Personne * AncienCollegueToDell,Personne *base_pers)
 {
+    AncienCollegue * tmp_collegue = this ;
+    AncienCollegue * collegue_to_delete ;
+    Personne * tmp_pers ; 
+
+    while (tmp_collegue) {
+        if (tmp_collegue->currentA() == AncienCollegueToDell) {     //recherche en avant dans la liste 
+            collegue_to_delete = tmp_collegue ;
+        }
+        tmp_collegue = tmp_collegue->nextA() ;
+    }
+    if (!collegue_to_delete)
+    {
+        tmp_collegue = this ;
+        while (tmp_collegue) {
+            if (tmp_collegue->currentA() == AncienCollegueToDell) {     //recherche en arrière dans la liste 
+                collegue_to_delete = tmp_collegue ;
+            }
+            tmp_collegue = tmp_collegue->previousA() ;
+        }
+    }
+    
+    if (collegue_to_delete) {
+        if (collegue_to_delete != this) {
+            if(collegue_to_delete->_previousA != NULL) collegue_to_delete->_previousA->_nextA = collegue_to_delete->_nextA ;
+            if(collegue_to_delete->_nextA != NULL) collegue_to_delete->_nextA->_previousA = collegue_to_delete->_previousA ;
+            collegue_to_delete->modifNextA(NULL) ;
+            collegue_to_delete->modifPreviousA(NULL) ;
+            delete collegue_to_delete ;
+        } else {
+            tmp_pers = _nextA->currentA() ;
+            this->dellAncienCollegue(_nextA->currentA(),base_pers) ;
+            this->modifCurrentA(tmp_pers) ;
+        }     
+    }
+    
+    base_pers->MAJDBPersonne() ; //mise à jour de la base de données à partir de la personne qui a la liste d'anciens collègues 
+                                 //pour éviter de mettre à jour le mauvais csv 
+                                 //on passe en paramètre l'addresse de celle-ci pour éviter de faire des parcours de liste
     return ;
 }

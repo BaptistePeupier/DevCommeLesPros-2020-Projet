@@ -107,8 +107,8 @@ class AncienCollegue
         void modifNextA(AncienCollegue * NewNextA) ;
         void modifPreviousA(AncienCollegue * NewPreviousA) ;
     // Fonctionnalités
-        void addAncienCollegue(Personne * NewAncienCollegue) ;      // Ajoute une personne à la liste
-        void dellAncienCollegue(Personne * AncienCollegueToDell) ;  // Retire une personne de la liste
+        void addAncienCollegue(Personne * NewAncienCollegue,Personne * base_pers) ;      // Ajoute une personne à la liste
+        void dellAncienCollegue(Personne * AncienCollegueToDell,Personne * base_pers) ;  // Retire une personne de la liste
 } ;
 
 #endif

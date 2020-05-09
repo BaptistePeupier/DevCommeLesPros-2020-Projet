@@ -136,14 +136,15 @@ int tests(void)
     Competence test_liste("C++" , NULL,NULL) ;
     test_liste.AddCompetence("Python") ;
     test_employes = ListeEmploye ;
-    while (test_employes->nextP()) test_employes = test_employes->nextP() ;
+    //while (test_employes->nextP()) test_employes = test_employes->nextP() ;
     test_employes->EmployeRechercheColleguesCompetence(&test_liste) ;
 
     test_pers.RecherchePosteCompetence(ListeEntreprise) ;
     cout << endl ;
     test_pers.RecherchePosteCompetenceCodePostal(ListeEntreprise) ;
 
-    test_employes->ListAncienCollegues()->addAncienCollegue(test_chercheur) ;
+    test_employes->ListAncienCollegues()->addAncienCollegue(test_chercheur,test_employes) ;
+    test_employes->ListAncienCollegues()->dellAncienCollegue(test_chercheur,test_employes) ;
 
     // Tests sur la MAJ de la db entreprise
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;
