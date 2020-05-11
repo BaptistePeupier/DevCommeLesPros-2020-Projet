@@ -40,6 +40,15 @@ int testreussis = 0 ;
     }else cout << "[ECHEC]\n" ;                      \
 }                                                   \
 
+#define TEST2(x, y) nbtests++ ;                     \
+{                                                   \
+    if(x == y){                                     \
+        testreussis++ ;                             \
+        cout << "[SUCCES] " ;                       \
+        printf(STRINGIZE(__FILE__) ", " STRINGIZE(__LINE__) ": " STRINGIZE(x) " == " STRINGIZE(y) "\n") ; \
+    }else cout << "[ECHEC]\n" ;                      \
+}                                                   \
+
 // Compare le contenu de deux fichiers aux chemins a et b avec la commande diff. Incrémente test_reussis si les fichiers sont pareils.
 // Réinitialise ensuite la DB en question
 #define TEST_MAJ_DB(New_db, Expected_db) nbtests++ ;\
@@ -87,7 +96,9 @@ int testreussis = 0 ;
 int tests(void)
 {
     Entreprise * ListeEntreprise ;
-    Personne * ListeEmploye, * ListeChercheurEmploi , *test_chercheur , *test_employes;
+    Personne * ListeEmploye, * ListeChercheurEmploi , *test_chercheur , *test_employes ;
+    Personne * tmpP ;
+    Entreprise * tmpE ;
 
     // Tests sur la créations des listes
     Creer_listes(&ListeEntreprise, &ListeEmploye, &ListeChercheurEmploi) ;
@@ -145,6 +156,14 @@ int tests(void)
 
     test_employes->ListAncienCollegues()->addAncienCollegue(test_chercheur,test_employes) ;
     test_employes->ListAncienCollegues()->dellAncienCollegue(test_chercheur,test_employes) ;
+
+    // Test sur la transition de profil
+    tmpP = ListeEmploye ;
+    tmpE = tmpP->EntrepriseActuelle() ;
+    ListeEmploye->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi) ;
+    TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP(),tmpP) ;
+    ListeChercheurEmploi->nextP()->nextP()->nextP()->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
+    TEST2(ListeEmploye->nextP()->nextP(),tmpP) ;
 
     // Tests sur la MAJ de la db entreprise
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;

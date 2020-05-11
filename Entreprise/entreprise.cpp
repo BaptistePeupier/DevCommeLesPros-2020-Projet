@@ -466,3 +466,4 @@ void Competence::delCompetence (const char* label)
 
     return ;
 }
+

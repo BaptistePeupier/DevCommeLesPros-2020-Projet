@@ -213,8 +213,79 @@ void Personne::modifAncienCollegues(AncienCollegue * NewListCollegues)
 // Fonctionnalités
 // Change un employé en chercheur d'emploi et inversement
 // Ajoute les anciens collègues si besoin
-void Personne::TransitionStatut(void)
+// NewEntreprise est le pointeur vers l'entreprise en cas de recrutement, NULL sinon
+void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeChercheurEmploi, Entreprise * NewEntreprise)
 {
+    Personne *tmpP ;
+    AncienCollegue *tmpA ;
+    int tmpIndex ;
+    bool inList ;
+
+    if(_EntrepriseActuelle && !NewEntreprise){                          // Employe vers chercheur d'emploi
+        // Ajout des anciens collègues s'il en sont pas déjà dans la liste
+        tmpP = *ListeEmploye ;
+        while (tmpP){
+            if(tmpP->EntrepriseActuelle() == _EntrepriseActuelle){
+                tmpA = ListAncienCollegues() ;
+                inList = false ;
+                while (tmpA && !inList){
+                    if(tmpA->currentA() == tmpP) inList = true ;
+                    tmpA = tmpA->nextA() ;
+                }
+                if(!inList) ListAncienCollegues()->addAncienCollegue(tmpP, this) ;
+            }
+            tmpP = tmpP->nextP() ;
+        }
+        // Ajout de la personne à la liste de chercheur d'emploi
+        _EntrepriseActuelle = NULL ;
+        tmpP = *ListeChercheurEmploi ;
+        while(tmpP->nextP()) tmpP = tmpP->nextP() ;
+        _index = tmpP->index()+1 ;
+        tmpP->modifNextP(this) ;
+        // Modification du chaînage
+        if(*ListeEmploye == this) *ListeEmploye = (*ListeEmploye)->nextP() ;
+        else{
+            if(_nextP) _nextP->modifPreviousP(_previousP) ;
+            if(_previousP) _previousP->modifNextP(_nextP) ;
+        }
+        // Modification des index
+        tmpP = *ListeEmploye ;
+        tmpIndex = 1 ;
+        while(tmpP){
+            tmpP->_index = tmpIndex++ ;
+            tmpP = tmpP->nextP() ;
+        }
+        // Mise a jour des DB
+        (*ListeEmploye)->MAJDBPersonne() ;
+        (*ListeChercheurEmploi)->MAJDBPersonne() ;
+
+    }else if(NewEntreprise && !_EntrepriseActuelle){                    // Chercher d'emploi vers employe
+        // Ajout de la personne à la liste d'employé
+        _EntrepriseActuelle = NULL ;
+        tmpP = *ListeEmploye ;
+        while(tmpP->nextP()) tmpP = tmpP->nextP() ;
+        if(_nextP) _nextP->modifPreviousP(_previousP) ;
+        if(_previousP) _previousP->modifNextP(_nextP) ;
+        _index = tmpP->index()+1 ;
+        tmpP->modifNextP(this) ;
+        // Modification du chaînage
+        if(*ListeChercheurEmploi == this) *ListeChercheurEmploi = (*ListeChercheurEmploi)->nextP() ;
+        else{
+            if(_nextP) _nextP->modifPreviousP(_previousP) ;
+            if(_previousP) _previousP->modifNextP(_nextP) ;
+        }
+        // Modification des index
+        tmpP = *ListeChercheurEmploi ;
+        tmpIndex = 1 ;
+        while(tmpP){
+            tmpP->_index = tmpIndex++ ;
+            tmpP = tmpP->nextP() ;
+        }
+        // Mise a jour des DB
+        (*ListeEmploye)->MAJDBPersonne() ;
+        (*ListeChercheurEmploi)->MAJDBPersonne() ;
+    }else cout << "Error" << endl ;
+
     return ;
 }
 
@@ -420,7 +491,7 @@ void Personne::MAJDBPersonne(void)
                 tmp_collegue = tmp_collegue->nextA() ;
                 
                 
-            }       // à tester après la lecture de la db
+            }
             collegues_to_write += "," ;
 
             tmp_collegue = tmp->ListAncienCollegues() ;          //on rajoute les anciens collegues chercheur d'emploi
@@ -432,7 +503,7 @@ void Personne::MAJDBPersonne(void)
                     collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;   
                 }
                 tmp_collegue = tmp_collegue->nextA() ;
-            }       // à tester après la lecture de la db
+            }
 
                     
             if (tmp->EntrepriseActuelle()) {
@@ -743,7 +814,7 @@ void AncienCollegue::dellAncienCollegue(Personne * AncienCollegueToDell,Personne
 
     tmp_collegue = this ;
     while (tmp_collegue) {
-        if (tmp_collegue->currentA() == AncienCollegueToDell) {     //recherche en avant dans la liste 
+        if (tmp_collegue->currentA() == AncienCollegueToDell) {         //recherche en avant dans la liste 
             collegue_to_delete = tmp_collegue ;
         }
         tmp_collegue = tmp_collegue->nextA() ;
