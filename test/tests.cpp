@@ -58,9 +58,9 @@ int testreussis = 0 ;
         testreussis++ ;                             \
         cout << "[SUCCES] " ;                       \
         printf(STRINGIZE(__FILE__) ", " STRINGIZE(__LINE__) ": Succes MAJ " STRINGIZE(New_db) " Reinitialisation\n") ; \
-        if(strcmp(New_db,"test/FichiersDeTests/chercheurd'emploi.csv") == 0){\
+        if(strcmp(New_db,"test/FichiersDeTests/chercheurEmploi.csv") == 0){\
             ofstream N(New_db) ;                    \
-            ifstream S("test/db_backup/chercheurd'emploi.csv") ;\
+            ifstream S("test/db_backup/chercheurEmploi.csv") ;\
             string line ;                           \
             getline(S, line) ;                      \
             N << line ;                             \
@@ -160,9 +160,15 @@ int tests(void)
     // Test sur la transition de profil
     tmpP = ListeEmploye ;
     tmpE = tmpP->EntrepriseActuelle() ;
-    ListeEmploye->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi) ;
+    tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi) ;
     TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP(),tmpP) ;
-    ListeChercheurEmploi->nextP()->nextP()->nextP()->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
+    tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
+    TEST2(ListeEmploye->nextP()->nextP(),tmpP) ;
+    tmpP = ListeEmploye->nextP() ;
+    tmpE = tmpP->EntrepriseActuelle() ;
+    tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi) ;
+    TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP(),tmpP) ;
+    tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
     TEST2(ListeEmploye->nextP()->nextP(),tmpP) ;
 
     // Tests sur la MAJ de la db entreprise
@@ -172,13 +178,13 @@ int tests(void)
     TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_tests_expected/entreprise.csv") ;
 
     // Tests sur la MAJ de la db poste
-
+    TEST_MAJ_DB("test/FichiersDeTests/poste.csv", "test/db_tests_expected/poste.csv") ;
 
     // Tests sur la MAJ de la db employe
-    ListeEmploye->nextP()->nextP()->modifNom("Souris") ;
     TEST_MAJ_DB("test/FichiersDeTests/employes.csv", "test/db_tests_expected/employes.csv") ;
 
-    // Tests sur la MAJ de la db chercheurd'emploi
+    // Tests sur la MAJ de la db chercheurEmploi
+    TEST_MAJ_DB("test/FichiersDeTests/chercheurEmploi.csv", "test/db_tests_expected/chercheurEmploi.csv") ;
 
     cout << endl << "Appel des destructeurs :" << endl ;
     delete ListeEntreprise ;

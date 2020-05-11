@@ -241,13 +241,18 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
         tmpP = *ListeChercheurEmploi ;
         while(tmpP->nextP()) tmpP = tmpP->nextP() ;
         _index = tmpP->index()+1 ;
-        tmpP->modifNextP(this) ;
         // Modification du chaînage
-        if(*ListeEmploye == this) *ListeEmploye = (*ListeEmploye)->nextP() ;
-        else{
+        if(*ListeEmploye == this){
+            *ListeEmploye = (*ListeEmploye)->nextP() ;
+            (*ListeEmploye)->_previousP = NULL ;
+        }else{
             if(_nextP) _nextP->modifPreviousP(_previousP) ;
             if(_previousP) _previousP->modifNextP(_nextP) ;
+
         }
+        _nextP = NULL ;
+        _previousP = tmpP ;
+        tmpP->modifNextP(this) ;
         // Modification des index
         tmpP = *ListeEmploye ;
         tmpIndex = 1 ;
@@ -261,19 +266,24 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
 
     }else if(NewEntreprise && !_EntrepriseActuelle){                    // Chercher d'emploi vers employe
         // Ajout de la personne à la liste d'employé
-        _EntrepriseActuelle = NULL ;
+        _EntrepriseActuelle = NewEntreprise ;
         tmpP = *ListeEmploye ;
         while(tmpP->nextP()) tmpP = tmpP->nextP() ;
         if(_nextP) _nextP->modifPreviousP(_previousP) ;
         if(_previousP) _previousP->modifNextP(_nextP) ;
         _index = tmpP->index()+1 ;
-        tmpP->modifNextP(this) ;
         // Modification du chaînage
-        if(*ListeChercheurEmploi == this) *ListeChercheurEmploi = (*ListeChercheurEmploi)->nextP() ;
-        else{
+        if(*ListeChercheurEmploi == this){
+            *ListeChercheurEmploi = (*ListeChercheurEmploi)->nextP() ;
+            (*ListeChercheurEmploi)->_previousP = NULL ;
+        }else{
             if(_nextP) _nextP->modifPreviousP(_previousP) ;
             if(_previousP) _previousP->modifNextP(_nextP) ;
+
         }
+        _nextP = NULL ;
+        _previousP = tmpP ;
+        tmpP->modifNextP(this) ;
         // Modification des index
         tmpP = *ListeChercheurEmploi ;
         tmpIndex = 1 ;
@@ -456,14 +466,14 @@ void Personne::MAJDBPersonne(void)
 
     tmp = this ;
     while (tmp->_previousP != NULL) tmp = tmp->previousP() ;                    //retour au début de la liste des personnes
-    if (this->EntrepriseActuelle()) {                                                               //ouverture du csv chercheurd'emploi ou employes selon la liste où se trouve la personne
+    if (this->EntrepriseActuelle()) {                                                               //ouverture du csv chercheurEmploi ou employes selon la liste où se trouve la personne
         new_db_employes = fopen("test/FichiersDeTests/employes_new.csv", "w") ;             // A modifier lorsque l'on utilisera la vrai DB
         prev_db_employes = fopen("test/FichiersDeTests/employes.csv", "r") ;                // A modifier lorsque l'on utilisera la vrai DB
         fscanf(prev_db_employes, "%127[^\n\r]", schema_db) ;                         //on recopie le schema de la base de données 
         fprintf(new_db_employes, "%s", schema_db) ;
     }else {
-        new_db_chercheurs = fopen("test/FichiersDeTests/chercheurd'emploi_new.csv", "w") ;  // A modifier lorsque l'on utilisera la vrai DB
-        prev_db_chercheurs = fopen("test/FichiersDeTests/chercheurd'emploi.csv", "r") ;     // A modifier lorsque l'on utilisera la vrai DB 
+        new_db_chercheurs = fopen("test/FichiersDeTests/chercheurEmploi_new.csv", "w") ;  // A modifier lorsque l'on utilisera la vrai DB
+        prev_db_chercheurs = fopen("test/FichiersDeTests/chercheurEmploi.csv", "r") ;     // A modifier lorsque l'on utilisera la vrai DB 
         
         fscanf(prev_db_chercheurs, "%127[^\n\r]", schema_db) ;                       //on recopie le schema de la base de données 
         fprintf(new_db_chercheurs, "%s", schema_db) ;
@@ -530,8 +540,8 @@ void Personne::MAJDBPersonne(void)
     } else {
         fclose(new_db_chercheurs) ;
         fclose(prev_db_chercheurs) ;
-        remove("test/FichiersDeTests/chercheurd'emploi.csv") ;                                                      // A modifier lorsque l'on utilisera la vrai DB
-        rename("test/FichiersDeTests/chercheurd'emploi_new.csv", "test/FichiersDeTests/chercheurd'emploi.csv") ;    // A modifier lorsque l'on utilisera la vrai DB
+        remove("test/FichiersDeTests/chercheurEmploi.csv") ;                                                      // A modifier lorsque l'on utilisera la vrai DB
+        rename("test/FichiersDeTests/chercheurEmploi_new.csv", "test/FichiersDeTests/chercheurEmploi.csv") ;    // A modifier lorsque l'on utilisera la vrai DB
     }
     
     return ;
