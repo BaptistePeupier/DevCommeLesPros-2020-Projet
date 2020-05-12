@@ -40,6 +40,15 @@ int testreussis = 0 ;
     }else cout << "[ECHEC]\n" ;                      \
 }                                                   \
 
+#define TEST2(x, y) nbtests++ ;                     \
+{                                                   \
+    if(x == y){                                     \
+        testreussis++ ;                             \
+        cout << "[SUCCES] " ;                       \
+        printf(STRINGIZE(__FILE__) ", " STRINGIZE(__LINE__) ": " STRINGIZE(x) " == " STRINGIZE(y) "\n") ; \
+    }else cout << "[ECHEC]\n" ;                      \
+}                                                   \
+
 // Compare le contenu de deux fichiers aux chemins a et b avec la commande diff. Incrémente test_reussis si les fichiers sont pareils.
 // Réinitialise ensuite la DB en question
 #define TEST_MAJ_DB(New_db, Expected_db) nbtests++ ;\
@@ -49,9 +58,9 @@ int testreussis = 0 ;
         testreussis++ ;                             \
         cout << "[SUCCES] " ;                       \
         printf(STRINGIZE(__FILE__) ", " STRINGIZE(__LINE__) ": Succes MAJ " STRINGIZE(New_db) " Reinitialisation\n") ; \
-        if(strcmp(New_db,"test/FichiersDeTests/chercheurd'emploi.csv") == 0){\
+        if(strcmp(New_db,"test/FichiersDeTests/chercheurEmploi.csv") == 0){\
             ofstream N(New_db) ;                    \
-            ifstream S("test/db_backup/chercheurd'emploi.csv") ;\
+            ifstream S("test/db_backup/chercheurEmploi.csv") ;\
             string line ;                           \
             getline(S, line) ;                      \
             N << line ;                             \
@@ -87,7 +96,9 @@ int testreussis = 0 ;
 int tests(void)
 {
     Entreprise * ListeEntreprise ;
-    Personne * ListeEmploye, * ListeChercheurEmploi , *test_chercheur , *test_employes;
+    Personne * ListeEmploye, * ListeChercheurEmploi , *test_chercheur , *test_employes ;
+    Personne * tmpP ;
+    Entreprise * tmpE ;
 
     // Tests sur la créations des listes
     Creer_listes(&ListeEntreprise, &ListeEmploye, &ListeChercheurEmploi) ;
@@ -146,6 +157,20 @@ int tests(void)
     test_employes->ListAncienCollegues()->addAncienCollegue(test_chercheur,test_employes) ;
     test_employes->ListAncienCollegues()->dellAncienCollegue(test_chercheur,test_employes) ;
 
+    // Test sur la transition de profil
+    tmpP = ListeEmploye ;
+    tmpE = tmpP->EntrepriseActuelle() ;
+    tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi) ;
+    TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP(),tmpP) ;
+    tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
+    TEST2(ListeEmploye->nextP()->nextP(),tmpP) ;
+    tmpP = ListeEmploye->nextP() ;
+    tmpE = tmpP->EntrepriseActuelle() ;
+    tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi) ;
+    TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP(),tmpP) ;
+    tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
+    TEST2(ListeEmploye->nextP()->nextP(),tmpP) ;
+
     // Tests sur la MAJ de la db entreprise
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;
     ListeEntreprise->modifCodePostal("777007707") ;
@@ -153,13 +178,13 @@ int tests(void)
     TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_tests_expected/entreprise.csv") ;
 
     // Tests sur la MAJ de la db poste
-
+    TEST_MAJ_DB("test/FichiersDeTests/poste.csv", "test/db_tests_expected/poste.csv") ;
 
     // Tests sur la MAJ de la db employe
-    ListeEmploye->nextP()->nextP()->modifNom("Souris") ;
     TEST_MAJ_DB("test/FichiersDeTests/employes.csv", "test/db_tests_expected/employes.csv") ;
 
-    // Tests sur la MAJ de la db chercheurd'emploi
+    // Tests sur la MAJ de la db chercheurEmploi
+    TEST_MAJ_DB("test/FichiersDeTests/chercheurEmploi.csv", "test/db_tests_expected/chercheurEmploi.csv") ;
 
     cout << endl << "Appel des destructeurs :" << endl ;
     delete ListeEntreprise ;

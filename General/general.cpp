@@ -127,7 +127,7 @@ Personne * CreerListeEmploye(Entreprise * ListeEntreprise)
     return ListeEmploye ;
 }
 
-// Construit la liste des Chercheurs d'emploi à partir d'une base de donnée (chercheurd'emplois)
+// Construit la liste des Chercheurs d'emploi à partir d'une base de donnée (chercheurEmplois)
 Personne * CreerListeChercheurEmploi(void)
 {
     Personne * ListeChercheurEmploi = NULL, * tmp = NULL ;
@@ -138,7 +138,7 @@ Personne * CreerListeChercheurEmploi(void)
     char tmpcodePostal[128] ;
     char tmpcompetence[128] ;
 
-    FILE *db_chercheur_emploi = fopen("test/FichiersDeTests/chercheurd'emploi.csv", "r") ;
+    FILE *db_chercheur_emploi = fopen("test/FichiersDeTests/chercheurEmploi.csv", "r") ;
     if(db_chercheur_emploi){
         fscanf(db_chercheur_emploi, "%*s") ;
         // id,nom,prenom,mail,code_postal,competences,collegues_employes,collegues_chercheur_d'emploi
@@ -181,7 +181,7 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
     int indexCollegue ;
 
     FILE *db_employe = fopen("test/FichiersDeTests/employes.csv", "r") ;
-    FILE *db_chercheur_emploi = fopen("test/FichiersDeTests/chercheurd'emploi.csv", "r") ;
+    FILE *db_chercheur_emploi = fopen("test/FichiersDeTests/chercheurEmploi.csv", "r") ;
     if(db_employe && db_chercheur_emploi){
         fscanf(db_employe, "%*s") ;
         // id,nom,prenom,mail,code_postal,entreprise,competences,collegues_employes,collegues_chercheur_d'emploi

@@ -213,8 +213,89 @@ void Personne::modifAncienCollegues(AncienCollegue * NewListCollegues)
 // Fonctionnalités
 // Change un employé en chercheur d'emploi et inversement
 // Ajoute les anciens collègues si besoin
-void Personne::TransitionStatut(void)
+// NewEntreprise est le pointeur vers l'entreprise en cas de recrutement, NULL sinon
+void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeChercheurEmploi, Entreprise * NewEntreprise)
 {
+    Personne *tmpP ;
+    AncienCollegue *tmpA ;
+    int tmpIndex ;
+    bool inList ;
+
+    if(_EntrepriseActuelle && !NewEntreprise){                          // Employe vers chercheur d'emploi
+        // Ajout des anciens collègues s'il en sont pas déjà dans la liste
+        tmpP = *ListeEmploye ;
+        while (tmpP){
+            if(tmpP->EntrepriseActuelle() == _EntrepriseActuelle){
+                tmpA = ListAncienCollegues() ;
+                inList = false ;
+                while (tmpA && !inList){
+                    if(tmpA->currentA() == tmpP) inList = true ;
+                    tmpA = tmpA->nextA() ;
+                }
+                if(!inList) ListAncienCollegues()->addAncienCollegue(tmpP, this) ;
+            }
+            tmpP = tmpP->nextP() ;
+        }
+        // Ajout de la personne à la liste de chercheur d'emploi
+        _EntrepriseActuelle = NULL ;
+        tmpP = *ListeChercheurEmploi ;
+        while(tmpP->nextP()) tmpP = tmpP->nextP() ;
+        _index = tmpP->index()+1 ;
+        // Modification du chaînage
+        if(*ListeEmploye == this){
+            *ListeEmploye = (*ListeEmploye)->nextP() ;
+            (*ListeEmploye)->_previousP = NULL ;
+        }else{
+            if(_nextP) _nextP->modifPreviousP(_previousP) ;
+            if(_previousP) _previousP->modifNextP(_nextP) ;
+
+        }
+        _nextP = NULL ;
+        _previousP = tmpP ;
+        tmpP->modifNextP(this) ;
+        // Modification des index
+        tmpP = *ListeEmploye ;
+        tmpIndex = 1 ;
+        while(tmpP){
+            tmpP->_index = tmpIndex++ ;
+            tmpP = tmpP->nextP() ;
+        }
+        // Mise a jour des DB
+        (*ListeEmploye)->MAJDBPersonne() ;
+        (*ListeChercheurEmploi)->MAJDBPersonne() ;
+
+    }else if(NewEntreprise && !_EntrepriseActuelle){                    // Chercher d'emploi vers employe
+        // Ajout de la personne à la liste d'employé
+        _EntrepriseActuelle = NewEntreprise ;
+        tmpP = *ListeEmploye ;
+        while(tmpP->nextP()) tmpP = tmpP->nextP() ;
+        if(_nextP) _nextP->modifPreviousP(_previousP) ;
+        if(_previousP) _previousP->modifNextP(_nextP) ;
+        _index = tmpP->index()+1 ;
+        // Modification du chaînage
+        if(*ListeChercheurEmploi == this){
+            *ListeChercheurEmploi = (*ListeChercheurEmploi)->nextP() ;
+            (*ListeChercheurEmploi)->_previousP = NULL ;
+        }else{
+            if(_nextP) _nextP->modifPreviousP(_previousP) ;
+            if(_previousP) _previousP->modifNextP(_nextP) ;
+
+        }
+        _nextP = NULL ;
+        _previousP = tmpP ;
+        tmpP->modifNextP(this) ;
+        // Modification des index
+        tmpP = *ListeChercheurEmploi ;
+        tmpIndex = 1 ;
+        while(tmpP){
+            tmpP->_index = tmpIndex++ ;
+            tmpP = tmpP->nextP() ;
+        }
+        // Mise a jour des DB
+        (*ListeEmploye)->MAJDBPersonne() ;
+        (*ListeChercheurEmploi)->MAJDBPersonne() ;
+    }else cout << "Error" << endl ;
+
     return ;
 }
 
@@ -385,14 +466,14 @@ void Personne::MAJDBPersonne(void)
 
     tmp = this ;
     while (tmp->_previousP != NULL) tmp = tmp->previousP() ;                    //retour au début de la liste des personnes
-    if (this->EntrepriseActuelle()) {                                                               //ouverture du csv chercheurd'emploi ou employes selon la liste où se trouve la personne
+    if (this->EntrepriseActuelle()) {                                                               //ouverture du csv chercheurEmploi ou employes selon la liste où se trouve la personne
         new_db_employes = fopen("test/FichiersDeTests/employes_new.csv", "w") ;             // A modifier lorsque l'on utilisera la vrai DB
         prev_db_employes = fopen("test/FichiersDeTests/employes.csv", "r") ;                // A modifier lorsque l'on utilisera la vrai DB
         fscanf(prev_db_employes, "%127[^\n\r]", schema_db) ;                         //on recopie le schema de la base de données 
         fprintf(new_db_employes, "%s", schema_db) ;
     }else {
-        new_db_chercheurs = fopen("test/FichiersDeTests/chercheurd'emploi_new.csv", "w") ;  // A modifier lorsque l'on utilisera la vrai DB
-        prev_db_chercheurs = fopen("test/FichiersDeTests/chercheurd'emploi.csv", "r") ;     // A modifier lorsque l'on utilisera la vrai DB 
+        new_db_chercheurs = fopen("test/FichiersDeTests/chercheurEmploi_new.csv", "w") ;  // A modifier lorsque l'on utilisera la vrai DB
+        prev_db_chercheurs = fopen("test/FichiersDeTests/chercheurEmploi.csv", "r") ;     // A modifier lorsque l'on utilisera la vrai DB 
         
         fscanf(prev_db_chercheurs, "%127[^\n\r]", schema_db) ;                       //on recopie le schema de la base de données 
         fprintf(new_db_chercheurs, "%s", schema_db) ;
@@ -420,7 +501,7 @@ void Personne::MAJDBPersonne(void)
                 tmp_collegue = tmp_collegue->nextA() ;
                 
                 
-            }       // à tester après la lecture de la db
+            }
             collegues_to_write += "," ;
 
             tmp_collegue = tmp->ListAncienCollegues() ;          //on rajoute les anciens collegues chercheur d'emploi
@@ -432,7 +513,7 @@ void Personne::MAJDBPersonne(void)
                     collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;   
                 }
                 tmp_collegue = tmp_collegue->nextA() ;
-            }       // à tester après la lecture de la db
+            }
 
                     
             if (tmp->EntrepriseActuelle()) {
@@ -459,8 +540,8 @@ void Personne::MAJDBPersonne(void)
     } else {
         fclose(new_db_chercheurs) ;
         fclose(prev_db_chercheurs) ;
-        remove("test/FichiersDeTests/chercheurd'emploi.csv") ;                                                      // A modifier lorsque l'on utilisera la vrai DB
-        rename("test/FichiersDeTests/chercheurd'emploi_new.csv", "test/FichiersDeTests/chercheurd'emploi.csv") ;    // A modifier lorsque l'on utilisera la vrai DB
+        remove("test/FichiersDeTests/chercheurEmploi.csv") ;                                                      // A modifier lorsque l'on utilisera la vrai DB
+        rename("test/FichiersDeTests/chercheurEmploi_new.csv", "test/FichiersDeTests/chercheurEmploi.csv") ;    // A modifier lorsque l'on utilisera la vrai DB
     }
     
     return ;
@@ -743,7 +824,7 @@ void AncienCollegue::dellAncienCollegue(Personne * AncienCollegueToDell,Personne
 
     tmp_collegue = this ;
     while (tmp_collegue) {
-        if (tmp_collegue->currentA() == AncienCollegueToDell) {     //recherche en avant dans la liste 
+        if (tmp_collegue->currentA() == AncienCollegueToDell) {         //recherche en avant dans la liste 
             collegue_to_delete = tmp_collegue ;
         }
         tmp_collegue = tmp_collegue->nextA() ;

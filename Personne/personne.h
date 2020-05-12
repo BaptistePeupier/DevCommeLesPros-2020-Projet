@@ -59,8 +59,9 @@ class Personne
         void modifCompetencePropres(Competence * NewListeCompetence) ;
         void modifAncienCollegues(AncienCollegue * NewListCollegues) ;
     // Fonctionnalités
-        void TransitionStatut(void) ;                                       // Change un employé en chercheur d'emploi et inversement
-                                                                            // Ajoute les anciens collègues si besoin
+        void TransitionStatut(Personne ** ListeEmploye, Personne ** ListeChercheurEmploi, Entreprise * NewEntreprise=NULL) ;// Change un employé en chercheur d'emploi et inversement
+                                                                                                                            // Ajoute les anciens collègues si besoin
+                                                                                                                            // NewEntreprise est le pointeur vers l'entreprise en cas de recrutement, NULL sinon
         void deleteProfile(void) ;
         void RecherchePosteCompetence(Entreprise * listeEntreprises) ;                               // Affiche une liste d'entreprise avec les postes correspondant aux compétences de la personne
         void RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises) ;                     // Affiche une liste d'entreprise avec les postes correspondant aux compétences et au code postal de la personne
