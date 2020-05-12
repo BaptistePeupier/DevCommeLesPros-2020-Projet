@@ -31,4 +31,8 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
 // Créer les listes et fait les liens avec les entreprises et ancien collègues
 void Creer_listes(Entreprise ** ListeEntreprise, Personne ** ListeEmploye, Personne ** ListeChercheurEmploi) ;
 
+// Supprime le profile (l'entreprise) ainsi que les postes qui lui sont lié
+// Fait également transitionner les employes de cette entreprise en chercheur d'emploi
+void deleteProfileEntreprise(Entreprise **ListeEntreprise, Entreprise *ToDellE, Personne **ListeEmploye, Personne **ListeChercheurEmploi) ;
+
 #endif

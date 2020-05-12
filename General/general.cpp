@@ -283,3 +283,28 @@ void Creer_listes(Entreprise ** ListeEntreprise, Personne ** ListeEmploye, Perso
 
     return ;
 }
+
+// Supprime le profile (l'entreprise) ainsi que les postes qui lui sont lié
+// Fait également transitionner les employes de cette entreprise en chercheur d'emploi
+void deleteProfileEntreprise(Entreprise **ListeEntreprise, Entreprise *ToDellE, Personne **ListeEmploye, Personne **ListeChercheurEmploi)
+{
+    Personne *tmpP ;
+
+    // Transition des employes de l'entreprise en chercheur d'emploi
+    tmpP = *ListeEmploye ;
+    while(tmpP){
+        if(tmpP->EntrepriseActuelle() == ToDellE) tmpP->TransitionStatut(ListeEmploye,ListeChercheurEmploi) ;
+        tmpP = tmpP->nextP() ;
+    }
+    // Suppression des postes
+    delete ToDellE->profilPoste() ;
+    // Suppresion de l'entreprise
+    if(ToDellE->next()) ToDellE->next()->modifPrevious(ToDellE->previous()) ;
+    if(ToDellE->previous()) ToDellE->previous()->modifNext(ToDellE->next()) ;
+    if(*ListeEntreprise == ToDellE) *ListeEntreprise = (*ListeEntreprise)->next() ;
+    ToDellE->modifNext(nullptr) ;
+    ToDellE->modifPrevious(nullptr) ;
+    delete ToDellE ;
+
+    return ;
+}
