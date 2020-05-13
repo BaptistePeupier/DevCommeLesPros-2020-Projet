@@ -299,10 +299,54 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
     return ;
 }
 
-void Personne::deleteProfile(void)
+void Personne::deleteProfile(Personne ** ListeEmploye, Personne ** ListeChercheurEmploi)
 {
-    //suppression de cette même personne dans les anciens collègues
+    //suppression de la personne des anciens collègues dans les 2 listes
+    
+    Personne * tmp_employe ;
+    Personne * tmp_chercheur ;
+
+    tmp_employe = *ListeEmploye;
+    while (tmp_employe) {
+        if (tmp_employe->ListAncienCollegues()) {
+            tmp_employe->ListAncienCollegues()->dellAncienCollegue(this,tmp_employe) ;
+        }
+        tmp_employe = tmp_employe->nextP() ;
+    }
+    
+    tmp_chercheur = *ListeChercheurEmploi ;
+    while (tmp_chercheur) {
+        if (tmp_chercheur->ListAncienCollegues()) {
+            tmp_chercheur->ListAncienCollegues()->dellAncienCollegue(this,tmp_chercheur) ;
+        }
+        tmp_chercheur = tmp_chercheur->nextP() ;
+    }
+    
     //suppression de la personne dans la liste
+    if (_previousP) {
+        _previousP->_nextP = _nextP ;
+    } else {
+        if (_EntrepriseActuelle) {
+            *ListeEmploye = _nextP ;
+        } else {
+            *ListeChercheurEmploi = _nextP ;         //mise à jour des pointeurs sur les liste au cas où on supprime la première personne de la liste
+        }
+    }
+    if (_nextP) {
+        _nextP->_previousP = _previousP ;
+    }
+    _previousP = NULL ;
+    _nextP = NULL ;
+    
+    if (_EntrepriseActuelle) {
+        tmp_employe = *ListeEmploye;
+        tmp_employe->MAJDBPersonne() ;
+    } else {
+        tmp_chercheur = *ListeChercheurEmploi ;
+        tmp_chercheur->MAJDBPersonne() ;
+    }
+    
+    
     return ;
 }
 
@@ -842,7 +886,12 @@ void AncienCollegue::dellAncienCollegue(Personne * AncienCollegueToDell,Personne
     
     if (collegue_to_delete) {
         if (collegue_to_delete != this) {
-            if(collegue_to_delete->_previousA != NULL) collegue_to_delete->_previousA->_nextA = collegue_to_delete->_nextA ;
+            if(collegue_to_delete->_previousA != NULL) {
+                collegue_to_delete->_previousA->_nextA = collegue_to_delete->_nextA ;
+            } else {
+                base_pers->modifAncienCollegues(collegue_to_delete->nextA()) ;                //on change le pointeur vers la liste des anciens collègues si on supprime un collègue en début de liste
+            }
+            ;
             if(collegue_to_delete->_nextA != NULL) collegue_to_delete->_nextA->_previousA = collegue_to_delete->_previousA ;
             collegue_to_delete->modifNextA(NULL) ;
             collegue_to_delete->modifPreviousA(NULL) ;
