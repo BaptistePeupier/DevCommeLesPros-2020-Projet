@@ -171,6 +171,22 @@ int tests(void)
     tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
     TEST2(ListeEmploye->nextP()->nextP(),tmpP) ;
 
+
+    //test de la suppression de profil avec une personne ajoutée à la fin
+    test_chercheur = ListeChercheurEmploi ;
+    while (test_chercheur->nextP()) {
+        test_chercheur = test_chercheur->nextP() ;
+    }
+    test_pers.modifIndex(test_chercheur->index()+1) ;
+    test_chercheur->modifNextP(&test_pers) ;
+    test_pers.modifPreviousP(test_chercheur) ;
+    test_chercheur->MAJDBPersonne() ;
+    test_pers.deleteProfile(&ListeEmploye,&ListeChercheurEmploi) ;
+
+    //test de la suppression de profil avec une personne au début
+    test_employes = ListeEmploye ;
+    test_employes->deleteProfile(&ListeEmploye,&ListeChercheurEmploi) ;
+
     // Tests sur la MAJ de la db entreprise
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;
     ListeEntreprise->modifCodePostal("777007707") ;
