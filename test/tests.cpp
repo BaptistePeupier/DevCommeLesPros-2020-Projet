@@ -172,14 +172,14 @@ int tests(void)
     TEST2(ListeEmploye->nextP()->nextP()->nextP(),tmpP) ;
 
     // Test sur la suppression du profil d'une entreprise
-    // tmpE = ListeEntreprise->next() ;
-    // deleteProfileEntreprise(ListeEntreprise, &ListeEntreprise, &ListeEmploye, &ListeChercheurEmploi) ;
-    // TEST2(ListeEntreprise, tmpE) ;
+    tmpE = ListeEntreprise->next() ;
+    deleteProfileEntreprise(ListeEntreprise, &ListeEntreprise, &ListeEmploye, &ListeChercheurEmploi) ;
+    TEST2(ListeEntreprise, tmpE) ;
 
     // Tests sur la MAJ de la db entreprise
+    ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;
     ListeEntreprise->modifCodePostal("777007707") ;
-    ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;
     TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_tests_expected/entreprise.csv") ;
 
     // Tests sur la MAJ de la db poste
