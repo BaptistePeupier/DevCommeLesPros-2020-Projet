@@ -161,15 +161,15 @@ int tests(void)
     tmpP = ListeEmploye ;
     tmpE = tmpP->EntrepriseActuelle() ;
     tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi) ;
-    TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP(),tmpP) ;
+    TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP()->nextP(),tmpP) ;
     tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
-    TEST2(ListeEmploye->nextP()->nextP(),tmpP) ;
+    TEST2(ListeEmploye->nextP()->nextP()->nextP(),tmpP) ;
     tmpP = ListeEmploye->nextP() ;
     tmpE = tmpP->EntrepriseActuelle() ;
     tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi) ;
-    TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP(),tmpP) ;
+    TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP()->nextP(),tmpP) ;
     tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
-    TEST2(ListeEmploye->nextP()->nextP(),tmpP) ;
+    TEST2(ListeEmploye->nextP()->nextP()->nextP(),tmpP) ;
 
     // Test sur la suppression du profil d'une entreprise
     // tmpE = ListeEntreprise->next() ;

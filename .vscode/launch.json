@@ -12,7 +12,7 @@
             "args": [],
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "stopAtEntry": true,
+            "stopAtEntry": false,
             "logging": {
                 "moduleLoad": false
             },

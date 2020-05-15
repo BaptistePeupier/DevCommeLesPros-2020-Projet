@@ -145,7 +145,7 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
                     if(tmpA->currentA() == tmpP) inList = true ;
                     tmpA = tmpA->nextA() ;
                 }
-                if(!inList){
+                if(!inList && tmpP!=this){
                     ListAncienCollegues()->addAncienCollegue(tmpP, this) ;
                     tmpP->ListAncienCollegues()->addAncienCollegue(this, tmpP) ;
                 }
@@ -330,7 +330,7 @@ void Personne::RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises)
     return ;
 }
 
-// Renvoie une liste d'ancien collègue travaillant dans une entreprise donnée
+// Affiche une liste d'ancien collègue travaillant dans une entreprise donnée
 void Personne::RechercheColleguesEntreprise(const char* nomEntreprise)
 {
     AncienCollegue * tmp ;
