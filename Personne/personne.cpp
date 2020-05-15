@@ -145,7 +145,10 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
                     if(tmpA->currentA() == tmpP) inList = true ;
                     tmpA = tmpA->nextA() ;
                 }
-                if(!inList) ListAncienCollegues()->addAncienCollegue(tmpP, this) ;
+                if(!inList){
+                    ListAncienCollegues()->addAncienCollegue(tmpP, this) ;
+                    tmpP->ListAncienCollegues()->addAncienCollegue(this, tmpP) ;
+                }
             }
             tmpP = tmpP->nextP() ;
         }

@@ -33,6 +33,6 @@ void Creer_listes(Entreprise ** ListeEntreprise, Personne ** ListeEmploye, Perso
 
 // Supprime le profile (l'entreprise) ainsi que les postes qui lui sont lié
 // Fait également transitionner les employes de cette entreprise en chercheur d'emploi
-void deleteProfileEntreprise(Entreprise **ListeEntreprise, Entreprise *ToDellE, Personne **ListeEmploye, Personne **ListeChercheurEmploi) ;
+void deleteProfileEntreprise(Entreprise *ToDellE, Entreprise **ListeEntreprise, Personne **ListeEmploye, Personne **ListeChercheurEmploi) ;
 
 #endif

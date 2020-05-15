@@ -171,6 +171,11 @@ int tests(void)
     tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
     TEST2(ListeEmploye->nextP()->nextP(),tmpP) ;
 
+    // Test sur la suppression du profil d'une entreprise
+    // tmpE = ListeEntreprise->next() ;
+    // deleteProfileEntreprise(ListeEntreprise, &ListeEntreprise, &ListeEmploye, &ListeChercheurEmploi) ;
+    // TEST2(ListeEntreprise, tmpE) ;
+
     // Tests sur la MAJ de la db entreprise
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;
     ListeEntreprise->modifCodePostal("777007707") ;
