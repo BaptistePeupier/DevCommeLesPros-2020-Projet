@@ -6,7 +6,7 @@
 // Fonctions memrbes de la calsse Entreprise                                                                     //
 //                                                                                                               //
 // PEUPIER Baptiste MASSELOT Nicolas                                                                             //
-// Cree le 06/04/2020, modifié le 18/04/2020                                                                     //
+// Cree le 06/04/2020, modifié le 12/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,50 +53,7 @@ Entreprise::~Entreprise(void)
     return ;
 }
 
-// Accesseurs
-int Entreprise::index(void)
-{
-    return _index ;
-}
-
-char* Entreprise::nom(void)
-{
-    return _nom ;
-}
-
-char* Entreprise::codePostal(void)
-{
-    return _codePostal;
-}
-
-char* Entreprise::mail(void)
-{
-    return _mail ;
-}
-
-Entreprise * Entreprise::next(void)
-{
-    return _next ;
-}
-
-Entreprise * Entreprise::previous(void)
-{
-    return _previous;
-}
-
-Poste * Entreprise::profilPoste(void)
-{
-    return _profilPoste ;
-}
-
-
 // Modifieurs
-void Entreprise::modifIndex(int NewIndex)
-{
-    _index = NewIndex ;
-    return ;
-}
-
 void Entreprise::modifNom(const char* NewNom)
 {
     int i ;
@@ -139,24 +96,6 @@ void Entreprise::modifMail(const char * NewMail)
     return ;
 }
 
-void Entreprise::modifNext(Entreprise * next)
-{
-    _next = next ;
-    return ;
-}
-
-void Entreprise::modifPrevious(Entreprise * previous)
-{
-    _previous = previous ;
-    return ;
-}
-
-// Modifie le pointeur vers la liste de postes à fournir
-void Entreprise::modifProfilPoste(Poste * NewListePoste)
-{
-    _profilPoste = NewListePoste ;
-}
-
 // Fonctionnalités
 // Ajoute une entreprise à la liste
 void Entreprise::addEntreprise(const char* nom, const char* codePostal, const char* mail)
@@ -170,12 +109,6 @@ void Entreprise::addEntreprise(const char* nom, const char* codePostal, const ch
     MAJDBEntreprise() ;
 
     return ;    
-}
-
-// Supprime le profile (l'entreprise) ainsi que les postes qui lui sont lié
-void Entreprise::deleteProfile(void)
-{
-    return ;
 }
 
 // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées ou ajoutées
@@ -238,6 +171,8 @@ void Entreprise::addPoste(Poste * ToAdd)
     while (tmp && tmp->next()) tmp = tmp->next() ;
     tmp->modifNext(ToAdd) ;
     ToAdd->modifPrevious(tmp) ;
+
+    return ;
 }
 
 
@@ -281,27 +216,6 @@ Poste::~Poste(void)
     return ;
 }
 
-// Accesseurs
-char* Poste::Titre(void)
-{
-    return _Titre ;
-}
-
-Poste * Poste::next(void)
-{
-    return _next ;
-}
-
-Poste * Poste::previous(void)
-{
-    return _previous ;
-}
-
-Competence * Poste::CompetencesRequises(void)
-{
-    return _CompetencesRequises ;
-}
-
 // Modifieurs
 void Poste::modifTitre(const char* NewTitre)
 {
@@ -313,18 +227,6 @@ void Poste::modifTitre(const char* NewTitre)
         _Titre[i] = NewTitre[i] ;
     }while (NewTitre[i] != '\0') ;
 
-    return ;
-}
-
-void Poste::modifNext(Poste* NewNext)
-{
-    _next = NewNext ;
-    return ;
-}
-
-void Poste::modifPrevious(Poste* NewPrevious)
-{
-    _previous = NewPrevious ;
     return ;
 }
 
@@ -373,22 +275,6 @@ Competence::~Competence(void)
     return ;
 }
 
-// Accesseurs
-char* Competence::label(void)
-{
-    return _label ;
-}
-
-Competence * Competence::next(void)
-{
-    return _next ;
-}
-
-Competence * Competence::previous(void)
-{
-    return _next ;
-}
-
 // Modifieurs
 void Competence::modifLabel(const char* NewLabel)
 {
@@ -400,18 +286,6 @@ void Competence::modifLabel(const char* NewLabel)
         _label[i] = NewLabel[i] ;
     }while (NewLabel[i] != '\0') ;
 
-    return ;
-}
-
-void Competence::modifNext(Competence* NewNext)
-{
-    _next = NewNext ;
-    return ;
-}
-
-void Competence::modifPrevious(Competence* NewPrevious)
-{
-    _previous = NewPrevious ;
     return ;
 }
 

@@ -13,7 +13,7 @@ class Personne ;
 // Classe Personne contenant les données d'une personne.                                                         //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 21/04/2020                                                                     //
+// Cree le 06/04/2020, modifié le 12/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,27 +37,27 @@ class Personne
     // Le destructeur
         virtual ~Personne(void) ;
     // Accesseurs
-        int index(void) ;
-        char* nom(void) ;
-        char* prenom(void) ;
-        char* mail(void) ;
-        char* codePostal() ;
-        Personne * previousP(void) ;
-        Personne * nextP(void) ;
-        Competence * CompetencePropres(void) ;
-        AncienCollegue * ListAncienCollegues(void) ;
-        Entreprise * EntrepriseActuelle(void) ;
+        int index(void){return _index ;} ;
+        char* nom(void){return _nom ;} ;
+        char* prenom(void){return _prenom ;} ;
+        char* mail(void){return _mail ;} ;
+        char* codePostal(){return _codePostal ;} ;
+        Personne * previousP(void){return _previousP ;} ;
+        Personne * nextP(void){return _nextP ;} ;
+        Competence * CompetencePropres(void){return _CompetencesPropres ;} ;
+        AncienCollegue * ListAncienCollegues(void){return _ListAncienCollegues ;} ;
+        Entreprise * EntrepriseActuelle(void){return _EntrepriseActuelle ;} ;
     // Modifieurs
-        void modifIndex(int Newindex) ;
+        void modifIndex(int Newindex){_index = Newindex ; MAJDBPersonne() ; return ;} ;
         void modifNom(const char* Newnom) ;
         void modifPrenom(const char* Newprenom) ;
         void modifMail(const char* Newmail) ;
         void modifCodePostal(const char* NewCodePostal) ;
-        void modifPreviousP(Personne * NewPreviousP) ;
-        void modifNextP(Personne * NewNextP) ;
-        void modifEntreprise(Entreprise * NewEntreprise) ;
-        void modifCompetencePropres(Competence * NewListeCompetence) ;
-        void modifAncienCollegues(AncienCollegue * NewListCollegues) ;
+        void modifPreviousP(Personne * NewPreviousP){_previousP = NewPreviousP ; return ;} ;
+        void modifNextP(Personne * NewNextP){_nextP = NewNextP ; return ;} ;
+        void modifEntreprise(Entreprise * NewEntreprise){_EntrepriseActuelle = NewEntreprise ; MAJDBPersonne() ; return ;} ;
+        void modifCompetencePropres(Competence * NewListeCompetence){_CompetencesPropres = NewListeCompetence ; return ;} ;
+        void modifAncienCollegues(AncienCollegue * NewListCollegues){_ListAncienCollegues = NewListCollegues ; return ;} ;
     // Fonctionnalités
         void TransitionStatut(Personne ** ListeEmploye, Personne ** ListeChercheurEmploi, Entreprise * NewEntreprise=NULL) ;// Change un employé en chercheur d'emploi et inversement
                                                                                                                             // Ajoute les anciens collègues si besoin
@@ -83,7 +83,7 @@ class Personne
 // Classe AncienCollegue étant une liste de personnes.                                                           //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 21/04/2020                                                                     //
+// Cree le 06/04/2020, modifié le 12/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,13 +100,13 @@ class AncienCollegue
     // Le destructeur
         virtual ~AncienCollegue(void) ;
     // Accesseurs
-        Personne * currentA(void) ;
-        AncienCollegue * nextA(void) ;
-        AncienCollegue * previousA(void) ;
+        Personne * currentA(void){return _currentA ;} ;
+        AncienCollegue * nextA(void){return _nextA ;} ;
+        AncienCollegue * previousA(void){return _previousA ;} ;
     // Modifieurs
-        void modifCurrentA(Personne * NewCurrent) ;
-        void modifNextA(AncienCollegue * NewNextA) ;
-        void modifPreviousA(AncienCollegue * NewPreviousA) ;
+        void modifCurrentA(Personne * NewCurrent){_currentA = NewCurrent ; return ;} ;
+        void modifNextA(AncienCollegue * NewNextA){_nextA = NewNextA ; return ;} ;
+        void modifPreviousA(AncienCollegue * NewPreviousA){_previousA = NewPreviousA ; return ;} ;
     // Fonctionnalités
         void addAncienCollegue(Personne * NewAncienCollegue,Personne * base_pers) ;      // Ajoute une personne à la liste
         void dellAncienCollegue(Personne * AncienCollegueToDell,Personne * base_pers) ;  // Retire une personne de la liste

@@ -161,15 +161,20 @@ int tests(void)
     tmpP = ListeEmploye ;
     tmpE = tmpP->EntrepriseActuelle() ;
     tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi) ;
-    TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP(),tmpP) ;
+    TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP()->nextP(),tmpP) ;
     tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
-    TEST2(ListeEmploye->nextP()->nextP(),tmpP) ;
+    TEST2(ListeEmploye->nextP()->nextP()->nextP(),tmpP) ;
     tmpP = ListeEmploye->nextP() ;
     tmpE = tmpP->EntrepriseActuelle() ;
     tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi) ;
-    TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP(),tmpP) ;
+    TEST2(ListeChercheurEmploi->nextP()->nextP()->nextP()->nextP(),tmpP) ;
     tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
-    TEST2(ListeEmploye->nextP()->nextP(),tmpP) ;
+    TEST2(ListeEmploye->nextP()->nextP()->nextP(),tmpP) ;
+
+    // Test sur la suppression du profil d'une entreprise
+    tmpE = ListeEntreprise->next() ;
+    deleteProfileEntreprise(ListeEntreprise, &ListeEntreprise, &ListeEmploye, &ListeChercheurEmploi) ;
+    TEST2(ListeEntreprise, tmpE) ;
 
 
     //test de la suppression de profil avec une personne ajoutée à la fin
@@ -188,9 +193,9 @@ int tests(void)
     test_employes->deleteProfile(&ListeEmploye,&ListeChercheurEmploi) ;
 
     // Tests sur la MAJ de la db entreprise
+    ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;
     ListeEntreprise->modifCodePostal("777007707") ;
-    ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;
     TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_tests_expected/entreprise.csv") ;
 
     // Tests sur la MAJ de la db poste

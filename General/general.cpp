@@ -283,3 +283,40 @@ void Creer_listes(Entreprise ** ListeEntreprise, Personne ** ListeEmploye, Perso
 
     return ;
 }
+
+// Supprime le profile (l'entreprise) ainsi que les postes qui lui sont lié
+// Fait également transitionner les employes de cette entreprise en chercheur d'emploi
+void deleteProfileEntreprise(Entreprise *ToDellE, Entreprise **ListeEntreprise, Personne **ListeEmploye, Personne **ListeChercheurEmploi)
+{
+    Personne *tmpP, *nextP ;
+    Entreprise *tmpE ;
+    int i ;
+
+    // Transition des employes de l'entreprise en chercheur d'emploi
+    tmpP = *ListeEmploye ;
+    while(tmpP){
+        nextP = tmpP->nextP() ;
+        if(tmpP->EntrepriseActuelle() == ToDellE) tmpP->TransitionStatut(ListeEmploye,ListeChercheurEmploi) ;
+        tmpP = nextP ;
+    }
+    // Suppresion de l'entreprise + ses postes, on retire l'entreprise de la liste pour que le destructeur ne supprime qu'elle
+    if(ToDellE->next()) ToDellE->next()->modifPrevious(ToDellE->previous()) ;
+    if(ToDellE->previous()) ToDellE->previous()->modifNext(ToDellE->next()) ;
+    if(*ListeEntreprise == ToDellE) *ListeEntreprise = (*ListeEntreprise)->next() ;
+    ToDellE->modifNext(nullptr) ;
+    ToDellE->modifPrevious(nullptr) ;
+    delete ToDellE ;
+    // Mise à jour des indices
+    tmpE = *ListeEntreprise ;
+    i = 1 ;
+    while(tmpE){
+        tmpE->modifIndex(i++) ;
+        tmpE = tmpE->next() ;
+    }
+    // Mise à jour des DB
+    (*ListeEntreprise)->MAJDBEntreprise() ;
+    (*ListeEmploye)->MAJDBPersonne() ;
+    (*ListeChercheurEmploi)->MAJDBPersonne() ;
+
+    return ;
+}

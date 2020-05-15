@@ -66,66 +66,7 @@ Personne::~Personne(void)
     return ;
 }
 
-// Accesseurs
-int Personne::index(void)
-{
-    return _index ;
-}
-
-char* Personne::nom(void)
-{
-    return _nom ;
-}
-
-char* Personne::prenom(void)
-{
-    return _prenom ;
-}
-
-char* Personne::mail(void)
-{
-    return _mail ;
-}
-
-char* Personne::codePostal()
-{
-    return _codePostal ;
-}
-
-Personne * Personne::previousP(void)
-{
-    return _previousP ;
-}
-
-Personne * Personne::nextP(void)
-{
-    return _nextP ;
-}
-
-Competence * Personne::CompetencePropres(void)
-{
-    return _CompetencesPropres ;
-}
-
-AncienCollegue * Personne::ListAncienCollegues(void)
-{
-    return _ListAncienCollegues ;
-}
-
-Entreprise * Personne::EntrepriseActuelle(void)
-{
-    return _EntrepriseActuelle ;
-}
-
 // Modifieurs
-void Personne::modifIndex(int Newindex)
-{
-    _index = Newindex ;
-    MAJDBPersonne();
-
-    return ;
-}
-
 void Personne::modifNom(const char* Newnom)
 {
     int i ;
@@ -182,34 +123,6 @@ void Personne::modifCodePostal(const char* NewCodePostal)
     return ;
 }
 
-void Personne::modifPreviousP(Personne * NewPreviousP)
-{
-    _previousP = NewPreviousP ;
-}
-
-void Personne::modifNextP(Personne * NewNextP)
-{
-    _nextP = NewNextP ;
-}
-
-void Personne::modifEntreprise(Entreprise * NewEntreprise)
-{
-    _EntrepriseActuelle = NewEntreprise ;
-    MAJDBPersonne() ;
-    return ;
-}
-
-void Personne::modifCompetencePropres(Competence * NewListeCompetence)
-{
-    _CompetencesPropres = NewListeCompetence ;
-}
-
-void Personne::modifAncienCollegues(AncienCollegue * NewListCollegues)
-{
-    _ListAncienCollegues = NewListCollegues ;
-}
-
-
 // Fonctionnalités
 // Change un employé en chercheur d'emploi et inversement
 // Ajoute les anciens collègues si besoin
@@ -232,7 +145,10 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
                     if(tmpA->currentA() == tmpP) inList = true ;
                     tmpA = tmpA->nextA() ;
                 }
-                if(!inList) ListAncienCollegues()->addAncienCollegue(tmpP, this) ;
+                if(!inList && tmpP!=this){
+                    ListAncienCollegues()->addAncienCollegue(tmpP, this) ;
+                    tmpP->ListAncienCollegues()->addAncienCollegue(this, tmpP) ;
+                }
             }
             tmpP = tmpP->nextP() ;
         }
@@ -458,7 +374,7 @@ void Personne::RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises)
     return ;
 }
 
-// Renvoie une liste d'ancien collègue travaillant dans une entreprise donnée
+// Affiche une liste d'ancien collègue travaillant dans une entreprise donnée
 void Personne::RechercheColleguesEntreprise(const char* nomEntreprise)
 {
     AncienCollegue * tmp ;
@@ -808,44 +724,6 @@ AncienCollegue::~AncienCollegue(void)
     return ;
 }
 
-// Accesseurs
-Personne * AncienCollegue::currentA(void)
-{
-    return _currentA ;
-}
-
-AncienCollegue * AncienCollegue::nextA(void)
-{
-    return _nextA ;
-}
-
-AncienCollegue * AncienCollegue::previousA(void)
-{
-    return _previousA ;
-}
-
-// Modifieurs
-void AncienCollegue::modifCurrentA(Personne * NewCurrent)
-{
-    _currentA = NewCurrent ;
-
-    return ;
-}
-
-void AncienCollegue::modifNextA(AncienCollegue * NewNextA)
-{
-    _nextA = NewNextA ;
-
-    return ;
-}
-
-void AncienCollegue::modifPreviousA(AncienCollegue * NewPreviousA)
-{
-    _previousA = NewPreviousA ;
-
-    return ;
-}
-
 // Fonctionnalités
 // Ajoute une personne à la liste
 void AncienCollegue::addAncienCollegue(Personne * NewAncienCollegue,Personne * base_pers)
@@ -908,3 +786,4 @@ void AncienCollegue::dellAncienCollegue(Personne * AncienCollegueToDell,Personne
                                  //on passe en paramètre l'addresse de celle-ci pour éviter de faire des parcours de liste
     return ;
 }
+
