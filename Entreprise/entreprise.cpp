@@ -6,40 +6,10 @@
 // Fonctions memrbes de la calsse Entreprise                                                                     //
 //                                                                                                               //
 // PEUPIER Baptiste MASSELOT Nicolas                                                                             //
-// Cree le 06/04/2020, modifié le 12/05/2020                                                                     //
+// Cree le 06/04/2020, modifié le 16/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Les constructeurs
-Entreprise::Entreprise(int index, const char* nom, const char* codePostal, const char* mail, Entreprise * next, Entreprise * previous)
-{ 
-    int i ;
-
-    i = -1 ;
-    do{                             // Si nom vide
-        i++ ;                       // Pour mettre le '\0'
-        _nom[i] = nom[i] ;
-    }while (nom[i] != '\0') ;
-
-    i = -1 ;
-    do{                             // Si code postal vide
-        i++ ;                       // Pour mettre le '\0'
-        _codePostal[i] = codePostal[i] ;
-    }while (codePostal[i] != '\0') ;
-
-    i = -1 ;
-    do{                             // Si mail vide
-        i++ ;                       // Pour mettre le '\0'
-        _mail[i] = mail[i] ;
-    }while (mail[i] != '\0') ;
-
-    _index = index ;
-    _next = next ;
-    _previous = previous ;
-
-    return ;
-}
 
 // Le destructeur
 Entreprise::~Entreprise(void)
@@ -53,52 +23,9 @@ Entreprise::~Entreprise(void)
     return ;
 }
 
-// Modifieurs
-void Entreprise::modifNom(const char* NewNom)
-{
-    int i ;
-
-    i = -1 ;
-    do{                             // Si nom vide
-        i++ ;                       // Pour mettre le '\0'
-        _nom[i] = NewNom[i] ;
-    }while (NewNom[i] != '\0') ;
-    MAJDBEntreprise() ;
-
-    return ;
-}
-
-void Entreprise::modifCodePostal(const char* NewCodePostal)
-{
-    int i ;
-
-    i = -1 ;
-    do{                             // Si code postal vide
-        i++ ;                       // Pour mettre le '\0'
-        _codePostal[i] = NewCodePostal[i] ;
-    }while (NewCodePostal[i] != '\0') ;
-    MAJDBEntreprise() ;
-
-    return ;
-}
-
-void Entreprise::modifMail(const char * NewMail)
-{
-    int i ;
-
-    i = -1 ;
-    do{                             // Si mail vide
-        i++ ;                       // Pour mettre le '\0'
-        _mail[i] = NewMail[i] ;
-    }while (NewMail[i] != '\0') ;
-    MAJDBEntreprise() ;
-
-    return ;
-}
-
 // Fonctionnalités
 // Ajoute une entreprise à la liste
-void Entreprise::addEntreprise(const char* nom, const char* codePostal, const char* mail)
+void Entreprise::addEntreprise(const string nom, const string codePostal, const string mail)
 {
     Entreprise * tmp, *  NewE ;
 
@@ -134,13 +61,13 @@ void Entreprise::MAJDBEntreprise(void)
         fprintf(new_db_poste, "%s", schema) ;
         // Ecriture des tuples de donnes contenus dans la liste des entreprises
         while(tmp){
-            fprintf(new_db_en, "\n%d,%s,%s,%s", tmp->index(), tmp->nom(), tmp->codePostal(), tmp->mail()) ;
+            fprintf(new_db_en, "\n%d,%s,%s,%s", tmp->index(), tmp->nom().c_str(), tmp->codePostal().c_str(), tmp->mail().c_str()) ;
             if(tmp->profilPoste()){
                 tmpC = tmp->profilPoste()->CompetencesRequises() ;
-                fprintf(new_db_poste, "\n%d,%s,%d,", indexPoste++, tmp->profilPoste()->Titre(), tmp->index()) ;
+                fprintf(new_db_poste, "\n%d,%s,%d,", indexPoste++, tmp->profilPoste()->Titre().c_str(), tmp->index()) ;
                 // Ecriture des compétences du poste
                 while(tmpC){
-                    fprintf(new_db_poste, "%s", tmpC->label()) ;
+                    fprintf(new_db_poste, "%s", tmpC->label().c_str()) ;
                     if(tmpC->next()) fprintf(new_db_poste, ";") ;
                     tmpC = tmpC->next() ;
                 }
@@ -187,22 +114,6 @@ void Entreprise::addPoste(Poste * ToAdd)
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Les constructeurs
-Poste::Poste(const char* Titre, Poste *next, Poste * previous, Competence * CompetencesRequises)
-{
-    int i ;
-
-    i = -1 ;
-    do{                             // Si titre vide
-        i++ ;                       // Pour mettre le '\0'
-        _Titre[i] = Titre[i] ;
-    }while (Titre[i] != '\0') ;
-    _next = next ;
-    _previous = previous ;
-    _CompetencesRequises = CompetencesRequises ;
-    return ;
-}
-
 // Le destructeur
 // Détruit seulement le Poste "this"
 Poste::~Poste(void)
@@ -213,27 +124,6 @@ Poste::~Poste(void)
     _CompetencesRequises = nullptr ;
     _next = _previous = nullptr ;
 
-    return ;
-}
-
-// Modifieurs
-void Poste::modifTitre(const char* NewTitre)
-{
-    int i ;
-
-    i = -1 ;
-    do{                             // Si titre vide
-        i++ ;                       // Pour mettre le '\0'
-        _Titre[i] = NewTitre[i] ;
-    }while (NewTitre[i] != '\0') ;
-
-    return ;
-}
-
-// Modifie le pointeur vers la liste de compétence
-void Poste::modifCompetencesRequises(Competence * NewListeCompetence)
-{
-    _CompetencesRequises = NewListeCompetence ;
     return ;
 }
 
@@ -248,24 +138,9 @@ void Poste::modifCompetencesRequises(Competence * NewListeCompetence)
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Les constructeurs
-Competence::Competence(const char* label, Competence * next, Competence * previous)
-{
-    int i ;
-
-    i = -1 ;
-    do{                             // Si label vide
-        i++ ;                       // Pour mettre le '\0'
-        _label[i] = label[i] ;
-    }while (label[i] != '\0') ;
-    _next = next ;
-    _previous = previous ;
-    
-    return ;
-}
 
 // Le destructeur
-// Détruit seulement la liste de compétence
+// Détruit la liste de compétence
 Competence::~Competence(void)
 {
     cout << "Destructeur Competence" << endl ;
@@ -275,24 +150,10 @@ Competence::~Competence(void)
     return ;
 }
 
-// Modifieurs
-void Competence::modifLabel(const char* NewLabel)
-{
-    int i ;
-
-    i = -1 ;
-    do{                             // Si label vide
-        i++ ;                       // Pour mettre le '\0'
-        _label[i] = NewLabel[i] ;
-    }while (NewLabel[i] != '\0') ;
-
-    return ;
-}
-
 // Fonctionnalité sur les Competences
 // Ajoute une compétence en fin de la liste des compétences
 // Nécéssite une première compétence déjà définie (this)
-void Competence::AddCompetence (const char* label)
+void Competence::AddCompetence (const string label)
 {
     Competence * tmp ;
     tmp = this ;
@@ -303,25 +164,21 @@ void Competence::AddCompetence (const char* label)
 }
 
 // Enlève une compétence dont le label est passé en paramètre
-void Competence::delCompetence (const char* label)
+void Competence::delCompetence (const string label)
 {
     Competence * tmp ;
-    char * tmpLabel ;
-    int i ;
+    string tmpLabel ;
     bool mememot ;
 
     tmp = this ;
     if(tmp != NULL){
         mememot = false ;
         while (tmp!=NULL && mememot==false){
-            i = 0 ;
             mememot = true ;
-            while (tmp->_label[i]!='\0' && label[i]!='\0'){
-                if(label[i] != tmp->_label[i]) mememot = false ;
-                i++ ;
+            if(label != tmp->_label){
+                mememot = false ;
+                tmp = tmp->_next ;
             }
-            if((label[i]=='\0' && tmp->_label[i]!='\0') || (tmp->_label[i]=='\0' && label[i]!='\0')) mememot = false ;        // Si les labels sont de longueur différentes
-            if(mememot == false) tmp = tmp->_next ;
         }
         if(tmp != NULL){                                                        // Si on a trouvé le label
             if(tmp != this){
@@ -341,3 +198,16 @@ void Competence::delCompetence (const char* label)
     return ;
 }
 
+// Revoie 1 si la compétence est présente dans une liste de compétence passée en argument, 0 sinon
+bool Competence::IsInList (Competence * listeComp)
+{
+    bool InList ;
+    
+    InList = false ;
+    while (listeComp && !InList){
+        if(_label == listeComp->_label) InList = true ;
+        listeComp = listeComp->_next ;
+    }
+
+    return InList ;
+}

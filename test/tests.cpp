@@ -24,7 +24,7 @@ int testreussis = 0 ;
 // Si le test réussi, incrémente le nombre de tests réussis de 1.
 #define TEST_STR(a, b) nbtests++ ;                  \
 {                                                   \
-    if(strcmp(a, b) == 0){                          \
+    if(a == b){                          \
         testreussis++ ;                             \
         cout << "[SUCCES] " ;                       \
         printf(STRINGIZE(__FILE__) ", " STRINGIZE(__LINE__) ": " STRINGIZE(a) " == " STRINGIZE(b) "\n") ; \
@@ -105,6 +105,14 @@ int tests(void)
     TEST(ListeEntreprise) ;
     TEST(ListeEmploye) ;
     TEST(ListeChercheurEmploi) ;
+    // Grâce aux fonctions de mise à jour des DB, on teste à la fois les fonctions de création des listes et de mise à jour des DB
+    ListeEntreprise->MAJDBEntreprise() ;
+    ListeEmploye->MAJDBPersonne() ;
+    ListeChercheurEmploi->MAJDBPersonne() ;
+    TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_backup/entreprise.csv") ;
+    TEST_MAJ_DB("test/FichiersDeTests/poste.csv", "test/db_backup/poste.csv") ;
+    TEST_MAJ_DB("test/FichiersDeTests/employes.csv", "test/db_backup/employes.csv") ;
+    TEST_MAJ_DB("test/FichiersDeTests/chercheurEmploi.csv", "test/db_backup/chercheurEmploi.csv") ;
       
     // Test sur la création d'une personne avec l'ajout d'une compétence 
     Personne test_pers(1,"onsepatro","mister","mronsepatro@gmail.com","75009",NULL,NULL,new Competence ("SQL", NULL, NULL),NULL,NULL) ;
@@ -131,23 +139,22 @@ int tests(void)
     
     // Tests sur la recherche d'anciens colllègues
     // Sur la dernière personne de la liste des chercheurs d'emploi
-    cout << "Test de la recherche d'anciens collegues chez google :" << endl ;
+    // Test de la recherche d'anciens collegues chez google :
     test_chercheur = ListeChercheurEmploi ;
     while (test_chercheur->nextP()) test_chercheur = test_chercheur->nextP() ;
-    test_chercheur->CompetencePropres()->AddCompetence("SQL") ;                 //ajout d'une compétence 
+    test_chercheur->CompetencePropres()->AddCompetence("SQL") ;                 // Ajout d'une compétence 
     test_chercheur->RechercheColleguesEntreprise("Google") ;
 
+    // Test de la recherche d'anciens collegues dans les entreprise recherchant les competences dans une liste :
     // La liste des compétences est celle de la personne pour tester
-    cout << "Test de la recherche d'anciens collegues dans les entreprise recherchant les competences dans une liste :" << endl ;
     test_chercheur->ChercheurRechercheColleguesCompetence(test_chercheur->CompetencePropres()) ;
 
+    // Test de la recherche d'anciens collegues disposant des competences dans une liste :
     // Test sur la dernière de la liste des employés
-    cout << "Test de la recherche d'anciens collegues disposant des competences dans une liste :" << endl ;
-    cout << endl ;
     Competence test_liste("C++" , NULL,NULL) ;
     test_liste.AddCompetence("Python") ;
     test_employes = ListeEmploye ;
-    //while (test_employes->nextP()) test_employes = test_employes->nextP() ;
+    while (test_employes->nextP()) test_employes = test_employes->nextP() ;
     test_employes->EmployeRechercheColleguesCompetence(&test_liste) ;
 
     test_pers.RecherchePosteCompetence(ListeEntreprise) ;

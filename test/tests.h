@@ -11,15 +11,14 @@
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-#include "general.h"
-#include <string.h>
-// #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <fstream>
 #include <iostream>
 #include <string>
+
+#include "general.h"
 
 int tests(void) ;
 

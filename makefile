@@ -12,6 +12,7 @@ clean:
 build:
 	mkdir -p build
 
+# Crée ...
 libEntreprise.a: Entreprise/entreprise.cpp Entreprise/entreprise.h | build
 	${CC} -g -c Entreprise/entreprise.cpp -o build/entreprise.o
 	ar crs build/libEntreprise.a build/entreprise.o
