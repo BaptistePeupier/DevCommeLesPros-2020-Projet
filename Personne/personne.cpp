@@ -422,23 +422,21 @@ AncienCollegue* Personne::ChercheurRechercheColleguesCompetence(Competence * Lis
     AncienCollegue *ListeToReturn = NULL, *tmpA ;
     AncienCollegue * tmp_collegue ;
     Poste * tmp_poste ;
-    string label_skill_entreprise, label_skill_liste ;
+    string label_skill_liste ;
     bool displayed ;
 
     tmp_comp = ListeCompetence ;
-    tmp_collegue = _ListAncienCollegues ;               //initialisation des pointeurs
+    tmp_collegue = _ListAncienCollegues ;                                       // Initialisation des pointeurs
     while (tmp_comp) {
-        cout << ">>>>collegues travaillant dans les entreprise qui recherchent la competence " << tmp_comp->label() << endl;
-        label_skill_liste = string(tmp_comp->label()) ;                 //recherche dans la liste des compétence fournie
+        label_skill_liste = tmp_comp->label() ;                                 // Recherche dans la liste des compétence fournie
         while (tmp_collegue) {
             displayed = false ;
-            if (tmp_collegue->currentA()->EntrepriseActuelle()) {               //recherche dans la liste des anciens collègues seulement sur ceux qui sont employés
+            if (tmp_collegue->currentA()->EntrepriseActuelle()) {               // Recherche dans la liste des anciens collègues seulement sur ceux qui sont employés
                 tmp_poste = tmp_collegue->currentA()->EntrepriseActuelle()->profilPoste() ;
                 while (tmp_poste) {
-                    tmp_comp_entreprise = tmp_poste->CompetencesRequises() ;            //parcours des compétences requises pour un poste
+                    tmp_comp_entreprise = tmp_poste->CompetencesRequises() ;    // Parcours des compétences requises pour un poste
                     while (tmp_comp_entreprise) {
-                        label_skill_entreprise = string(tmp_comp_entreprise->label()) ;
-                        if (label_skill_entreprise == label_skill_liste && !displayed) {
+                        if (tmp_comp_entreprise->label() == label_skill_liste && !displayed) {
                             if(ListeToReturn){
                                 tmpA->modifNextA(new AncienCollegue(tmp_collegue->currentA(), NULL, tmpA)) ;
                                 tmpA = tmpA->nextA() ;
@@ -446,7 +444,7 @@ AncienCollegue* Personne::ChercheurRechercheColleguesCompetence(Competence * Lis
                                 ListeToReturn = new AncienCollegue(tmp_collegue->currentA(), NULL, NULL) ;
                                 tmpA = ListeToReturn ;
                             }
-                            displayed = true ; //on évite d'afficher plusieurs fois le même collègue si il y a plusieurs postes recherchant la compétence
+                            displayed = true ;                                  // On évite d'afficher plusieurs fois le même collègue si il y a plusieurs postes recherchant la compétence
                         }
                         tmp_comp_entreprise = tmp_comp_entreprise->next() ;
                     }
@@ -455,7 +453,7 @@ AncienCollegue* Personne::ChercheurRechercheColleguesCompetence(Competence * Lis
             }
             tmp_collegue = tmp_collegue->nextA() ;
         }
-        tmp_collegue = _ListAncienCollegues ; //quand on a recherché pour une compétence on réinitialise le pointeur vers les anciens collègues
+        tmp_collegue = _ListAncienCollegues ; // Quand on a recherché pour une compétence on réinitialise le pointeur vers les anciens collègues
         tmp_comp = tmp_comp->next() ;
     }
     

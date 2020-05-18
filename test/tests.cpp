@@ -22,15 +22,6 @@ int testreussis = 0 ;
 
 // Incrémente le nombre de test exécutés de 1.
 // Si le test réussi, incrémente le nombre de tests réussis de 1.
-#define TEST_STR(a, b) nbtests++ ;                  \
-{                                                   \
-    if(a == b){                          \
-        testreussis++ ;                             \
-        cout << "[SUCCES] " ;                       \
-        printf(STRINGIZE(__FILE__) ", " STRINGIZE(__LINE__) ": " STRINGIZE(a) " == " STRINGIZE(b) "\n") ; \
-    }else cout << "[ECHEC] (val : "<<a<<")"<< endl ;\
-}                                                   \
-
 #define TEST(x) nbtests++ ;                         \
 {                                                   \
     if(x){                                          \
@@ -96,11 +87,16 @@ int testreussis = 0 ;
 int tests(void)
 {
     Entreprise * ListeEntreprise ;
-    Personne * ListeEmploye, * ListeChercheurEmploi , *test_chercheur , *test_employes ;
+    Personne * ListeEmploye, * ListeChercheurEmploi ;
+    Personne *test_employes, *test_chercheur ;
     Personne * tmpP ;
     Entreprise * tmpE ;
+    // Variables pour les tests de recherches
+    Entreprise *tmpERecherche ;
+    // Personne *tmpPRecherche ;
+    AncienCollegue *tmpARecherche ;
 
-    // Tests sur la créations des listes
+// Tests sur la créations des listes
     Creer_listes(&ListeEntreprise, &ListeEmploye, &ListeChercheurEmploi) ;
     TEST(ListeEntreprise) ;
     TEST(ListeEmploye) ;
@@ -113,58 +109,76 @@ int tests(void)
     TEST_MAJ_DB("test/FichiersDeTests/poste.csv", "test/db_backup/poste.csv") ;
     TEST_MAJ_DB("test/FichiersDeTests/employes.csv", "test/db_backup/employes.csv") ;
     TEST_MAJ_DB("test/FichiersDeTests/chercheurEmploi.csv", "test/db_backup/chercheurEmploi.csv") ;
-      
-    // Test sur la création d'une personne avec l'ajout d'une compétence 
+
+// Test sur la création d'une personne avec l'ajout d'une compétence 
     Personne test_pers(1,"onsepatro","mister","mronsepatro@gmail.com","75009",NULL,NULL,new Competence ("SQL", NULL, NULL),NULL,NULL) ;
     test_pers.CompetencePropres()->AddCompetence("C") ;
     test_pers.CompetencePropres()->AddCompetence("C++") ;
-    TEST_STR(test_pers.nom(),"onsepatro") ;
-    TEST_STR(test_pers.prenom(),"mister") ;
-    TEST_STR(test_pers.mail(),"mronsepatro@gmail.com") ;
-    TEST_STR(test_pers.codePostal(),"75009") ;
-    TEST_STR(test_pers.CompetencePropres()->label(),"SQL") ;
-    TEST_STR(test_pers.CompetencePropres()->next()->label(),"C") ;
-    TEST_STR(test_pers.CompetencePropres()->next()->next()->label(),"C++") ;
+    TEST2(test_pers.nom(),"onsepatro") ;
+    TEST2(test_pers.prenom(),"mister") ;
+    TEST2(test_pers.mail(),"mronsepatro@gmail.com") ;
+    TEST2(test_pers.codePostal(),"75009") ;
+    TEST2(test_pers.CompetencePropres()->label(),"SQL") ;
+    TEST2(test_pers.CompetencePropres()->next()->label(),"C") ;
+    TEST2(test_pers.CompetencePropres()->next()->next()->label(),"C++") ;
 
-    // Test pour la suppression de compétence
+// Test pour la suppression de compétence
     // Au milieu de la chaine
     test_pers.CompetencePropres()->delCompetence("C") ;
-    TEST_STR(test_pers.CompetencePropres()->label(),"SQL") ;
-    TEST_STR(test_pers.CompetencePropres()->next()->label(),"C++") ;
+    TEST2(test_pers.CompetencePropres()->label(),"SQL") ;
+    TEST2(test_pers.CompetencePropres()->next()->label(),"C++") ;
     TEST(!test_pers.CompetencePropres()->next()->next()) ;
     // En début de chaine
     test_pers.CompetencePropres()->delCompetence("SQL") ;
-    TEST_STR(test_pers.CompetencePropres()->label(),"C++") ;
+    TEST2(test_pers.CompetencePropres()->label(),"C++") ;
     TEST(!test_pers.CompetencePropres()->next()) ;
     
+// Tests sur les fonctions de recherche
     // Tests sur la recherche d'anciens colllègues
     // Sur la dernière personne de la liste des chercheurs d'emploi
-    // Test de la recherche d'anciens collegues chez google :
     test_chercheur = ListeChercheurEmploi ;
     while (test_chercheur->nextP()) test_chercheur = test_chercheur->nextP() ;
-    test_chercheur->CompetencePropres()->AddCompetence("SQL") ;                 // Ajout d'une compétence 
-    test_chercheur->RechercheColleguesEntreprise("Google") ;
+    test_chercheur->CompetencePropres()->AddCompetence("SQL") ;                 // Ajout d'une compétence
+    tmpARecherche = test_chercheur->RechercheColleguesEntreprise("Google") ;
+    TEST2(tmpARecherche->currentA()->nom(),"Untel") ;
+    TEST2(tmpARecherche->currentA()->prenom(),"Michel") ;
+    TEST(!tmpARecherche->nextA()) ;
+    delete tmpARecherche ;
 
     // Test de la recherche d'anciens collegues dans les entreprise recherchant les competences dans une liste :
     // La liste des compétences est celle de la personne pour tester
-    test_chercheur->ChercheurRechercheColleguesCompetence(test_chercheur->CompetencePropres()) ;
+    // Test sur la second personne de la liste
+    test_chercheur = ListeChercheurEmploi->nextP() ;
+    tmpARecherche = test_chercheur->ChercheurRechercheColleguesCompetence(test_chercheur->CompetencePropres()) ;
+    TEST2(tmpARecherche->currentA()->nom(),"Untel") ;
+    TEST2(tmpARecherche->currentA()->prenom(),"Michel") ;
+    // TEST(!tmpARecherche->nextA()) ;
+    delete tmpARecherche ;
 
     // Test de la recherche d'anciens collegues disposant des competences dans une liste :
-    // Test sur la dernière de la liste des employés
+    // Sur la dernière personne de la liste des employés
     Competence test_liste("C++" , NULL,NULL) ;
     test_liste.AddCompetence("Python") ;
     test_employes = ListeEmploye ;
     while (test_employes->nextP()) test_employes = test_employes->nextP() ;
-    test_employes->EmployeRechercheColleguesCompetence(&test_liste) ;
+    tmpARecherche = test_employes->EmployeRechercheColleguesCompetence(&test_liste) ;
+    TEST(!tmpARecherche) ;
+    delete tmpARecherche ;
 
-    test_pers.RecherchePosteCompetence(ListeEntreprise) ;
-    cout << endl ;
-    test_pers.RecherchePosteCompetenceCodePostal(ListeEntreprise) ;
+    tmpERecherche = test_pers.RecherchePosteCompetence(ListeEntreprise) ;
+    // TEST(tmpERecherche) ;
+    // TEST(!tmpERecherche->next()) ;
+    delete tmpERecherche ;
 
+    tmpERecherche = test_pers.RecherchePosteCompetenceCodePostal(ListeEntreprise) ;
+    TEST(!tmpERecherche) ;
+    delete tmpERecherche ;
+
+// Test d'ajout et de suppression d'ancien collègue
     test_employes->ListAncienCollegues()->addAncienCollegue(test_chercheur,test_employes) ;
     test_employes->ListAncienCollegues()->dellAncienCollegue(test_chercheur,test_employes) ;
 
-    // Test sur la transition de profil
+// Test sur la transition de profil
     tmpP = ListeEmploye ;
     tmpE = tmpP->EntrepriseActuelle() ;
     tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi) ;
@@ -178,13 +192,14 @@ int tests(void)
     tmpP->TransitionStatut(&ListeEmploye, &ListeChercheurEmploi, tmpE) ;
     TEST2(ListeEmploye->nextP()->nextP()->nextP(),tmpP) ;
 
-    // Test sur la suppression du profil d'une entreprise
+// Test sur la suppression du profil d'une entreprise
     tmpE = ListeEntreprise->next() ;
     deleteProfileEntreprise(ListeEntreprise, &ListeEntreprise, &ListeEmploye, &ListeChercheurEmploi) ;
     TEST2(ListeEntreprise, tmpE) ;
 
 
-    //test de la suppression de profil avec une personne ajoutée à la fin
+// Test de la suppression de profil
+    // Avec une personne ajoutée à la fin
     test_chercheur = ListeChercheurEmploi ;
     while (test_chercheur->nextP()) {
         test_chercheur = test_chercheur->nextP() ;
@@ -194,26 +209,27 @@ int tests(void)
     test_pers.modifPreviousP(test_chercheur) ;
     test_chercheur->MAJDBPersonne() ;
     test_pers.deleteProfile(&ListeEmploye,&ListeChercheurEmploi) ;
-
-    //test de la suppression de profil avec une personne au début
+    // Avec une personne au début
     test_employes = ListeEmploye ;
     test_employes->deleteProfile(&ListeEmploye,&ListeChercheurEmploi) ;
 
+// Tests sur les MAJ des DB
     // Tests sur la MAJ de la db entreprise
     ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;
     ListeEntreprise->modifCodePostal("777007707") ;
+    ListeEntreprise->MAJDBEntreprise() ;
+    ListeEmploye->MAJDBPersonne() ;
+    ListeChercheurEmploi->MAJDBPersonne() ;
     TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_tests_expected/entreprise.csv") ;
-
     // Tests sur la MAJ de la db poste
     TEST_MAJ_DB("test/FichiersDeTests/poste.csv", "test/db_tests_expected/poste.csv") ;
-
     // Tests sur la MAJ de la db employe
     TEST_MAJ_DB("test/FichiersDeTests/employes.csv", "test/db_tests_expected/employes.csv") ;
-
     // Tests sur la MAJ de la db chercheurEmploi
     TEST_MAJ_DB("test/FichiersDeTests/chercheurEmploi.csv", "test/db_tests_expected/chercheurEmploi.csv") ;
 
+// Fin des tests
     cout << endl << "Appel des destructeurs :" << endl ;
     delete ListeEntreprise ;
     delete ListeEmploye ;

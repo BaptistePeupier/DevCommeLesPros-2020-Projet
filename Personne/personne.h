@@ -69,13 +69,13 @@ class Personne
                                                                             // Si le pointeur vers une entrepise est non null c'est un Employe
         Entreprise* RecherchePosteCompetence(Entreprise * listeEntreprises) ;           // Retourne une liste d'entreprise avec les postes correspondant aux compétences de la personne
         Entreprise* RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises) ; // Retourne une liste d'entreprise avec les postes correspondant aux compétences et au code postal de la personne
+        Personne* ChercheurCompetence (Competence * listeComp) ;                                                // Rechercher parmis les chercheurs par competences, affiche les résutats
+        Personne* ChercheurCompetenceCodePostal (Competence * listeComp ,const string CodePostalRecherche) ;    // Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
         AncienCollegue* RechercheColleguesEntreprise(const string nomEntreprise) ;      // Retourne une liste d'ancien collègue travaillant dans une entreprise donnée
         AncienCollegue* ChercheurRechercheColleguesCompetence(Competence * ListeCompetence) ;   // Retourne une liste des anciens collègues employés dans les entreprises qui recherchent ces compétences
                                                                                                 // Seulement pour les chercheurs d'emploi
         AncienCollegue* EmployeRechercheColleguesCompetence(Competence * ListeCompetence) ;     // Retourne une liste des anciens collègues disposant des compétences passé en liste
                                                                                                 // Seulement pour les employés
-        Personne* ChercheurCompetence (Competence * listeComp) ;                                                // Rechercher parmis les chercheurs par competences, affiche les résutats
-        Personne* ChercheurCompetenceCodePostal (Competence * listeComp ,const string CodePostalRecherche) ;    // Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
 } ;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

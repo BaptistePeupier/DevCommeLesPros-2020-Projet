@@ -17,10 +17,12 @@ libEntreprise.a: Entreprise/entreprise.cpp Entreprise/entreprise.h | build
 	${CC} -g -c Entreprise/entreprise.cpp -o build/entreprise.o
 	ar crs build/libEntreprise.a build/entreprise.o
 
+# Crée ...
 libPersonne.a: libEntreprise.a Entreprise/entreprise.h Personne/personne.cpp | build
 	${CC} -g -c Personne/personne.cpp -I ./Entreprise -o build/personne.o
 	ar crs build/libPersonne.a build/personne.o
 
+# Crée ...
 libGeneral.a: libEntreprise.a libPersonne.a General/general.h General/general.cpp | build
 	${CC} -g -c General/general.cpp -I ./Entreprise -I ./Personne -o build/general.o
 	ar crs build/libGeneral.a build/general.o
@@ -39,4 +41,11 @@ all: libGeneral.a main.o
 # Lance le programme de test.
 check: all
 	./build/LuminIn
+
+# Restaure les DB à partir des backups
+RestoreDB:
+	cp test/db_backup/chercheurEmploi.csv test/FichiersDeTests/chercheurEmploi.csv
+	cp test/db_backup/employes.csv test/FichiersDeTests/employes.csv
+	cp test/db_backup/entreprise.csv test/FichiersDeTests/entreprise.csv
+	cp test/db_backup/poste.csv test/FichiersDeTests/poste.csv
 
