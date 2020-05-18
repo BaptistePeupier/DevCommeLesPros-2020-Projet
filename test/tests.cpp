@@ -111,7 +111,7 @@ int tests(void)
     TEST_MAJ_DB("test/FichiersDeTests/chercheurEmploi.csv", "test/db_backup/chercheurEmploi.csv") ;
 
 // Test sur la création d'une personne avec l'ajout d'une compétence 
-    Personne test_pers(1,"onsepatro","mister","mronsepatro@gmail.com","75009",NULL,NULL,new Competence ("SQL", NULL, NULL),NULL,NULL) ;
+    Personne test_pers(1,"onsepatro","mister","mronsepatro@gmail.com","75009",NULL,NULL,new Competence ("SQL")) ;
     test_pers.CompetencePropres()->AddCompetence("C") ;
     test_pers.CompetencePropres()->AddCompetence("C++") ;
     TEST2(test_pers.nom(),"onsepatro") ;
@@ -157,7 +157,7 @@ int tests(void)
 
     // Test de la recherche d'anciens collegues disposant des competences dans une liste :
     // Sur la dernière personne de la liste des employés
-    Competence test_liste("C++" , NULL,NULL) ;
+    Competence test_liste("C++") ;
     test_liste.AddCompetence("Python") ;
     test_employes = ListeEmploye ;
     while (test_employes->nextP()) test_employes = test_employes->nextP() ;
@@ -197,8 +197,11 @@ int tests(void)
     deleteProfileEntreprise(ListeEntreprise, &ListeEntreprise, &ListeEmploye, &ListeChercheurEmploi) ;
     TEST2(ListeEntreprise, tmpE) ;
 
+// Test sur l'ajout et la suppression d'un poste
+    ListeEntreprise->addPoste(new Poste("vendeur", NULL, NULL, new Competence("OS"))) ;
+    ListeEntreprise->dellPoste("vendeur") ;
 
-// Test de la suppression de profil
+// Test de la suppression de profil d'une personne
     // Avec une personne ajoutée à la fin
     test_chercheur = ListeChercheurEmploi ;
     while (test_chercheur->nextP()) {

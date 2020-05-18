@@ -36,8 +36,8 @@ class Entreprise
         Poste * _profilPoste ;
     public:
     // Les constructeurs
-        Entreprise(int index, const string nom, const string codePostal, const string mail, Entreprise * next, Entreprise * previous)
-        {_index = index ; _nom = nom ; _codePostal = codePostal ; _mail = mail ; _next = next ; _previous = previous ; return ;} ;
+        Entreprise(int index, const string nom, const string codePostal, const string mail, Entreprise * next=NULL, Entreprise * previous=NULL, Poste *profilPoste=NULL)
+        {_index = index ; _nom = nom ; _codePostal = codePostal ; _mail = mail ; _next = next ; _previous = previous, _profilPoste = profilPoste ; return ;} ;
     // Le destructeur
         virtual ~Entreprise(void) ;
     // Accesseurs
@@ -59,6 +59,7 @@ class Entreprise
     // Fonctionnalités
         void addEntreprise(const string nom, const string codePostal, const string mail) ;      // Ajoute une entreprise à la liste
         void addPoste(Poste * ToAdd) ;                                                          // Ajoute un poste à la liste des postes à fournir
+        void dellPoste(const string TitrePoste) ;                                               // Supprime un poste à la liste des postes à fournir
         void MAJDBEntreprise(void) ;                                                            // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées ou ajoutées
                                                                                                 // Met également à jour la base de données des postes
 } ;
@@ -72,7 +73,7 @@ class Poste
         Competence * _CompetencesRequises ;
     public:
     // Les constructeurs
-        Poste(const string Titre, Poste *next, Poste * previous, Competence * CompetencesRequises)
+        Poste(const string Titre, Poste *next=NULL, Poste * previous=NULL, Competence * CompetencesRequises=NULL)
         {_Titre = Titre ; _next = next ; _previous = previous ; _CompetencesRequises = CompetencesRequises ; return ;} ;
     // Le destructeur
         virtual ~Poste(void) ;
@@ -96,7 +97,7 @@ class Competence
         Competence * _previous ;
     public:
     // Les constructeurs
-        Competence(const string label, Competence * next, Competence * previous)
+        Competence(const string label, Competence * next=NULL, Competence * previous=NULL)
         {_label = label ; _next = next ; _previous = previous ; return ;} ;
     // Le destructeur
         virtual ~Competence(void) ;

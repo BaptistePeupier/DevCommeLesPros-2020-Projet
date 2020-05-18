@@ -48,6 +48,7 @@ void Entreprise::MAJDBEntreprise(void)
     FILE *prev_db_poste = fopen("test/FichiersDeTests/poste.csv", "r") ;         // A modifier lorsque l'on utilisera la vrai DB
     Entreprise * tmp ;
     Competence *tmpC ;
+    Poste *tmpP ;
     int indexPoste = 1 ;
     char schema[128] ;
 
@@ -62,15 +63,17 @@ void Entreprise::MAJDBEntreprise(void)
         // Ecriture des tuples de donnes contenus dans la liste des entreprises
         while(tmp){
             fprintf(new_db_en, "\n%d,%s,%s,%s", tmp->index(), tmp->nom().c_str(), tmp->codePostal().c_str(), tmp->mail().c_str()) ;
-            if(tmp->profilPoste()){
-                tmpC = tmp->profilPoste()->CompetencesRequises() ;
-                fprintf(new_db_poste, "\n%d,%s,%d,", indexPoste++, tmp->profilPoste()->Titre().c_str(), tmp->index()) ;
+            tmpP = tmp->profilPoste() ;
+            while(tmpP){
+                tmpC = tmpP->CompetencesRequises() ;
+                fprintf(new_db_poste, "\n%d,%s,%d,", indexPoste++, tmpP->Titre().c_str(), tmp->index()) ;
                 // Ecriture des compétences du poste
                 while(tmpC){
                     fprintf(new_db_poste, "%s", tmpC->label().c_str()) ;
                     if(tmpC->next()) fprintf(new_db_poste, ";") ;
                     tmpC = tmpC->next() ;
                 }
+                tmpP = tmpP->next() ;
             }
             tmp = tmp->next() ;
         }
@@ -98,6 +101,25 @@ void Entreprise::addPoste(Poste * ToAdd)
     while (tmp && tmp->next()) tmp = tmp->next() ;
     tmp->modifNext(ToAdd) ;
     ToAdd->modifPrevious(tmp) ;
+    MAJDBEntreprise() ;
+
+    return ;
+}
+
+// Supprime un poste à la liste des postes à fournir
+void Entreprise::dellPoste(const string TitrePoste)
+{
+    Poste *tmp ;
+    
+    tmp = _profilPoste ;
+    while(tmp && tmp->Titre()!=TitrePoste) tmp = tmp->next() ;
+    if(tmp->next()) tmp->next()->modifPrevious(tmp->previous()) ;
+    if(tmp->previous()) tmp->previous()->modifNext(tmp->next()) ;
+    if(tmp == _profilPoste) _profilPoste = _profilPoste->next() ;
+    tmp->modifNext(nullptr) ;
+    tmp->modifPrevious(nullptr) ;
+    delete tmp ;
+    MAJDBEntreprise() ;
 
     return ;
 }
