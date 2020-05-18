@@ -13,7 +13,7 @@ class Personne ;
 // Classe Personne contenant les données d'une personne.                                                         //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 12/05/2020                                                                     //
+// Cree le 06/04/2020, modifié le 16/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,10 +22,10 @@ class Personne
 {
     private :
         int _index ;
-        char _nom[128] ;
-        char _prenom[128] ;
-        char _mail[128] ;
-        char _codePostal[128] ;
+        string _nom ;
+        string _prenom ;
+        string _mail ;
+        string _codePostal ;
         Personne * _nextP ;
         Personne * _previousP ;
         Entreprise * _EntrepriseActuelle ;                                              // Si NULL est un chercheur d'emploi, sinon un employé
@@ -33,15 +33,16 @@ class Personne
         AncienCollegue * _ListAncienCollegues ;                                         // Pointeur vers la liste d'ancien collègue
     public:
     // Un constructeur
-        Personne(int index, const char* nom, const char* prenom, const char* mail, const char* codePostal, Personne * nextP, Personne * previousP, Competence * CompetencesPropres, AncienCollegue * ListAncienCollegues, Entreprise * EntrepriseActuelle) ;
+        Personne(int index, const string nom, const string prenom, const string mail, const string codePostal, Personne * nextP, Personne * previousP, Competence * CompetencesPropres, AncienCollegue * ListAncienCollegues, Entreprise * EntrepriseActuelle)
+        {_index = index ; _nom = nom ; _prenom = prenom ; _mail = mail ; _codePostal = codePostal ; _CompetencesPropres = CompetencesPropres ; _nextP = nextP ; _previousP = previousP ; _ListAncienCollegues = ListAncienCollegues ; _EntrepriseActuelle = EntrepriseActuelle ; return ;} ;
     // Le destructeur
         virtual ~Personne(void) ;
     // Accesseurs
         int index(void){return _index ;} ;
-        char* nom(void){return _nom ;} ;
-        char* prenom(void){return _prenom ;} ;
-        char* mail(void){return _mail ;} ;
-        char* codePostal(){return _codePostal ;} ;
+        string nom(void){return _nom ;} ;
+        string prenom(void){return _prenom ;} ;
+        string mail(void){return _mail ;} ;
+        string codePostal(){return _codePostal ;} ;
         Personne * previousP(void){return _previousP ;} ;
         Personne * nextP(void){return _nextP ;} ;
         Competence * CompetencePropres(void){return _CompetencesPropres ;} ;
@@ -49,10 +50,10 @@ class Personne
         Entreprise * EntrepriseActuelle(void){return _EntrepriseActuelle ;} ;
     // Modifieurs
         void modifIndex(int Newindex){_index = Newindex ; MAJDBPersonne() ; return ;} ;
-        void modifNom(const char* Newnom) ;
-        void modifPrenom(const char* Newprenom) ;
-        void modifMail(const char* Newmail) ;
-        void modifCodePostal(const char* NewCodePostal) ;
+        void modifNom(const string Newnom){_nom = Newnom ; MAJDBPersonne() ; return ;} ;
+        void modifPrenom(const string Newprenom){_prenom = Newprenom ; MAJDBPersonne() ; return ;} ;
+        void modifMail(const string Newmail){_mail = Newmail ; MAJDBPersonne() ; return ;} ;
+        void modifCodePostal(const string NewCodePostal){_codePostal = NewCodePostal ; MAJDBPersonne() ; return ;} ;
         void modifPreviousP(Personne * NewPreviousP){_previousP = NewPreviousP ; return ;} ;
         void modifNextP(Personne * NewNextP){_nextP = NewNextP ; return ;} ;
         void modifEntreprise(Entreprise * NewEntreprise){_EntrepriseActuelle = NewEntreprise ; MAJDBPersonne() ; return ;} ;
@@ -63,18 +64,18 @@ class Personne
                                                                                                                             // Ajoute les anciens collègues si besoin
                                                                                                                             // NewEntreprise est le pointeur vers l'entreprise en cas de recrutement, NULL sinon
         void deleteProfile(Personne ** ListeEmploye, Personne ** ListeChercheurEmploi) ;
-        void RecherchePosteCompetence(Entreprise * listeEntreprises) ;                               // Affiche une liste d'entreprise avec les postes correspondant aux compétences de la personne
-        void RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises) ;                     // Affiche une liste d'entreprise avec les postes correspondant aux compétences et au code postal de la personne
-        void RechercheColleguesEntreprise(const char* nomEntreprise) ;            // Affiche une liste d'ancien collègue travaillant dans une entreprise donnée
         void MAJDBPersonne(void) ;                                          // Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées
                                                                             // Si le pointeur vers une entrepise est null c'est un Chercheur d'emploi
                                                                             // Si le pointeur vers une entrepise est non null c'est un Employe
-        void ChercheurRechercheColleguesCompetence(Competence * ListeCompetence) ;  // Affiche les données des anciens collègues employés dans les entreprises qui recherchent ces compétences
-                                                                                    // Seulement pour les chercheurs d'emploi
-        void EmployeRechercheColleguesCompetence(Competence * ListeCompetence) ;    // Affiche les données des anciens collègues disposant des compétences passé en liste
-                                                                                    // Seulement pour les employés
-        void ChercheurCompetence (Competence * listeComp) ;                 // Rechercher parmis les chercheurs par competences, affiche les résutats
-        void ChercheurCompetenceCodePostal (Competence * listeComp ,const char * CodePostalRecherche) ;   // Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
+        Entreprise* RecherchePosteCompetence(Entreprise * listeEntreprises) ;           // Retourne une liste d'entreprise avec les postes correspondant aux compétences de la personne
+        Entreprise* RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises) ; // Retourne une liste d'entreprise avec les postes correspondant aux compétences et au code postal de la personne
+        Personne* ChercheurCompetence (Competence * listeComp) ;                                                // Rechercher parmis les chercheurs par competences, affiche les résutats
+        Personne* ChercheurCompetenceCodePostal (Competence * listeComp ,const string CodePostalRecherche) ;    // Rechercher parmis les chercheurs par competences et code postal, affiche les résutats
+        AncienCollegue* RechercheColleguesEntreprise(const string nomEntreprise) ;      // Retourne une liste d'ancien collègue travaillant dans une entreprise donnée
+        AncienCollegue* ChercheurRechercheColleguesCompetence(Competence * ListeCompetence) ;   // Retourne une liste des anciens collègues employés dans les entreprises qui recherchent ces compétences
+                                                                                                // Seulement pour les chercheurs d'emploi
+        AncienCollegue* EmployeRechercheColleguesCompetence(Competence * ListeCompetence) ;     // Retourne une liste des anciens collègues disposant des compétences passé en liste
+                                                                                                // Seulement pour les employés
 } ;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +84,7 @@ class Personne
 // Classe AncienCollegue étant une liste de personnes.                                                           //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 12/05/2020                                                                     //
+// Cree le 06/04/2020, modifié le 16/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,7 +97,8 @@ class AncienCollegue
         AncienCollegue * _previousA ;
     public:
     // Un constructeur
-        AncienCollegue(Personne * currentA, AncienCollegue * nextA, AncienCollegue * previousA) ;
+        AncienCollegue(Personne * currentA, AncienCollegue * nextA, AncienCollegue * previousA)
+        {_currentA = currentA ; _nextA = nextA ; _previousA = previousA ; return ;} ;
     // Le destructeur
         virtual ~AncienCollegue(void) ;
     // Accesseurs
@@ -113,4 +115,3 @@ class AncienCollegue
 } ;
 
 #endif
-

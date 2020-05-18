@@ -1,5 +1,4 @@
 #include "personne.h"
-#include <string.h>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
@@ -7,51 +6,13 @@
 // Fonctions memrbes de la classe Personne                                                                       //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 21/04/2020                                                                     //
+// Cree le 06/04/2020, modifié le 16/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Un constructeur
-Personne::Personne(int index, const char* nom, const char* prenom, const char* mail, const char* codePostal, Personne * nextP, Personne * previousP, Competence * CompetencesPropres, AncienCollegue * ListAncienCollegues, Entreprise * EntrepriseActuelle)
-{
-    int i ;
-    _index = index ;
-
-    i = -1 ;
-    do{                             // Si nom vide
-        i++ ;                       // Pour mettre le '\0'
-        _nom[i] = nom[i] ;
-    }while (nom[i] != '\0') ;
-
-    i = -1 ;
-    do{                             // Si prenom vide
-        i++ ;                       // Pour mettre le '\0'
-        _prenom[i] = prenom[i] ;
-    }while (prenom[i] != '\0') ;
-
-    i = -1 ;
-    do{                             // Si mail vide
-        i++ ;                       // Pour mettre le '\0'
-        _mail[i] = mail[i] ;
-    }while (mail[i] != '\0') ;
-
-    i = -1 ;
-    do{                             // Si codePostal vide
-        i++ ;                       // Pour mettre le '\0'
-        _codePostal[i] = codePostal[i] ;
-    }while (codePostal[i] != '\0') ;
-
-    _CompetencesPropres = CompetencesPropres ;
-    _nextP = nextP ;
-    _previousP = previousP ;
-    _ListAncienCollegues = ListAncienCollegues ;
-    _EntrepriseActuelle = EntrepriseActuelle ;
-
-    return ;
-}
-
 // Le destructeur
+// Détruit la liste de Personne
 Personne::~Personne(void)
 {
     cout << "Destructeur Personne" << endl ;
@@ -62,63 +23,6 @@ Personne::~Personne(void)
     _ListAncienCollegues = nullptr ;
     _nextP = _previousP = nullptr ;
     _EntrepriseActuelle = nullptr ;
-
-    return ;
-}
-
-// Modifieurs
-void Personne::modifNom(const char* Newnom)
-{
-    int i ;
-
-    i = -1 ;
-    do{                             // Si nom vide
-        i++ ;                       // Pour mettre le '\0'
-        _nom[i] = Newnom[i] ;
-    }while (Newnom[i] != '\0') ;
-    MAJDBPersonne() ;
-
-    return ;
-}
-
-void Personne::modifPrenom(const char* Newprenom)
-{
-    int i ;
-
-    i = -1 ;
-    do{                             // Si prenom vide
-        i++ ;                       // Pour mettre le '\0'
-        _prenom[i] = Newprenom[i] ;
-    }while (Newprenom[i] != '\0') ;
-    MAJDBPersonne();
-
-    return ;
-}
-
-void Personne::modifMail(const char* Newmail)
-{
-    int i ;
-    
-    i = -1 ;
-    do{                             // Si mail vide
-        i++ ;                       // Pour mettre le '\0'
-        _mail[i] = Newmail[i] ;
-    }while (Newmail[i] != '\0') ;
-    MAJDBPersonne() ;
-
-    return ;
-}
-
-void Personne::modifCodePostal(const char* NewCodePostal)
-{
-    int i ;
-    
-    i = -1 ;
-    do{                             // Si codePostal vide
-        i++ ;                       // Pour mettre le '\0'
-        _codePostal[i] = NewCodePostal[i] ;
-    }while (NewCodePostal[i] != '\0') ;
-    MAJDBPersonne() ;
 
     return ;
 }
@@ -266,22 +170,24 @@ void Personne::deleteProfile(Personne ** ListeEmploye, Personne ** ListeChercheu
     return ;
 }
 
-// Renvoie une liste d'entreprise avec les postes correspondant aux compétences de la personne 
-//on prend en paramètre le pointeur sur le début de la liste des entreprises
-void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
+// Retourne une liste d'entreprise avec les postes correspondant aux compétences de la personne
+// La liste est une liste d'entreprise ayant chacune à chaque fois un seul poste qui est un poste qui convient
+// Si la liste de poste n'est pas que d'un seul poste, les autres sont ignorés
+// On prend en paramètre le pointeur sur le début de la liste des entreprises
+Entreprise* Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
 {
     Poste *tmp_poste ;
+    Entreprise *ListeToReturn = NULL, *tmpE ;
     Entreprise *tmp_entreprise = listeEntreprises ;
     Competence *tmp_skills_poste ;
     Competence *tmp_skills_personne = _CompetencesPropres ;
-    string label_skill_personne , label_skill_poste ;
     int nbcompetences_poste = 0 ,  competences_dispo_pers = 0 ;
     
     while (tmp_entreprise) //parcours de la liste des entreprises 
     {
         tmp_poste = tmp_entreprise->profilPoste() ;
         while (tmp_poste) {
-            tmp_skills_poste = tmp_poste->CompetencesRequises() ;               //on compte les compétences du poste
+            tmp_skills_poste = tmp_poste->CompetencesRequises() ;   // On compte les compétences du poste
             while (tmp_skills_poste) {
                 nbcompetences_poste++ ;
                 tmp_skills_poste = tmp_skills_poste->next() ;
@@ -289,11 +195,9 @@ void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
             
             tmp_skills_poste = tmp_poste->CompetencesRequises() ; 
             while (tmp_skills_poste) {
-                tmp_skills_personne = _CompetencesPropres ;         //on compare les compétences du poste avec celles de la personne
+                tmp_skills_personne = _CompetencesPropres ;         // On compare les compétences du poste avec celles de la personne
                 while (tmp_skills_personne) {
-                    label_skill_personne = string(tmp_skills_personne->label()) ;
-                    label_skill_poste = string(tmp_skills_poste->label()) ;
-                    if (label_skill_personne == label_skill_poste) {
+                    if (tmp_skills_personne->label() == tmp_skills_poste->label()) {
                         competences_dispo_pers++ ;
                     }
                     tmp_skills_personne = tmp_skills_personne->next() ;
@@ -303,9 +207,15 @@ void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
             }
             
             if (competences_dispo_pers == nbcompetences_poste) {
-                cout << "-----------------------------------------------" << endl ;
-                cout << "titre : " << tmp_poste->Titre() << " | Entreprise : " << tmp_entreprise->nom() << " | mail :" << tmp_entreprise->mail() << " | code Postal :" << tmp_entreprise->codePostal() << endl ;
-                cout << "-----------------------------------------------" << endl ;
+                if(ListeToReturn){
+                    tmpE->modifNext(new Entreprise(tmp_entreprise->index(), tmp_entreprise->nom(), tmp_entreprise->codePostal(), tmp_entreprise->mail(), NULL, tmpE)) ;
+                    tmpE->modifProfilPoste(tmp_poste) ;
+                    tmpE = tmpE->next() ;
+                }else{
+                    ListeToReturn = new Entreprise(tmp_entreprise->index(), tmp_entreprise->nom(), tmp_entreprise->codePostal(), tmp_entreprise->mail(), NULL, NULL) ;
+                    ListeToReturn->modifProfilPoste(tmp_poste) ;
+                    tmpE = ListeToReturn ;
+                }
             }
             
             competences_dispo_pers = 0 ;
@@ -315,13 +225,16 @@ void Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
         tmp_entreprise = tmp_entreprise->next() ;
     }
 
-    return ;
+    return ListeToReturn ;
 }
 
 // Renvoie une liste d'entreprise avec les postes correspondant aux compétences et au code postal de la personne
-void Personne::RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises)
+// La liste est une liste d'entreprise ayant chacune à chaque fois un seul poste qui est un poste qui convient
+// Si la liste de poste n'est pas que d'un seul poste, les autres sont ignorés
+Entreprise* Personne::RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises)
 {
     Poste *tmp_poste ;
+    Entreprise *ListeToReturn = NULL, *tmpE ;
     Entreprise *tmp_entreprise = listeEntreprises ;
     Competence *tmp_skills_poste ;
     Competence *tmp_skills_personne = _CompetencesPropres ;
@@ -345,9 +258,7 @@ void Personne::RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises)
                 while (tmp_skills_poste) {
                     tmp_skills_personne = _CompetencesPropres ;         //on compare les compétences du poste avec celles de la personne
                     while (tmp_skills_personne) {
-                        label_skill_personne = string(tmp_skills_personne->label()) ;
-                        label_skill_poste = string(tmp_skills_poste->label()) ;
-                        if (label_skill_personne == label_skill_poste) {
+                        if (tmp_skills_personne->label() == tmp_skills_poste->label()) {
                             competences_dispo_pers++ ;
                         }
                         tmp_skills_personne = tmp_skills_personne->next() ;
@@ -357,9 +268,15 @@ void Personne::RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises)
                 }
                 
                 if (competences_dispo_pers == nbcompetences_poste) {
-                    cout << "-----------------------------------------------" << endl ;
-                    cout << "titre : " << tmp_poste->Titre() << " | Entreprise : " << tmp_entreprise->nom() << " | mail :" << tmp_entreprise->mail() << " | code Postal :" << tmp_entreprise->codePostal() << endl ;
-                    cout << "-----------------------------------------------" << endl ;
+                    if(ListeToReturn){
+                        tmpE->modifNext(new Entreprise(tmp_entreprise->index(), tmp_entreprise->nom(), tmp_entreprise->codePostal(), tmp_entreprise->mail(), NULL, tmpE)) ;
+                        tmpE->modifProfilPoste(tmp_poste) ;
+                        tmpE = tmpE->next() ;
+                    }else{
+                        ListeToReturn = new Entreprise(tmp_entreprise->index(), tmp_entreprise->nom(), tmp_entreprise->codePostal(), tmp_entreprise->mail(), NULL, NULL) ;
+                        ListeToReturn->modifProfilPoste(tmp_poste) ;
+                        tmpE = ListeToReturn ;
+                    }
                 }
                 
                 competences_dispo_pers = 0 ;
@@ -371,42 +288,32 @@ void Personne::RecherchePosteCompetenceCodePostal(Entreprise * listeEntreprises)
         tmp_entreprise = tmp_entreprise->next() ;
     }
 
-    return ;
+    return ListeToReturn ;
 }
 
-// Affiche une liste d'ancien collègue travaillant dans une entreprise donnée
-void Personne::RechercheColleguesEntreprise(const char* nomEntreprise)
+// Retourne une liste d'ancien collègue travaillant dans une entreprise donnée
+AncienCollegue* Personne::RechercheColleguesEntreprise(const string nomEntreprise)
 {
+    AncienCollegue *ListeToReturn = NULL, *tmpA ;
     AncienCollegue * tmp ;
-    char * entreprise_tmp ;
-    int i ;
-    bool afficher ;
 
     tmp = this->ListAncienCollegues() ;
     while (tmp) {
         if (tmp->currentA()->EntrepriseActuelle()) {
-            entreprise_tmp = tmp->currentA()->EntrepriseActuelle()->nom() ;
-            i = 0 ;
-            afficher = true ;
-            do
-            {
-                if (entreprise_tmp[i] != nomEntreprise[i]) {
-                    afficher = false ;
+            if (tmp->currentA()->EntrepriseActuelle()->nom() == nomEntreprise) {
+                if(ListeToReturn){
+                    tmpA->modifNextA(new AncienCollegue(tmp->currentA(), NULL, tmpA)) ;
+                    tmpA = tmpA->nextA() ;
+                }else{
+                    ListeToReturn = new AncienCollegue(tmp->currentA(), NULL, NULL) ;
+                    tmpA = ListeToReturn ;
                 }
-                i++ ;
-            } while (entreprise_tmp[i] != '\0');
-
-            if (afficher) {
-                cout << "-------------------------------------------------------------------------------------------" << endl ;
-                cout << " Nom : " << tmp->currentA()->nom() << "| Prenom : " << tmp->currentA()->prenom() << "| Mail : " << tmp->currentA()->mail() << endl;
-                cout << "--------------------------------------------------------------------------------------------" << endl ;
             }
         }
         tmp = tmp->nextA() ;
     }
 
-    //chercher dans la liste des anciens collègues  vérifier si il faut chercher dans previous
-    return ;
+    return ListeToReturn ;
 }
 // Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées
 // Si le pointeur vers une entrepise est null c'est un Chercheur d'emploi
@@ -477,12 +384,12 @@ void Personne::MAJDBPersonne(void)
 
                     
             if (tmp->EntrepriseActuelle()) {
-                fprintf(new_db_employes, "\n%d,%s,%s,%s,%s,%d,%s,%s", tmp->index(), tmp->nom(), tmp->prenom(), tmp->mail(),tmp->codePostal(),tmp->EntrepriseActuelle()->index(),skills_to_write.c_str(),collegues_to_write.c_str()) ; //il faut convertir la string en char* avec c_str pour utiliser fprintf
+                fprintf(new_db_employes, "\n%d,%s,%s,%s,%s,%d,%s,%s", tmp->index(), tmp->nom().c_str(), tmp->prenom().c_str(), tmp->mail().c_str(),tmp->codePostal().c_str(),tmp->EntrepriseActuelle()->index(),skills_to_write.c_str(),collegues_to_write.c_str()) ; //il faut convertir la string en char* avec c_str pour utiliser fprintf
                 skills_to_write.clear() ;       //on réinitialise les string avant de passer à la personne suivante
                 collegues_to_write.clear() ;
                 tmp = tmp->_nextP ;
             } else {
-                fprintf(new_db_chercheurs, "\n%d,%s,%s,%s,%s,%s,%s", tmp->index(), tmp->nom(), tmp->prenom(), tmp->mail(),tmp->codePostal(),skills_to_write.c_str(),collegues_to_write.c_str()) ; //il faut convertir la string en char* avec c_str pour utiliser fprintf
+                fprintf(new_db_chercheurs, "\n%d,%s,%s,%s,%s,%s,%s", tmp->index(), tmp->nom().c_str(), tmp->prenom().c_str(), tmp->mail().c_str(),tmp->codePostal().c_str(),skills_to_write.c_str(),collegues_to_write.c_str()) ; //il faut convertir la string en char* avec c_str pour utiliser fprintf
                 skills_to_write.clear() ;       //on réinitialise les string avant de passer à la personne suivante
                 collegues_to_write.clear() ;
                 tmp = tmp->_nextP ;
@@ -506,35 +413,38 @@ void Personne::MAJDBPersonne(void)
     
     return ;
 }
-// Affiche les données des anciens collègues employés dans les entreprises qui recherchent ces compétences
+// Retourne une liste des anciens collègues employés dans les entreprises qui recherchent ces compétences
 // Seulement pour les chercheurs d'emploi
-void Personne::ChercheurRechercheColleguesCompetence(Competence * ListeCompetence)
+AncienCollegue* Personne::ChercheurRechercheColleguesCompetence(Competence * ListeCompetence)
 {
     assert(!(this->_EntrepriseActuelle)) ;
     Competence * tmp_comp , *tmp_comp_entreprise;
+    AncienCollegue *ListeToReturn = NULL, *tmpA ;
     AncienCollegue * tmp_collegue ;
     Poste * tmp_poste ;
-    string label_skill_entreprise, label_skill_liste ;
+    string label_skill_liste ;
     bool displayed ;
 
     tmp_comp = ListeCompetence ;
-    tmp_collegue = _ListAncienCollegues ;               //initialisation des pointeurs
+    tmp_collegue = _ListAncienCollegues ;                                       // Initialisation des pointeurs
     while (tmp_comp) {
-        cout << ">>>>collegues travaillant dans les entreprise qui recherchent la competence " << tmp_comp->label() << endl;
-        label_skill_liste = string(tmp_comp->label()) ;                 //recherche dans la liste des compétence fournie
+        label_skill_liste = tmp_comp->label() ;                                 // Recherche dans la liste des compétence fournie
         while (tmp_collegue) {
             displayed = false ;
-            if (tmp_collegue->currentA()->EntrepriseActuelle()) {               //recherche dans la liste des anciens collègues seulement sur ceux qui sont employés
+            if (tmp_collegue->currentA()->EntrepriseActuelle()) {               // Recherche dans la liste des anciens collègues seulement sur ceux qui sont employés
                 tmp_poste = tmp_collegue->currentA()->EntrepriseActuelle()->profilPoste() ;
                 while (tmp_poste) {
-                    tmp_comp_entreprise = tmp_poste->CompetencesRequises() ;            //parcours des compétences requises pour un poste
+                    tmp_comp_entreprise = tmp_poste->CompetencesRequises() ;    // Parcours des compétences requises pour un poste
                     while (tmp_comp_entreprise) {
-                        label_skill_entreprise = string(tmp_comp_entreprise->label()) ;
-                        if (label_skill_entreprise == label_skill_liste && !displayed) {
-                            cout << "-------------------------------------------------------------------------------------------" << endl ;
-                            cout << " Nom : " << tmp_collegue->currentA()->nom() << "| Prenom : " << tmp_collegue->currentA()->prenom() << "| Mail : " << tmp_collegue->currentA()->mail() << endl;
-                            cout << "--------------------------------------------------------------------------------------------" << endl ;
-                            displayed = true ; //on évite d'afficher plusieurs fois le même collègue si il y a plusieurs postes recherchant la compétence
+                        if (tmp_comp_entreprise->label() == label_skill_liste && !displayed) {
+                            if(ListeToReturn){
+                                tmpA->modifNextA(new AncienCollegue(tmp_collegue->currentA(), NULL, tmpA)) ;
+                                tmpA = tmpA->nextA() ;
+                            }else{
+                                ListeToReturn = new AncienCollegue(tmp_collegue->currentA(), NULL, NULL) ;
+                                tmpA = ListeToReturn ;
+                            }
+                            displayed = true ;                                  // On évite d'afficher plusieurs fois le même collègue si il y a plusieurs postes recherchant la compétence
                         }
                         tmp_comp_entreprise = tmp_comp_entreprise->next() ;
                     }
@@ -543,24 +453,25 @@ void Personne::ChercheurRechercheColleguesCompetence(Competence * ListeCompetenc
             }
             tmp_collegue = tmp_collegue->nextA() ;
         }
-        tmp_collegue = _ListAncienCollegues ; //quand on a recherché pour une compétence on réinitialise le pointeur vers les anciens collègues
+        tmp_collegue = _ListAncienCollegues ; // Quand on a recherché pour une compétence on réinitialise le pointeur vers les anciens collègues
         tmp_comp = tmp_comp->next() ;
     }
     
-    return ;
+    return ListeToReturn ;
 }
 
-// Affiche les données des anciens collègues disposant des compétences passé en liste
+// Retourne une liste des anciens collègues disposant des compétences passé en liste
 // Seulement pour les employés
-void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
+AncienCollegue* Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
 {
     assert(this->_EntrepriseActuelle) ;
+    AncienCollegue *ListeToReturn = NULL, *tmpA ;
     AncienCollegue * tmp_collegue = _ListAncienCollegues;
     Competence * tmp_comp_collegue , *tmp_comp = ListeCompetence;           //initialisation des pointeurs
-    string label_skill_collegue, label_skill_liste , entreprise_pers , entreprise_collegue;
+    string label_skill_collegue , entreprise_pers , entreprise_collegue;
     int nb_skill_liste = 0 ,  nb_skill_match;
 
-    entreprise_pers = string(_EntrepriseActuelle->nom()) ;
+    entreprise_pers = _EntrepriseActuelle->nom() ;
 
     while (tmp_comp) {
         nb_skill_liste++ ;
@@ -583,8 +494,7 @@ void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
                     tmp_comp = ListeCompetence ;                //réinitialisation du parcours de la liste des compétences
                     label_skill_collegue = string(tmp_comp_collegue->label()) ;
                     while (tmp_comp) {
-                        label_skill_liste = string(tmp_comp->label()) ;
-                        if (label_skill_collegue == label_skill_liste) {
+                        if (label_skill_collegue == tmp_comp->label()) {
                             nb_skill_match++ ;
                         }
                         tmp_comp = tmp_comp->next() ;
@@ -593,23 +503,28 @@ void Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
                 }
 
                 if (nb_skill_liste == nb_skill_match) {
-                    cout << "-------------------------------------------------------------------------------------------" << endl ;
-                    cout << " Nom : " << tmp_collegue->currentA()->nom() << "| Prenom : " << tmp_collegue->currentA()->prenom() << "| Mail : " << tmp_collegue->currentA()->mail() << endl;
-                    cout << "--------------------------------------------------------------------------------------------" << endl ;
+                    if(ListeToReturn){
+                        tmpA->modifNextA(new AncienCollegue(tmp_collegue->currentA(), NULL, tmpA)) ;
+                        tmpA = tmpA->nextA() ;
+                    }else{
+                        ListeToReturn = new AncienCollegue(tmp_collegue->currentA(), NULL, NULL) ;
+                        tmpA = ListeToReturn ;
+                    }
                 }
             }
         }
         tmp_collegue = tmp_collegue->nextA() ;
     }
 
-    return ;
+    return ListeToReturn ;
 }
                                                                             
 // Rechercher parmis les chercheurs par competences, affiche les résultats
-void Personne::ChercheurCompetence (Competence * listeComp)
+Personne* Personne::ChercheurCompetence (Competence * listeComp)
 {
     Competence * tmp_comp = listeComp , *tmp_comp_pers;
     Personne * tmp_pers = this ;
+    Personne *ListeToReturn = NULL, *tmpP ;
     string label_skill_pers, label_skill_liste ;
     int nb_skill_match , nb_skill_liste = 0;
     assert(!(this->_EntrepriseActuelle)) ;
@@ -637,22 +552,27 @@ void Personne::ChercheurCompetence (Competence * listeComp)
             tmp_comp_pers = tmp_comp_pers->next() ; 
         }
         if (nb_skill_liste == nb_skill_match) {
-            cout << "-------------------------------------------------------------------------------------------" << endl ;
-            cout << " Nom : " << tmp_pers->nom() << "| Prenom : " << tmp_pers->prenom() << "| Mail : " << tmp_pers->mail() << endl;
-            cout << "--------------------------------------------------------------------------------------------" << endl ;
+            if(ListeToReturn){
+                tmpP->modifNextP(new Personne(tmp_pers->index(), tmp_pers->nom(), tmp_pers->prenom(), tmp_pers->mail(), tmp_pers->codePostal(), NULL, tmpP, NULL, NULL, tmp_pers->EntrepriseActuelle())) ;
+                tmpP = tmpP->nextP() ;
+            }else{
+                ListeToReturn = new Personne(tmp_pers->index(), tmp_pers->nom(), tmp_pers->prenom(), tmp_pers->mail(), tmp_pers->codePostal(), NULL, NULL, NULL, NULL, tmp_pers->EntrepriseActuelle()) ;
+                tmpP = ListeToReturn ;
+            }
         }
         
         tmp_pers = tmp_pers->nextP() ;
     }
-    return ;
+    return ListeToReturn ;
 }
 
 // Rechercher parmis les chercheurs par competences et code postal, affiche les résultats
-void Personne::ChercheurCompetenceCodePostal (Competence * listeComp ,const char * CodePostalRecherche)
+Personne* Personne::ChercheurCompetenceCodePostal (Competence * listeComp ,const string CodePostalRecherche)
 {
     Competence * tmp_comp = listeComp , *tmp_comp_pers;
+    Personne *ListeToReturn = NULL, *tmpP ;
     Personne * tmp_pers = this ;
-    string label_skill_pers, label_skill_liste , cp_recherche = string(CodePostalRecherche), cp_pers ;
+    string label_skill_pers, label_skill_liste , cp_recherche = CodePostalRecherche, cp_pers ;
     int nb_skill_match , nb_skill_liste = 0;
     assert(!(this->_EntrepriseActuelle)) ;
 
@@ -681,14 +601,18 @@ void Personne::ChercheurCompetenceCodePostal (Competence * listeComp ,const char
                 tmp_comp_pers = tmp_comp_pers->next() ; 
             }
             if (nb_skill_liste == nb_skill_match) {
-                cout << "-------------------------------------------------------------------------------------------" << endl ;
-                cout << " Nom : " << tmp_pers->nom() << "| Prenom : " << tmp_pers->prenom() << "| Mail : " << tmp_pers->mail() << endl;
-                cout << "--------------------------------------------------------------------------------------------" << endl ;
+                if(ListeToReturn){
+                    tmpP->modifNextP(new Personne(tmp_pers->index(), tmp_pers->nom(), tmp_pers->prenom(), tmp_pers->mail(), tmp_pers->codePostal(), NULL, tmpP, NULL, NULL, tmp_pers->EntrepriseActuelle())) ;
+                    tmpP = tmpP->nextP() ;
+                }else{
+                    ListeToReturn = new Personne(tmp_pers->index(), tmp_pers->nom(), tmp_pers->prenom(), tmp_pers->mail(), tmp_pers->codePostal(), NULL, NULL, NULL, NULL, tmp_pers->EntrepriseActuelle()) ;
+                    tmpP = ListeToReturn ;
+                }
             }
         }
         tmp_pers = tmp_pers->nextP() ;
     }
-    return ;
+    return ListeToReturn ;
 }
 
 
@@ -698,20 +622,10 @@ void Personne::ChercheurCompetenceCodePostal (Competence * listeComp ,const char
 // Classe AncienCollegue étant une liste de personnes.                                                           //
 //                                                                                                               //
 // PEUPIER Baptiste                                                                                              //
-// Cree le 06/04/2020, modifié le 21/04/2020                                                                     //
+// Cree le 06/04/2020, modifié le 16/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Un constructeur
-AncienCollegue::AncienCollegue(Personne * currentA, AncienCollegue * nextA, AncienCollegue * previousA)
-{
-    _currentA = currentA ;
-    _nextA = nextA ;
-    _previousA = previousA ;
-
-    return ;
-}
 
 // Le destructeur
 AncienCollegue::~AncienCollegue(void)

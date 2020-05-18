@@ -2,6 +2,7 @@
 #define _ENTREPRISE_H_
 
 #include <iostream>
+#include <string>
 using namespace std ;
 
 // Prototypes
@@ -27,35 +28,36 @@ class Entreprise
 {
     private :
         int _index ;
-        char _nom[128] ;
-        char _codePostal[128] ;
-        char _mail[128] ;
+        string _nom ;
+        string _codePostal ;
+        string _mail ;
         Entreprise * _next ;
         Entreprise * _previous ;
         Poste * _profilPoste ;
     public:
     // Les constructeurs
-        Entreprise(int index, const char* nom, const char* codePostal, const char* mail, Entreprise * next, Entreprise * previous) ;
+        Entreprise(int index, const string nom, const string codePostal, const string mail, Entreprise * next, Entreprise * previous)
+        {_index = index ; _nom = nom ; _codePostal = codePostal ; _mail = mail ; _next = next ; _previous = previous ; return ;} ;
     // Le destructeur
         virtual ~Entreprise(void) ;
     // Accesseurs
         int index(void){return _index ;} ;
-        char* nom(void){return _nom ;} ;
-        char* codePostal(void){return _codePostal ;} ;
-        char* mail(void){return _mail ;} ;
+        string nom(void){return _nom ;} ;
+        string codePostal(void){return _codePostal ;} ;
+        string mail(void){return _mail ;} ;
         Entreprise * next(void){return _next ;} ;
         Entreprise * previous(void){return _previous ;} ;
         Poste * profilPoste(void){return _profilPoste ;} ;
     // Modifieurs
         void modifIndex(int NewIndex){_index = NewIndex ; return ;} ;
-        void modifNom(const char* NewNom) ;
-        void modifCodePostal(const char* NewCodePostal) ;
-        void modifMail(const char * NewMail) ;
+        void modifNom(const string NewNom){_nom = NewNom ; MAJDBEntreprise() ; return ;};
+        void modifCodePostal(const string NewCodePostal){_codePostal = NewCodePostal ; MAJDBEntreprise() ; return ;} ;
+        void modifMail(const string NewMail){_mail = NewMail ; MAJDBEntreprise() ; return ;} ;
         void modifNext(Entreprise * next){_next = next ; return ;} ;
         void modifPrevious(Entreprise * previous){_previous = previous ; return ;} ;
         void modifProfilPoste(Poste * NewListePoste){_profilPoste = NewListePoste ; return ;} ; // Modifie le pointeur vers la liste de postes à fournir
     // Fonctionnalités
-        void addEntreprise(const char* nom, const char* codePostal, const char* mail) ;         // Ajoute une entreprise à la liste
+        void addEntreprise(const string nom, const string codePostal, const string mail) ;      // Ajoute une entreprise à la liste
         void addPoste(Poste * ToAdd) ;                                                          // Ajoute un poste à la liste des postes à fournir
         void MAJDBEntreprise(void) ;                                                            // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées ou ajoutées
                                                                                                 // Met également à jour la base de données des postes
@@ -64,49 +66,52 @@ class Entreprise
 class Poste
 {
     private:
-        char _Titre[128] ;
+        string _Titre ;
         Poste * _next ;
         Poste * _previous ;
         Competence * _CompetencesRequises ;
     public:
     // Les constructeurs
-        Poste(const char* Titre, Poste *next, Poste * previous, Competence * CompetencesRequises) ;
+        Poste(const string Titre, Poste *next, Poste * previous, Competence * CompetencesRequises)
+        {_Titre = Titre ; _next = next ; _previous = previous ; _CompetencesRequises = CompetencesRequises ; return ;} ;
     // Le destructeur
         virtual ~Poste(void) ;
     // Accesseurs
-        char* Titre(void){return _Titre ;} ;
+        string Titre(void){return _Titre ;} ;
         Poste * next(void){return _next ;} ;
         Poste * previous(void){return _previous ;} ;
         Competence * CompetencesRequises(void){return _CompetencesRequises ;} ;
     // Modifieurs
-        void modifTitre(const char* NewTitre) ;
+        void modifTitre(const string NewTitre){_Titre = NewTitre ; return ;} ;
         void modifNext(Poste* NewNext){_next = NewNext ; return ;} ;
         void modifPrevious(Poste* NewPrevious){_previous = NewPrevious ; return ;} ;
-        void modifCompetencesRequises(Competence * NewListeCompetence) ;        // Modifie le pointeur vers la liste de compétence
+        void modifCompetencesRequises(Competence * NewListeCompetence){_CompetencesRequises = NewListeCompetence ; return ;} ;        // Modifie le pointeur vers la liste de compétence
 } ;
 
 class Competence
 {
     private:
-        char _label[128] ;
+        string _label ;
         Competence * _next ;
         Competence * _previous ;
     public:
     // Les constructeurs
-        Competence(const char* label, Competence * next, Competence * previous) ;
+        Competence(const string label, Competence * next, Competence * previous)
+        {_label = label ; _next = next ; _previous = previous ; return ;} ;
     // Le destructeur
         virtual ~Competence(void) ;
     // Accesseurs
-        char* label(void){return _label ;} ;
+        string label(void){return _label ;} ;
         Competence * next(void){return _next ;} ;
         Competence * previous(void){return _next ;} ;
     // Modifieurs
-        void modifLabel(const char* NewLabel) ;
+        void modifLabel(const string NewLabel){_label = NewLabel ; return ;} ;
         void modifNext(Competence* NewNext){_next = NewNext ; return ;} ;
         void modifPrevious(Competence* NewPrevious){_previous = NewPrevious ; return ;} ;
     // Fonctionnalité sur les Competences
-        void AddCompetence (const char* label) ;
-        void delCompetence (const char* label) ;
+        void AddCompetence (const string label) ;
+        void delCompetence (const string label) ;
+        bool IsInList (Competence * listeComp) ;                // Revoie 1 si la compétence est présente dans une liste de compétence passée en argument, 0 sinon
 } ;
 
 #endif
