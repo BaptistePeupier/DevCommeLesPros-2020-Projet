@@ -1,32 +1,26 @@
+#ifndef _INTERFACE_H_
+#define _INTERFACE_H_
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
-// Programme général, permettant soit de lancer l'application soit le lancer les tests.                          //
+// Interface de l'application                                                                                    //
 //                                                                                                               //
 // PEUPIER Baptiste MASSELOT Nicolas                                                                             //
-// Cree le 06/05/2020, modifié le 06/05/2020                                                                     //
+// Cree le 18/05/2020, modifié le 18/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include "tests.h"
-#include "interface.h"
+#include "general.h"
+#include <string.h>
+// #include <stddef.h>
+#include <stdlib.h>
 
-int main()
-{
-    int code ;
+#include <fstream>
+#include <iostream>
+#include <string>
 
-    cout << "Bienvenue dans LuminIn !" << endl << "(Tapez 0 pour lancer le programme de tests, n'importe quelle autre touche sinon.)" << endl ;
-    // cin >> code ;
-    code = 1 ;          // On n'exécute que les tests pour l'instant
-    if(code == 0){
-        code = tests() ;
-        if(code != 0) cout << "Echec du programme de test" << endl ;
-    }else{
-        code = interface() ;
-        code = 0 ;
-        // A remplacer par l'interface graphique
-    }
+int interface(void) ;
 
-    return code ;
-}
+#endif
