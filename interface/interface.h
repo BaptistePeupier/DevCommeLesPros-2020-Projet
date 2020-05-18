@@ -22,5 +22,8 @@
 #include <string>
 
 int interface(void) ;
+void menu_employe() ;
+void menu_chercheur() ;
+void menu_entreprise() ;
 
 #endif
