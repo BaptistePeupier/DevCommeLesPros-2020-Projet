@@ -33,7 +33,7 @@ class Personne
         AncienCollegue * _ListAncienCollegues ;                                         // Pointeur vers la liste d'ancien collègue
     public:
     // Un constructeur
-        Personne(int index, const string nom, const string prenom, const string mail, const string codePostal, Personne * nextP, Personne * previousP, Competence * CompetencesPropres, AncienCollegue * ListAncienCollegues, Entreprise * EntrepriseActuelle)
+        Personne(int index, const string nom, const string prenom, const string mail, const string codePostal, Personne * nextP=NULL, Personne * previousP=NULL, Competence * CompetencesPropres=NULL, AncienCollegue * ListAncienCollegues=NULL, Entreprise * EntrepriseActuelle=NULL)
         {_index = index ; _nom = nom ; _prenom = prenom ; _mail = mail ; _codePostal = codePostal ; _CompetencesPropres = CompetencesPropres ; _nextP = nextP ; _previousP = previousP ; _ListAncienCollegues = ListAncienCollegues ; _EntrepriseActuelle = EntrepriseActuelle ; return ;} ;
     // Le destructeur
         virtual ~Personne(void) ;
@@ -97,7 +97,7 @@ class AncienCollegue
         AncienCollegue * _previousA ;
     public:
     // Un constructeur
-        AncienCollegue(Personne * currentA, AncienCollegue * nextA, AncienCollegue * previousA)
+        AncienCollegue(Personne * currentA, AncienCollegue * nextA=NULL, AncienCollegue * previousA=NULL)
         {_currentA = currentA ; _nextA = nextA ; _previousA = previousA ; return ;} ;
     // Le destructeur
         virtual ~AncienCollegue(void) ;
