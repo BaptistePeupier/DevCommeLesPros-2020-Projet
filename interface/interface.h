@@ -20,10 +20,33 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <regex>
 
-int interface(void) ;
-void menu_employe() ;
-void menu_chercheur() ;
-void menu_entreprise() ;
+//affichage du menu principal
+int menu_principal(void) ;
+
+//connexion des employés
+void connexion_employe() ;
+
+//connexion des chercheurs d'emploi
+void connexion_chercheur() ;
+
+//connexion des entreprises
+void connexion_entreprise() ;
+
+//fonction de vérification de l'addresse mail entrée
+bool email_valide(string email) ;
+
+//fonction de vérification du code postal entré
+bool cp_valide(string code_postal) ;
+
+//affichage du menu correspondant au profil d'entreprise
+void menu_entreprise(Entreprise * utilisateur_entreprise) ;
+
+//affichage du menu correspondant au profil de chercheur d'emploi
+void menu_chercheur(Personne * utilisateur_chercheur) ;
+
+//affichage du menu correspondant au profil d'employé
+void menu_employe(Personne * utilisateur_employe) ;
 
 #endif

@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
-// Interface de l'application                                                                                    //
+// menu_principal de l'application                                                                                    //
 //                                                                                                               //
 // PEUPIER Baptiste MASSELOT Nicolas                                                                             //
 // Cree le 18/05/2020, modifié le 18/05/2020                                                                     //
@@ -11,8 +11,26 @@
 
 #include "interface.h"
 
+//fonction de vérification de l'addresse mail entrée
+bool email_valide(string email)
+{
+    if (regex_match(email, regex("([a-z]+)([_.a-z0-9]*)([a-z0-9]+)(@)([a-z]+)([.a-z]+)([a-z]+)"))) 
+        return true;
 
-void menu_profil_entreprise(Entreprise * utilisateur_entreprise)
+    return false;
+}
+
+//fonction de vérification du code postal entré
+bool cp_valide(string code_postal)
+{
+    if (regex_match(code_postal, regex("[0-9]*"))) 
+        return true;
+
+    return false;
+}
+
+//affichage du menu correspondant au profil d'entreprise
+void menu_entreprise(Entreprise * utilisateur_entreprise)
 {
     char choix_action_entreprise ;
     bool option_unknown = true;
@@ -26,8 +44,10 @@ void menu_profil_entreprise(Entreprise * utilisateur_entreprise)
         cout << "2. Supprimer le profil d'un poste maintenant pourvu" << endl ;
         cout << "3. Faire une recherche parmi les chercheurs d'emploi" << endl ;
         cout << "4. Supprimer votre profil" << endl ;
+        cout << endl ;
         cout << "Votre choix ('q' pour revenir au menu principal) : ";
         cin >> choix_action_entreprise ;
+        cout << endl ;
 
         switch (choix_action_entreprise)
         {
@@ -69,17 +89,19 @@ void menu_profil_entreprise(Entreprise * utilisateur_entreprise)
         cout << endl ;
     }
     if (choix_action_entreprise == 'q') {
-        interface() ;
+        menu_principal() ;
     } else {
-        menu_profil_entreprise(utilisateur_entreprise) ;
+        menu_entreprise(utilisateur_entreprise) ;
     }
     return ;
 }
 
-void menu_entreprise()
+//connexion des entreprises
+void connexion_entreprise()
 {
     Entreprise * current_user_entreprise = NULL;
     char choix_entreprise ;
+    bool valid_input;
     string nom_entreprise , cp_entreprise , mail_entreprise ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
     cout << "* Menu entreprise *" << endl ;
@@ -87,28 +109,43 @@ void menu_entreprise()
 
     cout << "Veuillez indiquer le nom de votre entreprise : " ;
     cin >> nom_entreprise ;
-    cout << "Veuillez indiquer le code postal de votre entreprise : " ;
-    cin >> cp_entreprise ; 
-    cout << "Veuillez indiquer l'adresse mail de votre entreprise : " ;
-    cin >> mail_entreprise ;
-    //recherche dans la BDD
+    do
+    {
+        cout << "Veuillez indiquer le code postal de votre entreprise : " ;
+        cin >> cp_entreprise ;
+        valid_input = cp_valide(cp_entreprise) ;
+        if (!valid_input) {
+            cout << "Code postal invalide" << endl << endl ;
+        } 
+    } while (!valid_input);
+
+    do {
+        cout << "Veuillez indiquer l'adresse mail de votre entreprise : " ;
+        cin >> mail_entreprise ;
+        valid_input = email_valide(mail_entreprise) ;
+        if (!valid_input) {
+            cout << "address email invalide" << endl << endl ;
+        }
+        
+    } while (!valid_input);
+    //recherche dans la BDD du profil de l'utilisateur
     if (current_user_entreprise) {
         for (int i = 0; i < 5; i++) { //on va à la ligne pour changer de menu
             cout << endl ;
         }
-        menu_profil_entreprise(current_user_entreprise) ;         
+        menu_entreprise(current_user_entreprise) ;         
         
     } else {
         //création de profil
-        for (int i = 0; i < 5; i++) { //on va à la ligne pour changer de menu
-            cout << endl ;
-        }
-        cout << "voulez-vous  créer un profil ?" << endl ;
-        cout << "1.Oui" << endl ;
-        cout << "2.Non" << endl ;
-        cout << "Votre choix :" ;
         do
         {
+            for (int i = 0; i < 5; i++) { //on va à la ligne pour changer de menu
+                cout << endl ;
+            }
+            cout << "voulez-vous  créer un profil ?" << endl ;
+            cout << "1.Oui" << endl ;
+            cout << "2.Non" << endl ;
+            cout << "Votre choix :" ;
             cin >> choix_entreprise ;
             if (choix_entreprise != '1' && choix_entreprise != '2') {
                 cout << "Choix inconnu veuillez recommencer" << endl ;
@@ -120,18 +157,19 @@ void menu_entreprise()
             for (int i = 0; i < 5; i++) { //on va à la ligne pour changer de menu
                 cout << endl ;
             }
-            menu_profil_entreprise(current_user_entreprise) ;  
+            menu_entreprise(current_user_entreprise) ;  
         } else {
             for (int i = 0; i < 5; i++) { //on va à la ligne pour changer de menu
                 cout << endl ;
             }
-            interface() ;
+            menu_principal() ;
         }
     }
     return ;
 }
 
-void menu_profil_chercheur(Personne * utilisateur_chercheur)
+//affichage du menu correspondant au profil de chercheur d'emploi
+void menu_chercheur(Personne * utilisateur_chercheur)
 {
     char choix_action_chercheur ;
     bool option_unknown = true;
@@ -146,8 +184,10 @@ void menu_profil_chercheur(Personne * utilisateur_chercheur)
         cout << "3. Effectuer une recherche parmis les postes à pourvoir" << endl ;
         cout << "4. Effectuer une recherche parmis vos anciens collègues" << endl ;
         cout << "5. Supprimer votre profil" << endl ;
+        cout << endl ;
         cout << "Votre choix ('q' pour revenir au menu principal) : " ;
         cin >> choix_action_chercheur ;
+        cout << endl ;
 
         switch (choix_action_chercheur)
         {
@@ -195,17 +235,19 @@ void menu_profil_chercheur(Personne * utilisateur_chercheur)
         cout << endl ;
     }
     if (choix_action_chercheur == 'q') { //retour au menu principal
-        interface() ;
+        menu_principal() ;
     } else {
-        menu_profil_chercheur(utilisateur_chercheur) ;
+        menu_chercheur(utilisateur_chercheur) ;
     }
     return ;
 }
 
-void menu_chercheur()
+//connexion des chercheurs d'emploi
+void connexion_chercheur()
 {
     Personne * current_user_chercheur = NULL;
     char choix_chercheur ;
+    bool valid_input ;
     string nom_chercheur , prenom_chercheur , cp_chercheur , mail_chercheur ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
     cout << "* Menu chercheur d'emploi *" << endl ;
@@ -215,28 +257,43 @@ void menu_chercheur()
     cin >> nom_chercheur ;
     cout << "Veuillez indiquer votre prénom : " ;
     cin >> prenom_chercheur ;
-    cout << "Veuillez indiquer votre code postal : " ; 
-    cin >> cp_chercheur ;
-    cout << "Veuillez indiquer votre adresse mail : " ;
-    cin >> mail_chercheur ;
-    //recherche dans la BDD
+    do
+    {
+        cout << "Veuillez indiquer votre code postal : " ; 
+        cin >> cp_chercheur ;
+        valid_input = cp_valide(cp_chercheur) ; 
+        if (!valid_input) {
+            cout << "Code postal invalide" << endl << endl ;
+        }
+    } while (!valid_input);
+
+    do {
+        cout << "Veuillez indiquer votre adresse mail : " ;
+        cin >> mail_chercheur ;
+        valid_input = email_valide(mail_chercheur) ;
+        if (!valid_input) {
+            cout << "address email invalide" << endl << endl ;
+        }
+        
+    } while (!valid_input);
+    //recherche dans la BDD du profil de l'utilisateur
     if (current_user_chercheur) {
         for (int i = 0; i < 5; i++) {
             cout << endl ;
         }
-        menu_profil_chercheur(current_user_chercheur) ;      
+        menu_chercheur(current_user_chercheur) ;      
         
     } else {
         //création de profil
-        for (int i = 0; i < 5; i++) { //on va à la ligne pour changer de menu
-            cout << endl ;
-        }
-        cout << "voulez-vous  créer un profil ?" << endl ;
-        cout << "1.Oui" << endl ;
-        cout << "2.Non" << endl ;
-        cout << "Votre choix : " ;
         do
         {
+            for (int i = 0; i < 5; i++) { //on va à la ligne pour changer de menu
+                cout << endl ;
+            }
+            cout << "voulez-vous  créer un profil ?" << endl ;
+            cout << "1.Oui" << endl ;
+            cout << "2.Non" << endl ;
+            cout << "Votre choix : " ;
             cin >> choix_chercheur ;
             if (choix_chercheur != '1' && choix_chercheur != '2') {
                 cout << "Choix inconnu veuillez recommencer" << endl ;
@@ -248,18 +305,19 @@ void menu_chercheur()
             for (int i = 0; i < 5; i++) {       //on va à la ligne pour changer de menu
                 cout << endl ;
             }
-            menu_profil_chercheur(current_user_chercheur) ;   
+            menu_chercheur(current_user_chercheur) ;   
         } else {
             for (int i = 0; i < 5; i++) {
                 cout << endl ;
             }
-            interface() ;
+            menu_principal() ;
         }
     }
     return ; 
 }
 
-void menu_profil_employe(Personne * utilisateur_employe)
+//affichage du menu correspondant au profil d'employé
+void menu_employe(Personne * utilisateur_employe)
 {
     char choix_action_employe ;
     bool option_unknown = true;
@@ -274,8 +332,10 @@ void menu_profil_employe(Personne * utilisateur_employe)
         cout << "3. Effectuer une recherche parmis les postes à pourvoir" << endl ;
         cout << "4. Effectuer une recherche parmis vos anciens collègues" << endl ;
         cout << "5. Supprimer votre profil" << endl ;
+        cout << endl ;
         cout << "Votre choix ('q' pour revenir au menu principal) : " ;
         cin >> choix_action_employe ;
+        cout << endl ;
 
         switch (choix_action_employe)
         {
@@ -322,17 +382,18 @@ void menu_profil_employe(Personne * utilisateur_employe)
         cout << endl ;
     }
     if (choix_action_employe == 'q') {
-        interface() ;
+        menu_principal() ;
     } else {
-        menu_profil_employe(utilisateur_employe) ;
+        menu_employe(utilisateur_employe) ;
     }
     return ;
 }
-
-void menu_employe()
+//connexion des employés
+void connexion_employe()
 {
     Personne * current_user_employe = NULL ;
     char choix_employe ;
+    bool valid_input ;
     string nom_employe , prenom_employe , cp_employe , mail_employe , entreprise_employe ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
     cout << "* Menu employé *" << endl ;
@@ -342,10 +403,27 @@ void menu_employe()
     cin >> nom_employe ;
     cout << "Veuillez indiquer votre prénom : " ;
     cin >> prenom_employe ;
-    cout << "Veuillez indiquer votre code postal : " ; 
-    cin >> cp_employe ;
-    cout << "Veuillez indiquer votre adresse mail : " ;
-    cin >> mail_employe ;
+    do
+    {
+        cout << "Veuillez indiquer votre code postal : " ; 
+        cin >> cp_employe ;
+        valid_input = cp_valide(cp_employe) ; 
+        if (!valid_input) {
+            cout << "Code postal invalide" << endl << endl ;
+        }
+    } while (!valid_input);
+
+
+    do {
+        cout << "Veuillez indiquer votre adresse mail : " ;
+        cin >> mail_employe ;
+        valid_input = email_valide(mail_employe) ;
+        if (!valid_input) {
+            cout << "address email invalide" << endl << endl ;
+        }
+        
+    } while (!valid_input);
+
     cout << "Veuillez indiquer votre entreprise : " ;
     cin >> entreprise_employe ;
     //recherche dans la BDD
@@ -353,19 +431,20 @@ void menu_employe()
         for (int i = 0; i < 5; i++) {
             cout << endl ;
         }
-        menu_profil_employe(current_user_employe) ;       
+        menu_employe(current_user_employe) ;       
         
     } else {
-        //création de profil
-        for (int i = 0; i < 5; i++) {
-            cout << endl ;
-        }
-        cout << "voulez-vous  créer un profil ?" << endl ;
-        cout << "1.Oui" << endl ;
-        cout << "2.Non" << endl ;
-        cout << "Votre choix : " ;
+        //création de profil 
+        //attention à l'entreprise vérifier qu'elle existe
         do
         {
+            for (int i = 0; i < 5; i++) {
+                cout << endl ;
+            }
+            cout << "voulez-vous  créer un profil ?" << endl ;
+            cout << "1.Oui" << endl ;
+            cout << "2.Non" << endl ;
+            cout << "Votre choix : " ;
             cin >> choix_employe ;
             if (choix_employe != '1' && choix_employe != '2') {
                 cout << "Choix inconnu veuillez recommencer" << endl ;
@@ -377,20 +456,22 @@ void menu_employe()
             for (int i = 0; i < 5; i++) {
                 cout << endl ;
             }
-            menu_profil_employe(current_user_employe) ; 
+            menu_employe(current_user_employe) ; 
         } else {
             for (int i = 0; i < 5; i++) {
                 cout << endl ;
             }
-            interface() ;
+            menu_principal() ;
         }
     }
     return ; 
 }
 
-int interface(void)
+//affichage du menu principal
+int menu_principal(void)
 {
-    string choix ;
+    char choix ;
+    bool valid_input = false ;
     cout << "* Menu principal *" << endl ;
     cout << endl ;
 
@@ -400,21 +481,41 @@ int interface(void)
     cout << "3.A la recherche d'un emploi" << endl ;
     cout << endl ;
     cout << "Votre choix ('q' pour quitter) : " ;
+    cin >> choix ;
     
     do
     {
-        cin >> choix ;
-        if (choix != "1" && choix != "2" && choix != "3" && choix != "q") {
+        switch (choix)
+        {
+        case '1':
+            valid_input = true ;
+            connexion_entreprise() ;
+            break;
+        
+        case '2':
+            valid_input = true ;
+            connexion_employe() ;
+            break;
+
+        case '3':
+            valid_input = true ;
+            connexion_chercheur() ;
+            break;
+
+        case 'q':
+            valid_input = true ;
+            cout << endl ;
+            cout << "-------------- Au revoir ------------"<< endl ;
+            break;
+
+        default:
             cout << "option inconnue" << endl ;
+            break;
         }
-    } while (choix != "1" && choix != "2" && choix != "3" && choix != "q" );
+    } while (!valid_input);
     
-    if (choix == "1") {
-        menu_entreprise() ;
-    } else if (choix == "2") {
-        menu_employe() ;
-    } else if (choix == "3") {
-        menu_chercheur() ;
-    }
+    
+    
+    
     return 0 ;
 }

@@ -23,7 +23,7 @@ int main()
         code = tests() ;
         if(code != 0) cout << "Echec du programme de test" << endl ;
     }else{
-        code = interface() ;
+        code = menu_principal() ;
         code = 0 ;
         // A remplacer par l'interface graphique
     }
