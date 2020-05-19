@@ -12,7 +12,7 @@
 #include "general.h"
 
 // Construit la liste des Entreprises à partir d'une base de donnée (entreprise + postes)
-Entreprise * CreerListeEntreprise(void)
+Entreprise * CreerListeEntreprise(string DBEnt, string DBP)
 {
     Entreprise * ListeEntreprise = NULL, * tmp = NULL ;
     int tmpindex ;
@@ -23,7 +23,7 @@ Entreprise * CreerListeEntreprise(void)
     char tmpcompetence[128] ;
 
     // Lecture de la base de donnée des entreprises
-    FILE *db_entreprise = fopen("test/FichiersDeTests/entreprise.csv", "r") ;
+    FILE *db_entreprise = fopen(DBEnt.c_str(), "r") ;
     if(db_entreprise){
         fscanf(db_entreprise, "%*s") ;
         // id,nom,code_postal,mail -> entreprise
@@ -45,7 +45,7 @@ Entreprise * CreerListeEntreprise(void)
     }
 
     // Lecture de la base de donnée des postes
-    FILE *db_poste = fopen("test/FichiersDeTests/poste.csv", "r") ;
+    FILE *db_poste = fopen(DBP.c_str(), "r") ;
     if(db_poste){
         fscanf(db_poste, "%*s") ;
         // id,titre,entreprise,competences(multiples) -> poste
@@ -77,7 +77,7 @@ Entreprise * CreerListeEntreprise(void)
 }
 
 // Construit la liste des Employe à partir d'une base de donnée (employe)
-Personne * CreerListeEmploye(Entreprise * ListeEntreprise)
+Personne * CreerListeEmploye(Entreprise * ListeEntreprise, string DBEmp)
 {
     Personne * ListeEmploye = NULL, * tmp = NULL ;
     Entreprise * tmpentreprise ;
@@ -91,7 +91,7 @@ Personne * CreerListeEmploye(Entreprise * ListeEntreprise)
 
     assert(ListeEntreprise) ;                               // On a besoin de la liste des entreprises
 
-    FILE *db_employe = fopen("test/FichiersDeTests/employes.csv", "r") ;
+    FILE *db_employe = fopen(DBEmp.c_str(), "r") ;
     if(db_employe){
         fscanf(db_employe, "%*s") ;
         // id,nom,prenom,mail,code_postal,entreprise,competences,collegues_employes,collegues_chercheur_d'emploi
@@ -128,7 +128,7 @@ Personne * CreerListeEmploye(Entreprise * ListeEntreprise)
 }
 
 // Construit la liste des Chercheurs d'emploi à partir d'une base de donnée (chercheurEmplois)
-Personne * CreerListeChercheurEmploi(void)
+Personne * CreerListeChercheurEmploi(string DBEmp)
 {
     Personne * ListeChercheurEmploi = NULL, * tmp = NULL ;
     int tmpindex ;
@@ -138,7 +138,7 @@ Personne * CreerListeChercheurEmploi(void)
     char tmpcodePostal[128] ;
     char tmpcompetence[128] ;
 
-    FILE *db_chercheur_emploi = fopen("test/FichiersDeTests/chercheurEmploi.csv", "r") ;
+    FILE *db_chercheur_emploi = fopen(DBEmp.c_str(), "r") ;
     if(db_chercheur_emploi){
         fscanf(db_chercheur_emploi, "%*s") ;
         // id,nom,prenom,mail,code_postal,competences,collegues_employes,collegues_chercheur_d'emploi
@@ -173,15 +173,15 @@ Personne * CreerListeChercheurEmploi(void)
 }
 
 // Effectue la lisaison entre la liste des Employes et chercheur d'emploi
-void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmploi)
+void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmploi, string DBEmp, string DBC)
 {
     Personne * tmp, * tmp2 ;
     AncienCollegue * tmpA ;
     char tmpIndexCollegue[128] ;
     int indexCollegue ;
 
-    FILE *db_employe = fopen("test/FichiersDeTests/employes.csv", "r") ;
-    FILE *db_chercheur_emploi = fopen("test/FichiersDeTests/chercheurEmploi.csv", "r") ;
+    FILE *db_employe = fopen(DBEmp.c_str(), "r") ;
+    FILE *db_chercheur_emploi = fopen(DBC.c_str(), "r") ;
     if(db_employe && db_chercheur_emploi){
         fscanf(db_employe, "%*s") ;
         // id,nom,prenom,mail,code_postal,entreprise,competences,collegues_employes,collegues_chercheur_d'emploi
@@ -274,12 +274,12 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
 
 // Fonction auxiliaire aux fonctions CreerListeEntreprise, CreerListeEmploye, CreerListeChercheurEmploi, InitAnciensCollegues
 // Créer les listes et fait les liens avec les entreprises et ancien collègues
-void Creer_listes(Entreprise ** ListeEntreprise, Personne ** ListeEmploye, Personne ** ListeChercheurEmploi)
+void Creer_listes(Entreprise ** ListeEntreprise, Personne ** ListeEmploye, Personne ** ListeChercheurEmploi, string DBEnt, string DBP, string DBEmp, string DBC)
 {
-    *ListeEntreprise = CreerListeEntreprise() ;
-    *ListeEmploye = CreerListeEmploye(*ListeEntreprise) ;
-    *ListeChercheurEmploi = CreerListeChercheurEmploi() ;
-    InitAnciensCollegues(*ListeEmploye, *ListeChercheurEmploi) ;
+    *ListeEntreprise = CreerListeEntreprise(DBEnt, DBP) ;
+    *ListeEmploye = CreerListeEmploye(*ListeEntreprise, DBEmp) ;
+    *ListeChercheurEmploi = CreerListeChercheurEmploi(DBC) ;
+    InitAnciensCollegues(*ListeEmploye, *ListeChercheurEmploi, DBEmp, DBC) ;
 
     return ;
 }

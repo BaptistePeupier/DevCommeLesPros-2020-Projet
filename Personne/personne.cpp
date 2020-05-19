@@ -11,6 +11,10 @@
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+string Personne::_DBE = "test/FichiersDeTests/employes.csv" ;
+string Personne::_DBC = "test/FichiersDeTests/chercheurEmploi.csv" ;
+
+
 // Le destructeur
 // Détruit la liste de Personne
 Personne::~Personne(void)
@@ -318,7 +322,7 @@ AncienCollegue* Personne::RechercheColleguesEntreprise(const string nomEntrepris
 // Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées
 // Si le pointeur vers une entrepise est null c'est un Chercheur d'emploi
 // Si le pointeur vers une entrepise est non null c'est un Employe
-void Personne::MAJDBPersonne(void)
+void Personne::MAJDBPersonne(string DBE, string DBC)
 {
     Personne * tmp ;
     Competence *tmp_skill ;
@@ -334,13 +338,13 @@ void Personne::MAJDBPersonne(void)
     tmp = this ;
     while (tmp->_previousP != NULL) tmp = tmp->previousP() ;                    //retour au début de la liste des personnes
     if (this->EntrepriseActuelle()) {                                                               //ouverture du csv chercheurEmploi ou employes selon la liste où se trouve la personne
-        new_db_employes = fopen("test/FichiersDeTests/employes_new.csv", "w") ;             // A modifier lorsque l'on utilisera la vrai DB
-        prev_db_employes = fopen("test/FichiersDeTests/employes.csv", "r") ;                // A modifier lorsque l'on utilisera la vrai DB
+        new_db_employes = fopen("employes_new.csv", "w") ;
+        prev_db_employes = fopen(DBE.c_str(), "r") ;
         fscanf(prev_db_employes, "%127[^\n\r]", schema_db) ;                         //on recopie le schema de la base de données 
         fprintf(new_db_employes, "%s", schema_db) ;
     }else {
-        new_db_chercheurs = fopen("test/FichiersDeTests/chercheurEmploi_new.csv", "w") ;  // A modifier lorsque l'on utilisera la vrai DB
-        prev_db_chercheurs = fopen("test/FichiersDeTests/chercheurEmploi.csv", "r") ;     // A modifier lorsque l'on utilisera la vrai DB 
+        new_db_chercheurs = fopen("chercheurEmploi_new.csv", "w") ; 
+        prev_db_chercheurs = fopen(DBC.c_str(), "r") ;
         
         fscanf(prev_db_chercheurs, "%127[^\n\r]", schema_db) ;                       //on recopie le schema de la base de données 
         fprintf(new_db_chercheurs, "%s", schema_db) ;
@@ -402,13 +406,13 @@ void Personne::MAJDBPersonne(void)
     if (this->EntrepriseActuelle()) {
         fclose(new_db_employes);
         fclose(prev_db_employes) ;
-        remove("test/FichiersDeTests/employes.csv") ;                                                               // A modifier lorsque l'on utilisera la vrai DB
-        rename("test/FichiersDeTests/employes_new.csv", "test/FichiersDeTests/employes.csv") ;                      // A modifier lorsque l'on utilisera la vrai DB
+        remove(DBE.c_str()) ;
+        rename("employes_new.csv", DBE.c_str()) ;
     } else {
         fclose(new_db_chercheurs) ;
         fclose(prev_db_chercheurs) ;
-        remove("test/FichiersDeTests/chercheurEmploi.csv") ;                                                      // A modifier lorsque l'on utilisera la vrai DB
-        rename("test/FichiersDeTests/chercheurEmploi_new.csv", "test/FichiersDeTests/chercheurEmploi.csv") ;    // A modifier lorsque l'on utilisera la vrai DB
+        remove(DBC.c_str()) ;
+        rename("chercheurEmploi_new.csv", DBC.c_str()) ;
     }
     
     return ;

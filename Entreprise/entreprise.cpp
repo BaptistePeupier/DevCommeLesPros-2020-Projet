@@ -11,6 +11,9 @@
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+string Entreprise::_DBE = "test/FichiersDeTests/entreprise.csv" ;
+string Entreprise::_DBP = "test/FichiersDeTests/poste.csv" ;
+
 // Le destructeur
 Entreprise::~Entreprise(void)
 {
@@ -40,12 +43,12 @@ void Entreprise::addEntreprise(const string nom, const string codePostal, const 
 
 // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées ou ajoutées
 // Met également à jour la base de données des postes
-void Entreprise::MAJDBEntreprise(void)
+void Entreprise::MAJDBEntreprise(string DBE, string DBP)
 {
-    FILE *new_db_en = fopen("test/FichiersDeTests/entrepriseNew.csv", "w") ;     // A modifier lorsque l'on utilisera la vrai DB
-    FILE *prev_db_en = fopen("test/FichiersDeTests/entreprise.csv", "r") ;       // A modifier lorsque l'on utilisera la vrai DB
-    FILE *new_db_poste = fopen("test/FichiersDeTests/posteNew.csv", "w") ;       // A modifier lorsque l'on utilisera la vrai DB
-    FILE *prev_db_poste = fopen("test/FichiersDeTests/poste.csv", "r") ;         // A modifier lorsque l'on utilisera la vrai DB
+    FILE *new_db_en = fopen("entrepriseNew.csv", "w") ;
+    FILE *prev_db_en = fopen(DBE.c_str(), "r") ;
+    FILE *new_db_poste = fopen("posteNew.csv", "w") ;
+    FILE *prev_db_poste = fopen(DBP.c_str(), "r") ;
     Entreprise * tmp ;
     Competence *tmpC ;
     Poste *tmpP ;
@@ -84,10 +87,10 @@ void Entreprise::MAJDBEntreprise(void)
     fclose(prev_db_en) ;
     fclose(new_db_poste) ;
     fclose(prev_db_poste) ;
-    remove("test/FichiersDeTests/entreprise.csv") ;                                             // A modifier lorsque l'on utilisera la vrai DB
-    rename("test/FichiersDeTests/entrepriseNew.csv", "test/FichiersDeTests/entreprise.csv") ;   // A modifier lorsque l'on utilisera la vrai DB
-    remove("test/FichiersDeTests/poste.csv") ;                                                  // A modifier lorsque l'on utilisera la vrai DB
-    rename("test/FichiersDeTests/posteNew.csv", "test/FichiersDeTests/poste.csv") ;             // A modifier lorsque l'on utilisera la vrai DB
+    remove(DBE.c_str()) ;
+    rename("entrepriseNew.csv", DBE.c_str()) ;
+    remove("test/FichiersDeTests/poste.csv") ;
+    rename("posteNew.csv", DBP.c_str()) ;
 
     return ;
 }
