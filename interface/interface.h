@@ -22,6 +22,12 @@
 #include <string>
 #include <regex>
 
+//fonction de vérification de l'addresse mail entrée
+bool email_valide(string email) ;
+
+//fonction de vérification du code postal entré
+bool cp_valide(string code_postal) ;
+
 //affichage du menu principal
 int menu_principal(void) ;
 
@@ -33,12 +39,6 @@ void connexion_chercheur() ;
 
 //connexion des entreprises
 void connexion_entreprise() ;
-
-//fonction de vérification de l'addresse mail entrée
-bool email_valide(string email) ;
-
-//fonction de vérification du code postal entré
-bool cp_valide(string code_postal) ;
 
 //affichage du menu correspondant au profil d'entreprise
 void menu_entreprise(Entreprise * utilisateur_entreprise) ;

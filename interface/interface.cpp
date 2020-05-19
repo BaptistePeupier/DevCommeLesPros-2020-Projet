@@ -4,7 +4,7 @@
 // menu_principal de l'application                                                                                    //
 //                                                                                                               //
 // PEUPIER Baptiste MASSELOT Nicolas                                                                             //
-// Cree le 18/05/2020, modifié le 18/05/2020                                                                     //
+// Cree le 18/05/2020, modifié le 19/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,6 +34,8 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
 {
     char choix_action_entreprise ;
     bool option_unknown = true;
+
+    system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
     cout << "* Menu entreprise *" << endl ;
     cout << endl ;
@@ -85,9 +87,7 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
         }
     }
 
-    for (int i = 0; i < 5; i++) {
-        cout << endl ;
-    }
+    system("clear") ;
     if (choix_action_entreprise == 'q') {
         menu_principal() ;
     } else {
@@ -103,6 +103,8 @@ void connexion_entreprise()
     char choix_entreprise ;
     bool valid_input;
     string nom_entreprise , cp_entreprise , mail_entreprise ;
+
+    system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
     cout << "* Menu entreprise *" << endl ;
     cout << endl ;
@@ -128,21 +130,17 @@ void connexion_entreprise()
         }
         
     } while (!valid_input);
-    //recherche dans la BDD du profil de l'utilisateur
+    // Recherche dans la BDD du profil de l'utilisateur
     if (current_user_entreprise) {
-        for (int i = 0; i < 5; i++) { //on va à la ligne pour changer de menu
-            cout << endl ;
-        }
+        system("clear") ;
         menu_entreprise(current_user_entreprise) ;         
         
     } else {
-        //création de profil
+        // Création de profil
         do
         {
-            for (int i = 0; i < 5; i++) { //on va à la ligne pour changer de menu
-                cout << endl ;
-            }
-            cout << "voulez-vous  créer un profil ?" << endl ;
+            system("clear") ;
+            cout << "voulez-vous créer un profil ?" << endl ;
             cout << "1.Oui" << endl ;
             cout << "2.Non" << endl ;
             cout << "Votre choix :" ;
@@ -154,14 +152,10 @@ void connexion_entreprise()
         
         if (choix_entreprise == '1') {
             //appel de la fonction de création du profil
-            for (int i = 0; i < 5; i++) { //on va à la ligne pour changer de menu
-                cout << endl ;
-            }
+            system("clear") ;
             menu_entreprise(current_user_entreprise) ;  
         } else {
-            for (int i = 0; i < 5; i++) { //on va à la ligne pour changer de menu
-                cout << endl ;
-            }
+            system("clear") ;
             menu_principal() ;
         }
     }
@@ -173,6 +167,8 @@ void menu_chercheur(Personne * utilisateur_chercheur)
 {
     char choix_action_chercheur ;
     bool option_unknown = true;
+
+    system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
     cout << "* Menu chercheur d'emploi *" << endl ;
     cout << endl ;
@@ -231,9 +227,7 @@ void menu_chercheur(Personne * utilisateur_chercheur)
         }
     }
 
-    for (int i = 0; i < 5; i++) {
-        cout << endl ;
-    }
+    system("clear") ;
     if (choix_action_chercheur == 'q') { //retour au menu principal
         menu_principal() ;
     } else {
@@ -249,6 +243,8 @@ void connexion_chercheur()
     char choix_chercheur ;
     bool valid_input ;
     string nom_chercheur , prenom_chercheur , cp_chercheur , mail_chercheur ;
+
+    system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
     cout << "* Menu chercheur d'emploi *" << endl ;
     cout << endl ;
@@ -278,19 +274,15 @@ void connexion_chercheur()
     } while (!valid_input);
     //recherche dans la BDD du profil de l'utilisateur
     if (current_user_chercheur) {
-        for (int i = 0; i < 5; i++) {
-            cout << endl ;
-        }
+        system("clear") ;
         menu_chercheur(current_user_chercheur) ;      
         
     } else {
         //création de profil
         do
         {
-            for (int i = 0; i < 5; i++) { //on va à la ligne pour changer de menu
-                cout << endl ;
-            }
-            cout << "voulez-vous  créer un profil ?" << endl ;
+            system("clear") ;
+            cout << "voulez-vous créer un profil ?" << endl ;
             cout << "1.Oui" << endl ;
             cout << "2.Non" << endl ;
             cout << "Votre choix : " ;
@@ -302,14 +294,10 @@ void connexion_chercheur()
         
         if (choix_chercheur == '1') {
             //appel de la fonction de création du profil
-            for (int i = 0; i < 5; i++) {       //on va à la ligne pour changer de menu
-                cout << endl ;
-            }
+            system("clear") ;
             menu_chercheur(current_user_chercheur) ;   
         } else {
-            for (int i = 0; i < 5; i++) {
-                cout << endl ;
-            }
+            
             menu_principal() ;
         }
     }
@@ -378,9 +366,7 @@ void menu_employe(Personne * utilisateur_employe)
         }
     }
 
-    for (int i = 0; i < 5; i++) {
-        cout << endl ;
-    }
+    system("clear") ;
     if (choix_action_employe == 'q') {
         menu_principal() ;
     } else {
@@ -388,6 +374,7 @@ void menu_employe(Personne * utilisateur_employe)
     }
     return ;
 }
+
 //connexion des employés
 void connexion_employe()
 {
@@ -395,6 +382,8 @@ void connexion_employe()
     char choix_employe ;
     bool valid_input ;
     string nom_employe , prenom_employe , cp_employe , mail_employe , entreprise_employe ;
+
+    system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
     cout << "* Menu employé *" << endl ;
     cout << endl ;
@@ -428,9 +417,7 @@ void connexion_employe()
     cin >> entreprise_employe ;
     //recherche dans la BDD
     if (current_user_employe) {
-        for (int i = 0; i < 5; i++) {
-            cout << endl ;
-        }
+        system("clear") ;
         menu_employe(current_user_employe) ;       
         
     } else {
@@ -438,10 +425,8 @@ void connexion_employe()
         //attention à l'entreprise vérifier qu'elle existe
         do
         {
-            for (int i = 0; i < 5; i++) {
-                cout << endl ;
-            }
-            cout << "voulez-vous  créer un profil ?" << endl ;
+            system("clear") ;
+            cout << "voulez-vous créer un profil ?" << endl ;
             cout << "1.Oui" << endl ;
             cout << "2.Non" << endl ;
             cout << "Votre choix : " ;
@@ -453,14 +438,10 @@ void connexion_employe()
         
         if (choix_employe == '1') {
             //appel de la fonction de création du profil
-            for (int i = 0; i < 5; i++) {
-                cout << endl ;
-            }
+            system("clear") ;
             menu_employe(current_user_employe) ; 
         } else {
-            for (int i = 0; i < 5; i++) {
-                cout << endl ;
-            }
+            system("clear") ;
             menu_principal() ;
         }
     }
@@ -472,6 +453,8 @@ int menu_principal(void)
 {
     char choix ;
     bool valid_input = false ;
+
+    system("clear") ; 
     cout << "* Menu principal *" << endl ;
     cout << endl ;
 
@@ -481,10 +464,10 @@ int menu_principal(void)
     cout << "3.A la recherche d'un emploi" << endl ;
     cout << endl ;
     cout << "Votre choix ('q' pour quitter) : " ;
-    cin >> choix ;
     
     do
     {
+        cin >> choix ;
         switch (choix)
         {
         case '1':

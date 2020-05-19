@@ -31,6 +31,8 @@ class Personne
         Entreprise * _EntrepriseActuelle ;                                              // Si NULL est un chercheur d'emploi, sinon un employé
         Competence * _CompetencesPropres ;
         AncienCollegue * _ListAncienCollegues ;                                         // Pointeur vers la liste d'ancien collègue
+        static string _DBE, _DBC ;                                                      // Chaine de caractère statique à la classe dénottant les DB à utiliser
+                                                                                        // Modifier ces variables pour passer des DB du programme de test à celle de l'application
     public:
     // Un constructeur
         Personne(int index, const string nom, const string prenom, const string mail, const string codePostal, Personne * nextP=NULL, Personne * previousP=NULL, Competence * CompetencesPropres=NULL, AncienCollegue * ListAncienCollegues=NULL, Entreprise * EntrepriseActuelle=NULL)
@@ -64,7 +66,7 @@ class Personne
                                                                                                                             // Ajoute les anciens collègues si besoin
                                                                                                                             // NewEntreprise est le pointeur vers l'entreprise en cas de recrutement, NULL sinon
         void deleteProfile(Personne ** ListeEmploye, Personne ** ListeChercheurEmploi) ;
-        void MAJDBPersonne(void) ;                                          // Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées
+        void MAJDBPersonne(string DBE=_DBE, string DBC=_DBC) ;              // Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées
                                                                             // Si le pointeur vers une entrepise est null c'est un Chercheur d'emploi
                                                                             // Si le pointeur vers une entrepise est non null c'est un Employe
         Entreprise* RecherchePosteCompetence(Entreprise * listeEntreprises) ;           // Retourne une liste d'entreprise avec les postes correspondant aux compétences de la personne
