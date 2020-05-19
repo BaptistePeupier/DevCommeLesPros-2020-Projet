@@ -18,8 +18,8 @@ int main()
 
     system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << "(Tapez 0 pour lancer le programme de tests, n'importe quelle autre touche sinon.)" << endl ;
-    cin >> code ;
-    // code = 0 ;          // On n'exécute que les tests pour l'instant
+    // cin >> code ;
+    code = 0 ;          // On n'exécute que les tests pour l'instant
     if(code == 0){
         code = tests() ;
         if(code != 0) cout << "Echec du programme de test" << endl ;

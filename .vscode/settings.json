@@ -9,6 +9,7 @@
         "string_view": "cpp",
         "iosfwd": "cpp",
         "istream": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "regex": "cpp"
     }
 }
