@@ -90,7 +90,9 @@ int tests(void)
     Personne * ListeEmploye, * ListeChercheurEmploi ;
     Personne *test_employes, *test_chercheur ;
     Personne * tmpP ;
+    Poste *tmpPo ;
     Entreprise * tmpE ;
+    AncienCollegue *tmpA ;
     // Variables pour les tests de recherches
     Entreprise *tmpERecherche ;
     // Personne *tmpPRecherche ;
@@ -176,7 +178,11 @@ int tests(void)
 
 // Test d'ajout et de suppression d'ancien collègue
     test_employes->ListAncienCollegues()->addAncienCollegue(test_chercheur,test_employes) ;
+    tmpA = test_employes->ListAncienCollegues() ;
+    while(tmpA->nextA()->nextA()) tmpA = tmpA->nextA() ;        // Pour ne pas garder un pointeur sur l'objet détruit, on utilise son précédent
+    TEST2(tmpA->nextA()->currentA(), test_chercheur) ;
     test_employes->ListAncienCollegues()->dellAncienCollegue(test_chercheur,test_employes) ;
+    TEST(!tmpA->nextA()) ;
 
 // Test sur la transition de profil
     tmpP = ListeEmploye ;
@@ -199,7 +205,12 @@ int tests(void)
 
 // Test sur l'ajout et la suppression d'un poste
     ListeEntreprise->addPoste(new Poste("vendeur", NULL, NULL, new Competence("OS"))) ;
+    tmpPo = ListeEntreprise->profilPoste() ;
+    while(tmpPo->next()->next()) tmpPo = tmpPo->next() ;        // Pour ne pas garder un pointeur sur l'objet détruit, on utilise son précédent
+    TEST2(tmpPo->next()->Titre(), "vendeur") ;
+    TEST2(tmpPo->next()->CompetencesRequises()->label(), "OS") ;
     ListeEntreprise->dellPoste("vendeur") ;
+    TEST(!tmpPo->next()) ;
 
 // Test de la suppression de profil d'une personne
     // Avec une personne ajoutée à la fin
@@ -218,7 +229,7 @@ int tests(void)
 
 // Tests sur les MAJ des DB
     // Tests sur la MAJ de la db entreprise
-    ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;
+    ListeEntreprise->addEntreprise("test", "7007", "test@gmail.com") ;  // Teste également l'ajout d'entreprise
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;
     ListeEntreprise->modifCodePostal("777007707") ;
     ListeEntreprise->MAJDBEntreprise() ;
