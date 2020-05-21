@@ -193,15 +193,17 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
                 indexCollegue = atoi(tmpIndexCollegue) ;
                 tmp2 = ListeEmploye ;
                 while(tmp2 && tmp2->index()!=indexCollegue) tmp2 = tmp2->nextP() ;  // On retrouve la personne d'index recherché
-                AncienCollegue * NewAncienCollegue = new AncienCollegue(tmp2,NULL,NULL) ;
-                tmp2 = tmp ;
-                if(tmp2->ListAncienCollegues()){
-                    tmpA = tmp2->ListAncienCollegues() ;
-                    while(tmpA->nextA()) tmpA = tmpA->nextA() ;
-                    NewAncienCollegue->modifPreviousA(tmpA) ;
-                    tmpA->modifNextA(NewAncienCollegue) ;
-                }else{                                                              // Premier collegue
-                    tmp2->modifAncienCollegues(NewAncienCollegue) ;
+                if(tmp2){
+                    AncienCollegue * NewAncienCollegue = new AncienCollegue(tmp2,NULL,NULL) ;
+                    tmp2 = tmp ;
+                    if(tmp2->ListAncienCollegues()){
+                        tmpA = tmp2->ListAncienCollegues() ;
+                        while(tmpA->nextA()) tmpA = tmpA->nextA() ;
+                        NewAncienCollegue->modifPreviousA(tmpA) ;
+                        tmpA->modifNextA(NewAncienCollegue) ;
+                    }else{                                                              // Premier collegue
+                        tmp2->modifAncienCollegues(NewAncienCollegue) ;
+                    }
                 }
             }
             fscanf(db_employe, "%1[,]", tmpIndexCollegue) ;
@@ -210,15 +212,17 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
                 indexCollegue = atoi(tmpIndexCollegue) ;
                 tmp2 = ListeChercheurEmploi ;
                 while(tmp2 && tmp2->index()!=indexCollegue) tmp2 = tmp2->nextP() ;  // On retrouve la personne d'index recherché
-                AncienCollegue * NewAncienCollegue = new AncienCollegue(tmp2,NULL,NULL) ;
-                tmp2 = tmp ;
-                if(tmp2->ListAncienCollegues()){
-                    tmpA = tmp2->ListAncienCollegues() ;
-                    while(tmpA->nextA()) tmpA = tmpA->nextA() ;
-                    NewAncienCollegue->modifPreviousA(tmpA) ;
-                    tmpA->modifNextA(NewAncienCollegue) ;
-                }else{                                                              // Premier collegue
-                    tmp2->modifAncienCollegues(NewAncienCollegue) ;
+                if(tmp2){
+                    AncienCollegue * NewAncienCollegue = new AncienCollegue(tmp2,NULL,NULL) ;
+                    tmp2 = tmp ;
+                    if(tmp2->ListAncienCollegues()){
+                        tmpA = tmp2->ListAncienCollegues() ;
+                        while(tmpA->nextA()) tmpA = tmpA->nextA() ;
+                        NewAncienCollegue->modifPreviousA(tmpA) ;
+                        tmpA->modifNextA(NewAncienCollegue) ;
+                    }else{                                                              // Premier collegue
+                        tmp2->modifAncienCollegues(NewAncienCollegue) ;
+                    }
                 }
             }
             tmp = tmp->nextP() ;
@@ -234,15 +238,17 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
                 indexCollegue = atoi(tmpIndexCollegue) ;
                 tmp2 = ListeEmploye ;
                 while(tmp2 && tmp2->index()!=indexCollegue) tmp2 = tmp2->nextP() ;  // On retrouve la personne d'index recherché
-                AncienCollegue * NewAncienCollegue = new AncienCollegue(tmp2,NULL,NULL) ;
-                tmp2 = tmp ;
-                if(tmp2->ListAncienCollegues()){
-                    tmpA = tmp2->ListAncienCollegues() ;
-                    while(tmpA->nextA()) tmpA = tmpA->nextA() ;
-                    NewAncienCollegue->modifPreviousA(tmpA) ;
-                    tmpA->modifNextA(NewAncienCollegue) ;
-                }else{                                                              // Premier collegue
-                    tmp2->modifAncienCollegues(NewAncienCollegue) ;
+                if(tmp2){
+                    AncienCollegue * NewAncienCollegue = new AncienCollegue(tmp2,NULL,NULL) ;
+                    tmp2 = tmp ;
+                    if(tmp2->ListAncienCollegues()){
+                        tmpA = tmp2->ListAncienCollegues() ;
+                        while(tmpA->nextA()) tmpA = tmpA->nextA() ;
+                        NewAncienCollegue->modifPreviousA(tmpA) ;
+                        tmpA->modifNextA(NewAncienCollegue) ;
+                    }else{                                                              // Premier collegue
+                        tmp2->modifAncienCollegues(NewAncienCollegue) ;
+                    }
                 }
             }
             fscanf(db_chercheur_emploi, "%1[,]", tmpIndexCollegue) ;
@@ -251,15 +257,17 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
                 indexCollegue = atoi(tmpIndexCollegue) ;
                 tmp2 = ListeChercheurEmploi ;
                 while(tmp2 && tmp2->index()!=indexCollegue) tmp2 = tmp2->nextP() ;  // On retrouve la personne d'index recherché
-                AncienCollegue * NewAncienCollegue = new AncienCollegue(tmp2,NULL,NULL) ;
-                tmp2 = tmp ;
-                if(tmp2->ListAncienCollegues()){
-                    tmpA = tmp2->ListAncienCollegues() ;
-                    while(tmpA->nextA()) tmpA = tmpA->nextA() ;
-                    NewAncienCollegue->modifPreviousA(tmpA) ;
-                    tmpA->modifNextA(NewAncienCollegue) ;
-                }else{                                                              // Premier collegue
-                    tmp2->modifAncienCollegues(NewAncienCollegue) ;
+                if(tmp2){
+                    AncienCollegue * NewAncienCollegue = new AncienCollegue(tmp2,NULL,NULL) ;
+                    tmp2 = tmp ;
+                    if(tmp2->ListAncienCollegues()){
+                        tmpA = tmp2->ListAncienCollegues() ;
+                        while(tmpA->nextA()) tmpA = tmpA->nextA() ;
+                        NewAncienCollegue->modifPreviousA(tmpA) ;
+                        tmpA->modifNextA(NewAncienCollegue) ;
+                    }else{                                                              // Premier collegue
+                        tmp2->modifAncienCollegues(NewAncienCollegue) ;
+                    }
                 }
             }
             tmp = tmp->nextP() ;
