@@ -28,6 +28,9 @@ bool email_valide(string email) ;
 //fonction de vérification du code postal entré
 bool cp_valide(string code_postal) ;
 
+//fonction de vérification des saisies
+bool saisie_valide(string saisie) ;
+
 //affichage du menu principal
 int menu_principal(void) ;
 
