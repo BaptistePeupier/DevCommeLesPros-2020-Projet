@@ -1,10 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Projet DCLP                                                                                                   //
 //                                                                                                               //
-// menu_principal de l'application                                                                                    //
+// menu_principal de l'application                                                                               //
 //                                                                                                               //
 // PEUPIER Baptiste MASSELOT Nicolas                                                                             //
-// Cree le 18/05/2020, modifié le 19/05/2020                                                                     //
+// Cree le 18/05/2020, modifié le 21/05/2020                                                                     //
 //                                                                                                               //
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,6 +24,15 @@ bool email_valide(string email)
 bool cp_valide(string code_postal)
 {
     if (regex_match(code_postal, regex("[0-9]*"))) 
+        return true;
+
+    return false;
+}
+
+//fonction de vérification des saisies
+bool saisie_valide(string saisie) 
+{
+    if (regex_match(saisie, regex("[^,;]+"))) 
         return true;
 
     return false;
@@ -109,8 +118,17 @@ void connexion_entreprise()
     cout << "* Menu entreprise *" << endl ;
     cout << endl ;
 
-    cout << "Veuillez indiquer le nom de votre entreprise : " ;
-    cin >> nom_entreprise ;
+    do
+    {
+        cout << "Veuillez indiquer le nom de votre entreprise : " ;
+        cin >> nom_entreprise ;
+        valid_input = saisie_valide(nom_entreprise) ;
+        if (!valid_input) {
+            cout << "Nom invalide" << endl << endl ;
+        } 
+        
+    } while (!valid_input);
+
     do
     {
         cout << "Veuillez indiquer le code postal de votre entreprise : " ;
@@ -249,10 +267,28 @@ void connexion_chercheur()
     cout << "* Menu chercheur d'emploi *" << endl ;
     cout << endl ;
 
-    cout << "Veuillez indiquer votre nom : " ;
-    cin >> nom_chercheur ;
-    cout << "Veuillez indiquer votre prénom : " ;
-    cin >> prenom_chercheur ;
+    do
+    {
+        cout << "Veuillez indiquer votre nom : " ;
+        cin >> nom_chercheur ;
+        valid_input = saisie_valide(nom_chercheur) ;
+        if (!valid_input) {
+            cout << "Nom invalide" << endl << endl ;
+        } 
+        
+    } while (!valid_input);
+
+    do
+    {
+        cout << "Veuillez indiquer votre prénom : " ;
+        cin >> prenom_chercheur ;
+        valid_input = saisie_valide(prenom_chercheur) ;
+        if (!valid_input) {
+            cout << "Prénom invalide" << endl << endl ;
+        } 
+        
+    } while (!valid_input);
+    
     do
     {
         cout << "Veuillez indiquer votre code postal : " ; 
@@ -388,10 +424,29 @@ void connexion_employe()
     cout << "* Menu employé *" << endl ;
     cout << endl ;
 
-    cout << "Veuillez indiquer votre nom : " ;
-    cin >> nom_employe ;
-    cout << "Veuillez indiquer votre prénom : " ;
-    cin >> prenom_employe ;
+
+    do
+    {
+        cout << "Veuillez indiquer votre nom : " ;
+        cin >> nom_employe ;
+        valid_input = saisie_valide(nom_employe) ;
+        if (!valid_input) {
+            cout << "Nom invalide" << endl << endl ;
+        } 
+        
+    } while (!valid_input);
+
+    do
+    {
+        cout << "Veuillez indiquer votre prénom : " ;
+        cin >> prenom_employe ;
+        valid_input = saisie_valide(prenom_employe) ;
+        if (!valid_input) {
+            cout << "Prénom invalide" << endl << endl ;
+        } 
+        
+    } while (!valid_input);
+
     do
     {
         cout << "Veuillez indiquer votre code postal : " ; 
@@ -413,9 +468,19 @@ void connexion_employe()
         
     } while (!valid_input);
 
-    cout << "Veuillez indiquer votre entreprise : " ;
-    cin >> entreprise_employe ;
-    //recherche dans la BDD
+    
+
+    do
+    {
+        cout << "Veuillez indiquer votre entreprise : " ;
+        cin >> entreprise_employe ;
+        valid_input = saisie_valide(entreprise_employe) ;
+        if (!valid_input) {
+            cout << "Nom d'entreprise invalide" << endl << endl ;
+        } 
+        
+    } while (!valid_input);
+    //fonction recherche dans la BDD 
     if (current_user_employe) {
         system("clear") ;
         menu_employe(current_user_employe) ;       
