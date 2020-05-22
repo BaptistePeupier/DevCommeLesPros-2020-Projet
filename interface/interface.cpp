@@ -38,11 +38,536 @@ bool saisie_valide(string saisie)
     return false;
 }
 
+//fonction demandant à l'utilisateur de continuer
+void continuer()
+{
+    cout << "appuyez sur une touche pour continuer ..." << endl ;
+    cin.get() ;
+    cin.get() ;
+    system("clear") ;
+}
+
+//menu confirmation suppression de profil
+bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur) 
+{
+    int confirmation_ans ;
+    bool option_inconnue = true , profil_supprime ;
+
+    system("clear") ;
+    cout << "Bienvenue dans LuminIn !" << endl << endl;
+    if (utilisateur) {
+        if (utilisateur->EntrepriseActuelle()) {
+            cout << "* Menu employé *" << endl ;
+        } else {
+            cout << "* Menu chercheur d'emploi *" << endl ;
+        }
+    } else if (utilisateur_entreprise) {
+        cout << "* Menu entreprise *" << endl ;
+    } else {
+        return false ;
+    }
+    
+    cout << endl ;
+    
+    while (option_inconnue)
+    {
+        cout << "Etes-vous sûr de supprimer votre profil ?" << endl ;
+        cout << "1. Oui" << endl ;
+        cout << "2. Non" << endl ;
+        cout << endl ;
+        cout << "Votre choix : " ;
+        cin >> confirmation_ans ;
+        cout << endl ;
+
+        switch (confirmation_ans)
+        {
+            case 1:
+                
+                if (utilisateur) {
+                    //appel de la fonction de suppression du profil de personne
+                } else if (utilisateur_entreprise) {
+                    //appel de la fonction de suppression du profil d'entreprise
+                }
+                cout << "Profil supprimé avec succès" << endl ;
+                option_inconnue = false ;
+                profil_supprime = true ;
+                break;
+            
+            case 2:
+                cout << "retour en arrière" << endl ;
+                option_inconnue = false ;
+                profil_supprime = false ;
+                break ;
+
+            default:
+                cout << "option inconnue veuillez recommencer" << endl ;
+                break;
+        }
+    }
+    continuer() ;
+    return profil_supprime;
+}
+
+Personne * saisie_personne()
+{
+    string nom,prenom,cp,mail ;
+    bool valid_input ;
+
+    do
+    {
+        cout << "Veuillez indiquer le nom : " ;
+        cin >> nom ;
+        valid_input = saisie_valide(nom) ;
+        if (!valid_input) {
+            cout << "Nom invalide" << endl << endl ;
+        } 
+        
+    } while (!valid_input);
+
+    do
+    {
+        cout << "Veuillez indiquer le prénom : " ;
+        cin >> prenom ;
+        valid_input = saisie_valide(prenom) ;
+        if (!valid_input) {
+            cout << "Prénom invalide" << endl << endl ;
+        } 
+        
+    } while (!valid_input);
+    
+    do
+    {
+        cout << "Veuillez indiquer le code postal : " ; 
+        cin >> cp ;
+        valid_input = cp_valide(cp) ; 
+        if (!valid_input) {
+            cout << "Code postal invalide" << endl << endl ;
+        }
+    } while (!valid_input);
+
+    do {
+        cout << "Veuillez indiquer  l'adresse mail : " ;
+        cin >> mail ;
+        valid_input = email_valide(mail) ;
+        if (!valid_input) {
+            cout << "address mail invalide" << endl << endl ;
+        }
+        
+    } while (!valid_input);
+    //recherche dans la base de données
+    return NULL ;
+}
+
+//menu de modification de profil
+void modif_profil_pers(Personne *current_user)
+{
+    char choix_modif , choix_ajout;
+    bool option_inconnue = true ,  end_saisie = false , valid_input ;
+    string new_skill , nouv_cp , nouv_entreprise ;
+    Personne * nouv_collegue;
+
+    system("clear") ;
+    cout << "Bienvenue dans LuminIn !" << endl << endl;
+   if (current_user) {
+        if (current_user->EntrepriseActuelle()) {
+            cout << "* Menu employé *" << endl ;
+        } else {
+            cout << "* Menu chercheur d'emploi *" << endl ;
+        }
+    } else {
+        return ;
+    }
+    
+    while (option_inconnue) {
+        cout << "Vous voulez :" << endl ;
+        cout << "1.Ajouter des compétences" << endl;
+        cout << "2.Ajouter un(e) ancien(ne) collègue de travail" << endl ;
+        cout << "3.Modifier le code postal" << endl ;
+        if (current_user->EntrepriseActuelle()) {
+            cout << "4.Modifier l'entreprise actuelle" << endl ;
+        }
+        cout << "Votre choix ('q' pour revenir en arrière) : ";
+        cin >> choix_modif ;
+
+        switch (choix_modif)
+        {
+            case '1':
+                while (!end_saisie)
+                {
+                    do
+                    {
+                        cout << "Veuillez entrer les compétences que vous souhaitez ajouter" << endl ;
+                        cin >> new_skill ;
+                        valid_input = saisie_valide(new_skill) ;
+                        if (!valid_input) {             
+                            cout << "Label entré invalide" << endl << endl ;
+                        } 
+                        //vérifier si la compétence est pas déjà dans la liste
+                    } while (!valid_input);
+                    //appel de l'ajout de compétence à la personne
+                    option_inconnue = true ;
+                    while (option_inconnue)
+                    {
+                         cout << "Voulez vous ajouter d'autres compétences ?" << endl ;
+                        cout << "1. Oui" << endl ;
+                        cout << "2. Non" << endl ;
+                        cout << endl ;
+                        cout << "Votre choix : " ;
+                        cin >> choix_ajout ;
+                        if (choix_ajout == '1') {
+                            option_inconnue = false ;
+                            continuer() ;
+                        } else if (choix_ajout == '2') {
+                            option_inconnue = false ;
+                            end_saisie = true ;
+                        } else {
+                            cout << "option inconnue veuillez recommencer" << endl ;
+                        }
+                    }
+                }
+                option_inconnue = false ;
+                
+                break;
+
+            case '2':
+                while (!end_saisie)
+                {
+                    nouv_collegue = saisie_personne();
+                    if (nouv_collegue)
+                    {
+                        //appel de l'ajout d'ancien collègue
+                    } else{
+                        cout << "La personne que vous recherchez est introuvable" << endl ;
+                        continuer() ;
+                    }
+                    option_inconnue = true ;
+                    while (option_inconnue)
+                    {
+                        cout << "Voulez vous ajouter d'autres collègues ?" << endl ;
+                        cout << "1. Oui" << endl ;
+                        cout << "2. Non" << endl ;
+                        cout << endl ;
+                        cout << "Votre choix : " ;
+                        cin >> choix_ajout ;
+                        if (choix_ajout == '1') {
+                            option_inconnue = false ;
+                            continuer() ;
+                        } else if (choix_ajout == '2') {
+                            option_inconnue = false ;
+                            end_saisie = true ;
+                        } else {
+                            cout << "option inconnue veuillez recommencer" << endl ;
+                        }
+                    }
+                }
+                option_inconnue = false ;
+                break;
+            
+            case '3':
+                do
+                {
+                    cout << "Veuillez indiquer votre nouveau : " ;
+                    cin >> nouv_cp ;
+                    valid_input = cp_valide(nouv_cp) ;
+                    if (!valid_input) {
+                        cout << "Code postal invalide" << endl << endl ;
+                    } 
+                } while (!valid_input);
+                break;
+            
+            case '4':
+                if (current_user->EntrepriseActuelle()) {
+                    do
+                    {
+                        cout << "Veuillez indiquer votre nouvelle entreprise : " ;
+                        cin >> nouv_entreprise ;
+                        valid_input = saisie_valide(nouv_entreprise) ;
+                        if (!valid_input) {
+                            cout << "Nom d'entreprise invalide" << endl << endl ;
+                        } 
+                        
+                    } while (!valid_input);
+                    //appel de la modification d'entreprise de la classe personne
+                }
+                break;
+
+            case 'q':
+                option_inconnue = false ;
+                break;
+
+            default:
+                cout << "option inconnue veuillez recommencer" << endl ;
+                break;
+        }
+    }
+    
+    continuer() ;
+    return ; 
+
+}
+
+
+//menu de transition de profil
+bool menu_transition_pers(Personne * current_user,string nouv_entreprise)
+{
+    int confirmation_ans ;
+    bool option_inconnue = true , succes_transition ;
+
+    system("clear") ;
+    cout << "Bienvenue dans LuminIn !" << endl << endl;
+    if (current_user) {
+        if (current_user->EntrepriseActuelle()) {
+            cout << "* Menu employé *" << endl ;
+        } else {
+            cout << "* Menu chercheur d'emploi *" << endl ;
+        }
+    } else {
+        return false ;
+    }
+    
+    cout << endl ;
+    
+    while (option_inconnue)
+    {
+        if (current_user->EntrepriseActuelle()) {
+            cout << "Etes-vous sûr de passer au statut 'chercheur d'emploi' ?" << endl ;
+        }else {
+            cout << "Etes-vous sûr de passer au statut 'employé' ?" << endl ;
+        }
+        cout << "1. Oui" << endl ;
+        cout << "2. Non" << endl ;
+        cout << endl ;
+        cout << "Votre choix : " ;
+        cin >> confirmation_ans ;
+        cout << endl ;
+
+        switch (confirmation_ans)
+        {
+            case 1:
+                
+                if (current_user) {
+                    if ( nouv_entreprise == "no entreprise here" && current_user->EntrepriseActuelle()) {
+                        //appel de la fonction de transition du profil vers le status chercheur d'emploi
+                    } else {
+                        //appel de la fonction de transition du profil vers le statut employé
+                    }
+                }
+                cout << "Transition effectuée avec succès" << endl ;
+                option_inconnue = false ;
+                succes_transition = true ;
+                break;
+            
+            case 2:
+                cout << "retour en arrière" << endl ;
+                option_inconnue = false ;
+                succes_transition = false ;
+                break ;
+
+            default:
+                cout << "option inconnue veuillez recommencer" << endl ;
+                break;
+        }
+    }
+    continuer() ;
+    return succes_transition;
+}
+
+//menu permettant de sélectionner le type de recherche parmis les chercheurs d'emploi
+void type_recherche_entreprise()
+{
+    char choix_type ;
+    bool option_inconnue = true , valid_input;
+    string cp_chercheurs ;
+
+    system("clear") ;
+    cout << "Bienvenue dans LuminIn !" << endl << endl;
+    cout << "* Menu entreprise *" << endl ;
+    cout << endl ;
+
+    while (option_inconnue)
+    {
+        cout << "Vous voulez :" << endl ;
+        cout << "1.Effectuer une recherche des chercheurs d'emploi" << endl ;
+        cout << "2.Effectuer une recherche des chercheurs d'emploi avec un code postal précis " << endl ;
+        cout << endl ;
+        cout << "Votre choix ('q' pour revenir en arrière) : ";
+        cin >> choix_type ;
+        cout << endl ;
+
+        switch (choix_type)
+        {
+            case '1':
+                option_inconnue = false ;
+                cout << "Veuillez saisir les compétences recherchées" << endl ;
+                //appel de la fonction de saisie des compétence dans une liste
+                
+                cout << "Voici le résultat de la recherche :" << endl << endl;
+                //appel de la recherche selon les compétences
+                break;
+
+            case '2':
+                option_inconnue = false ;
+                cout << "Veuillez saisir les compétences recherchées" << endl ;
+                //appel de la fonction de saisie des compétence dans une liste
+                do
+                {
+                    cout << "Veuillez entrer le code postal que vous recherchez :" ;
+                    cin >> cp_chercheurs ;
+                    valid_input = cp_valide(cp_chercheurs) ; 
+                    if (!valid_input) {
+                        cout << "Code postal invalide" << endl << endl ;
+                    }
+                } while (!valid_input);
+
+                cout << "Voici le résultat de la recherche :" << endl << endl;
+                //appel de la recherche selon les compétences et le code postal
+                break;
+
+            case 'q':
+                option_inconnue = false ;
+                break;
+
+            default:
+                cout << "option inconnue veuillez recommencer" << endl ;
+                break;
+        }
+    }
+    continuer() ;
+    return ;
+}
+
+//menu de recherche de postes
+void recherche_poste_pers(Personne *current_user)
+{
+    char choix_type_recherche ;
+    bool option_inconnue = true ;
+
+    system("clear") ;
+    cout << "Bienvenue dans LuminIn !" << endl << endl;
+    if (current_user) {
+        if (current_user->EntrepriseActuelle()) {
+            cout << "* Menu employé *" << endl ;
+        } else {
+            cout << "* Menu chercheur d'emploi *" << endl ;
+        }
+    } else {
+        return ;
+    }
+    
+    while (option_inconnue) {
+        cout << "Vous voulez :" << endl ; 
+        cout << "1. Rechercher les postes à pourvoir correspondant à vos compétences" << endl ;
+        cout << "2. Rechercher les postes à pourvoir correspondant à vos compétences proche de chez vous" << endl ;
+        cout << endl ;
+        cout << "Votre choix ('q' pour revenir en arrière) : ";
+        cin >> choix_type_recherche ;
+
+        switch (choix_type_recherche)
+        {
+            case '1':
+                option_inconnue = false ;
+                cout << "Voici les postes à pourvoir correspondant à vos compétences" << endl ;
+                //appel de la recherche de poste par compétence
+                break;
+
+            case '2':
+                option_inconnue = false ;
+                cout << "Voici les postes à pourvoir correspondant à vos compétences proche de chez vous :" << endl ;
+                //appel de la recherche de poste par compétence et code postal
+                break;
+
+            case 'q':
+                cout << "retour en arrière " << endl ;
+                option_inconnue = false ;
+                break;
+
+            default:
+                cout << "option inconnue veuillez recommencer" << endl ;
+                break;
+        }
+    }
+
+    continuer() ;
+    return ;
+    
+}
+
+//menu recherche parmis les anciens collègues
+void recherche_collegue_pers(Personne *current_user)
+{
+    char choix_type_recherche ;
+    bool option_inconnue = true , valid_input;
+    string entreprise_collegue ;
+
+    system("clear") ;
+    cout << "Bienvenue dans LuminIn !" << endl << endl;
+   /* if (current_user) {
+        if (current_user->EntrepriseActuelle()) {
+            cout << "* Menu employé *" << endl ;
+        } else {*/
+            cout << "* Menu chercheur d'emploi *" << endl ;
+        /*}
+    } else {
+        return ;
+    }*/
+    
+    while (option_inconnue) {
+        cout << "Vous voulez :" << endl ; 
+        cout << "1. Rechercher les anciens collègues employés dans une entreprise particulière" << endl ;
+        cout << "2. Rechercher les anciens collègues employés dans les entreprises recherchant certaines compétences" << endl ;
+        cout << endl ;
+        cout << "Votre choix ('q' pour revenir en arrière) : ";
+        cin >> choix_type_recherche ;
+
+        switch (choix_type_recherche)
+        {
+            case '1':
+                option_inconnue = false ;
+                do
+                    {
+                        cout << "Veuillez indiquer l'entreprise recherchée : " ;
+                        cin >> entreprise_collegue ;
+                        valid_input = saisie_valide(entreprise_collegue) ;
+                        if (!valid_input) {
+                            cout << "Nom d'entreprise invalide" << endl << endl ;
+                        } 
+                        
+                    } while (!valid_input);
+                cout << "Voici les anciens collègues employés dans l'entreprise " << entreprise_collegue << endl ;
+                //appel de la recherche d'anciens collègues dans une entreprise
+                break;
+
+            case '2':
+                option_inconnue = false ;
+                cout << "Veuillez entrer les compétence à rechercher :" << endl ;
+                //appel de la saisie de compétence dans une liste 
+                cout << "Voici les anciens collègues employés dans les entreprises recherchant les compétences saisies :" << endl ;
+                //appel de la recherche de poste par compétence et code postal
+                break;
+
+            case 'q':
+                cout << "retour en arrière " << endl ;
+                option_inconnue = false ;
+                break;
+
+            default:
+                cout << "option inconnue veuillez recommencer" << endl ;
+                break;
+        }
+    }
+
+    continuer() ;
+    return ;
+    
+}
+
 //affichage du menu correspondant au profil d'entreprise
 void menu_entreprise(Entreprise * utilisateur_entreprise)
 {
     char choix_action_entreprise ;
     bool option_unknown = true;
+    bool profil_deleted , valid_input;
+    string titre_poste ;
 
     system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
@@ -64,30 +589,54 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
         {
             case '1':
                 option_unknown = false ;
-                //création de poste 
-                cout << "création de poste (coming soon)" << endl ;
+                //création de poste  
+                do
+                {
+                    cout << "Veuillez entrer le titre du poste à ajouter : ";
+                    cin >> titre_poste ;
+                    valid_input = saisie_valide(titre_poste) ;
+                    if (!valid_input) {             
+                        cout << "Titre entré invalide" << endl << endl ;
+                    } 
+                    //vérifier si le titre du poste est déjà dans la base de données pour l'entreprise en question
+                } while (!valid_input);
+                cout << "Veuillez saisir les compétences recherchées pour ce poste : " << endl ;
+                //appel de la fonction permettant d'entrer des compétences dans une liste
+                //ajout du poste à la liste des postes de l'entreprise
+                cout << "poste ajouté avec succès" << endl ;
+                continuer() ;
                 break;
 
             case '2':
                 option_unknown = false ;
-                //suppression de poste 
-                cout << "suppression de poste (coming soon)" << endl ;
+                do
+                {
+                    cout << "Veuillez entrer le titre du poste à supprimer : " ;
+                    cin >> titre_poste ;
+                    valid_input = saisie_valide(titre_poste) ;
+                    if (!valid_input) {
+                        cout << "Titre entré invalide" << endl << endl ;
+                    } 
+                } while (!valid_input);
+                //appel de la fonction de suppression de poste
+                cout << "suppression du poste" << endl ;
+                continuer() ;
                 break;
 
             case '3':
                 option_unknown = false ;
-                //recherche parmis les chercheurs d'emplois 
-                cout << "recherche (coming soon)" << endl ;
+                type_recherche_entreprise() ;
                 break;
             
             case '4':
                 option_unknown = false ;
-                //suppression du profil 
-                cout << "suppression (coming soon)" << endl ;
+                profil_deleted = menu_supp_profil(utilisateur_entreprise, NULL) ;
                 break;
             
             case 'q':
                 option_unknown = false ;
+                cout << "retour au menu principal" << endl ;
+                continuer() ;
                 break ;
 
             default:
@@ -97,7 +646,7 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
     }
 
     system("clear") ;
-    if (choix_action_entreprise == 'q') {
+    if (choix_action_entreprise == 'q' || profil_deleted) {
         menu_principal() ;
     } else {
         menu_entreprise(utilisateur_entreprise) ;
@@ -158,7 +707,7 @@ void connexion_entreprise()
         do
         {
             system("clear") ;
-            cout << "voulez-vous créer un profil ?" << endl ;
+            cout << "Votre profil est introuvable , voulez-vous créer un profil ?" << endl ;
             cout << "1.Oui" << endl ;
             cout << "2.Non" << endl ;
             cout << "Votre choix :" ;
@@ -184,7 +733,8 @@ void connexion_entreprise()
 void menu_chercheur(Personne * utilisateur_chercheur)
 {
     char choix_action_chercheur ;
-    bool option_unknown = true;
+    bool option_unknown = true , deleted_profil , transition_success , valid_input;
+    string nouv_entreprise ;
 
     system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
@@ -207,32 +757,38 @@ void menu_chercheur(Personne * utilisateur_chercheur)
         {
             case '1':
                 option_unknown = false ;
-                //modif de profil
-                cout << "modif de profil (coming soon)" << endl ;
+                modif_profil_pers(utilisateur_chercheur) ;
                 break;
 
             case '2':
                 option_unknown = false ;
-                //transition profil
-                cout << "transition de profil (coming soon)" << endl ; 
+                do
+                {
+                    cout << "Veuillez indiquer votre nouvelle entreprise : " ;
+                    cin >> nouv_entreprise ;
+                    valid_input = saisie_valide(nouv_entreprise) ;
+                    if (!valid_input) {
+                        cout << "Nom d'entreprise invalide" << endl << endl ;
+                    } 
+                    
+                } while (!valid_input);
+                transition_success = menu_transition_pers(utilisateur_chercheur,nouv_entreprise) ; 
                 break;
 
             case '3':
                 option_unknown = false ;
-                //recherche de postes
-                cout << "recherche de posts (coming soon)" << endl ;
+                recherche_poste_pers(utilisateur_chercheur) ;
                 break;
 
             case '4':
                 option_unknown = false ;
-                //recherche parmis les anciens collègues
-                cout << "recherche parmis les anciens collègues (coming soon)" << endl ;
+                recherche_collegue_pers(utilisateur_chercheur) ;
                 break;
             
             case '5':
                 option_unknown = false ;
                 //suppression du profil 
-                cout << "suppression du profil(coming soon)" << endl ;
+                deleted_profil = menu_supp_profil(NULL, utilisateur_chercheur) ;
                 break;
             
             case 'q':
@@ -246,8 +802,10 @@ void menu_chercheur(Personne * utilisateur_chercheur)
     }
 
     system("clear") ;
-    if (choix_action_chercheur == 'q') { //retour au menu principal
+    if (choix_action_chercheur == 'q' || deleted_profil) {
         menu_principal() ;
+    }else if (transition_success) {
+        menu_employe(utilisateur_chercheur) ;
     } else {
         menu_chercheur(utilisateur_chercheur) ;
     }
@@ -318,7 +876,7 @@ void connexion_chercheur()
         do
         {
             system("clear") ;
-            cout << "voulez-vous créer un profil ?" << endl ;
+            cout << "Votre profil est introuvable , voulez-vous créer un profil ?" << endl ;
             cout << "1.Oui" << endl ;
             cout << "2.Non" << endl ;
             cout << "Votre choix : " ;
@@ -344,7 +902,8 @@ void connexion_chercheur()
 void menu_employe(Personne * utilisateur_employe)
 {
     char choix_action_employe ;
-    bool option_unknown = true;
+    bool option_unknown = true , deleted_profil , transition_success;
+
     cout << "Bienvenue dans LuminIn !" << endl << endl;
     cout << "* Menu employé *" << endl ;
     cout << endl ;
@@ -365,32 +924,28 @@ void menu_employe(Personne * utilisateur_employe)
         {
             case '1':
                 option_unknown = false ;
-                //modif de profil
-                cout << "modif de profil (coming soon)" << endl ;
+                modif_profil_pers(utilisateur_employe) ;
                 break;
 
             case '2':
                 option_unknown = false ;
-                //transition profil
-                cout << "transition de profil (coming soon)" << endl ; 
+                transition_success = menu_transition_pers(utilisateur_employe) ; 
                 break;
 
             case '3':
                 option_unknown = false ;
-                //recherche de postes
-                cout << "recherche de posts (coming soon)" << endl ;
+                recherche_poste_pers(utilisateur_employe) ;
                 break;
 
             case '4':
                 option_unknown = false ;
-                //recherche parmis les anciens collègues
-                cout << "recherche parmis les anciens collègues (coming soon)" << endl ;
+                recherche_collegue_pers(utilisateur_employe) ;
                 break;
             
             case '5':
                 option_unknown = false ;
-                //suppression du profil 
-                cout << "suppression du profil(coming soon)" << endl ;
+                deleted_profil = menu_supp_profil(NULL, utilisateur_employe) ;
+                continuer() ;
                 break;
             
             case 'q':
@@ -403,8 +958,10 @@ void menu_employe(Personne * utilisateur_employe)
     }
 
     system("clear") ;
-    if (choix_action_employe == 'q') {
+    if (choix_action_employe == 'q' || deleted_profil) {
         menu_principal() ;
+    }else if (transition_success) {
+        menu_chercheur(utilisateur_employe) ;
     } else {
         menu_employe(utilisateur_employe) ;
     }
@@ -491,7 +1048,7 @@ void connexion_employe()
         do
         {
             system("clear") ;
-            cout << "voulez-vous créer un profil ?" << endl ;
+            cout << "Votre profil est introuvable , voulez-vous créer un profil ?" << endl ;
             cout << "1.Oui" << endl ;
             cout << "2.Non" << endl ;
             cout << "Votre choix : " ;
