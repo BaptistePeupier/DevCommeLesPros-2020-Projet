@@ -31,6 +31,9 @@ bool cp_valide(string code_postal) ;
 //fonction de vérification des saisies
 bool saisie_valide(string saisie) ;
 
+//fonction demandant à l'utilisateur de continuer en appuyant sur une touche
+void continuer() ;
+
 //affichage du menu principal
 int menu_principal(void) ;
 
@@ -46,8 +49,26 @@ void connexion_entreprise() ;
 //affichage du menu correspondant au profil d'entreprise
 void menu_entreprise(Entreprise * utilisateur_entreprise) ;
 
+//menu permettant de sélectionner le type de recherche parmis les chercheurs d'emploi
+void type_recherche_entreprise() ;
+
+//menu confirmation suppression de profil
+bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur) ;
+
 //affichage du menu correspondant au profil de chercheur d'emploi
 void menu_chercheur(Personne * utilisateur_chercheur) ;
+
+//menu de modification de profil
+void modif_profil_pers(Personne *current_user) ;
+
+//menu de recherche de postes
+void recherche_poste_pers(Personne *current_user) ;
+
+//menu recherche parmis les anciens collègues
+void recherche_collegue_pers(Personne *current_user) ;
+
+//menu de transition de profil
+bool menu_transition_pers(Personne * current_user,string nouv_entreprise = "no entreprise here") ;
 
 //affichage du menu correspondant au profil d'employé
 void menu_employe(Personne * utilisateur_employe) ;
