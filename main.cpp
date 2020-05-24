@@ -12,6 +12,10 @@
 #include "tests.h"
 #include "interface.h"
 
+Personne * EmployesListe ;
+Personne * ChercheursListe ;
+Entreprise * EntrepriseListe ;
+
 int main()
 {
     int code ;
@@ -24,8 +28,13 @@ int main()
         code = tests() ;
         if(code != 0) cout << "Echec du programme de test" << endl ;
     }else{
+
+        Creer_listes(&EntrepriseListe, &EmployesListe, &ChercheursListe) ;
         code = menu_principal() ;
         // code = 0 ;
+        delete EmployesListe ;
+        delete ChercheursListe ;
+        delete EntrepriseListe ;
     }
 
     return code ;

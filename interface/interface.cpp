@@ -11,6 +11,10 @@
 
 #include "interface.h"
 
+extern Personne * EmployesListe ;
+extern Personne * ChercheursListe ;
+extern Entreprise * EntrepriseListe ;
+
 //fonction de vérification de l'addresse mail entrée
 bool email_valide(string email)
 {
