@@ -89,10 +89,8 @@ Personne * CreerListeEmploye(Entreprise * ListeEntreprise, string DBEmp)
     char tmpcodePostal[128] ;
     char tmpcompetence[128] ;
 
-    assert(ListeEntreprise) ;                               // On a besoin de la liste des entreprises
-
     FILE *db_employe = fopen(DBEmp.c_str(), "r") ;
-    if(db_employe){
+    if(db_employe && ListeEntreprise){                      // On a besoin de la liste des entreprises
         fscanf(db_employe, "%*s") ;
         // id,nom,prenom,mail,code_postal,entreprise,competences,collegues_employes,collegues_chercheur_d'emploi
         while(fscanf(db_employe, "%d,%127[^,],%127[^,],%127[^,],%127[^,],%d,", &tmpindex,tmpnom,tmpprenom,tmpmail,tmpcodePostal,&tmpindexentreprise) == 6)
@@ -288,6 +286,10 @@ void Creer_listes(Entreprise ** ListeEntreprise, Personne ** ListeEmploye, Perso
     *ListeEmploye = CreerListeEmploye(*ListeEntreprise, DBEmp) ;
     *ListeChercheurEmploi = CreerListeChercheurEmploi(DBC) ;
     InitAnciensCollegues(*ListeEmploye, *ListeChercheurEmploi, DBEmp, DBC) ;
+    (*ListeEntreprise)->modifDBE(DBEnt) ;
+    (*ListeEntreprise)->modifDBP(DBP) ;
+    (*ListeEmploye)->modifDBE(DBEmp) ;
+    (*ListeEmploye)->modifDBC(DBC) ;
 
     return ;
 }

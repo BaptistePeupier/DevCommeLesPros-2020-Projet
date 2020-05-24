@@ -61,7 +61,9 @@ class Personne
         void modifEntreprise(Entreprise * NewEntreprise){_EntrepriseActuelle = NewEntreprise ; MAJDBPersonne() ; return ;} ;
         void modifCompetencePropres(Competence * NewListeCompetence){_CompetencesPropres = NewListeCompetence ; return ;} ;
         void modifAncienCollegues(AncienCollegue * NewListCollegues){_ListAncienCollegues = NewListCollegues ; return ;} ;
-    // Fonctionnalités
+        static void modifDBE(string NewDBE){_DBE = NewDBE ; return ;} ;
+        static void modifDBC(string NewDBC){_DBC = NewDBC ; return ;} ;
+        // Fonctionnalités
         void TransitionStatut(Personne ** ListeEmploye, Personne ** ListeChercheurEmploi, Entreprise * NewEntreprise=NULL) ;// Change un employé en chercheur d'emploi et inversement
                                                                                                                             // Ajoute les anciens collègues si besoin
                                                                                                                             // NewEntreprise est le pointeur vers l'entreprise en cas de recrutement, NULL sinon
