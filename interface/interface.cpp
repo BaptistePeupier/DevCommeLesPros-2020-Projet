@@ -1123,8 +1123,5 @@ int menu_principal(void)
         }
     } while (!valid_input);
     
-    
-    
-    
     return 0 ;
 }
