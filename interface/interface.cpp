@@ -112,10 +112,13 @@ bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur
     return profil_supprime;
 }
 
+// Retourne une personne présente dans une liste de donnée (des employes ou des chercheur)
+// L'identification se fait par l'adresse mail
 Personne * saisie_personne()
 {
     string nom,prenom,cp,mail ;
-    bool valid_input ;
+    bool valid_input, find ;
+    Personne *tmpP = NULL ;
 
     do
     {
@@ -158,8 +161,22 @@ Personne * saisie_personne()
         }
         
     } while (!valid_input);
-    //recherche dans la base de données
-    return NULL ;
+    //recherche dans les base de données
+    find = false ;
+    tmpP = EmployesListe ;
+    while(tmpP && !find){
+        if (tmpP->mail() == mail) find = true ;
+        tmpP = tmpP->nextP() ;
+    }
+    if(!find){
+            tmpP = ChercheursListe ;
+        while(tmpP && !find){
+            if (tmpP->mail() == mail) find = true ;
+            tmpP = tmpP->nextP() ;
+        }
+    }
+
+    return tmpP ;
 }
 
 //menu de modification de profil
@@ -236,7 +253,7 @@ void modif_profil_pers(Personne *current_user)
             case '2':
                 while (!end_saisie)
                 {
-                    nouv_collegue = saisie_personne();
+                    nouv_collegue = saisie_personne() ;
                     if (nouv_collegue)
                     {
                         //appel de l'ajout d'ancien collègue
@@ -309,7 +326,6 @@ void modif_profil_pers(Personne *current_user)
     return ; 
 
 }
-
 
 //menu de transition de profil
 bool menu_transition_pers(Personne * current_user,string nouv_entreprise)
@@ -661,36 +677,15 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
 //connexion des entreprises
 void connexion_entreprise()
 {
-    Entreprise * current_user_entreprise = NULL;
+    Entreprise * current_user_entreprise = NULL, *tmpE ;
     char choix_entreprise ;
-    bool valid_input;
+    bool valid_input, find ;
     string nom_entreprise , cp_entreprise , mail_entreprise ;
 
     system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
     cout << "* Menu entreprise *" << endl ;
     cout << endl ;
-
-    do
-    {
-        cout << "Veuillez indiquer le nom de votre entreprise : " ;
-        cin >> nom_entreprise ;
-        valid_input = saisie_valide(nom_entreprise) ;
-        if (!valid_input) {
-            cout << "Nom invalide" << endl << endl ;
-        } 
-        
-    } while (!valid_input);
-
-    do
-    {
-        cout << "Veuillez indiquer le code postal de votre entreprise : " ;
-        cin >> cp_entreprise ;
-        valid_input = cp_valide(cp_entreprise) ;
-        if (!valid_input) {
-            cout << "Code postal invalide" << endl << endl ;
-        } 
-    } while (!valid_input);
 
     do {
         cout << "Veuillez indiquer l'adresse mail de votre entreprise : " ;
@@ -702,6 +697,15 @@ void connexion_entreprise()
         
     } while (!valid_input);
     // Recherche dans la BDD du profil de l'utilisateur
+    find = false ;
+    tmpE = EntrepriseListe ;
+    while(tmpE && !find){
+        if(tmpE->mail() == mail_entreprise){
+            find = true ;
+            current_user_entreprise = tmpE ;
+        }
+        tmpE = tmpE->next() ;
+    }
     if (current_user_entreprise) {
         system("clear") ;
         menu_entreprise(current_user_entreprise) ;         
@@ -722,7 +726,34 @@ void connexion_entreprise()
         } while (choix_entreprise != '1' && choix_entreprise != '2');
         
         if (choix_entreprise == '1') {
-            //appel de la fonction de création du profil
+            do
+            {
+                cout << "Veuillez indiquer le nom de votre entreprise : " ;
+                cin >> nom_entreprise ;
+                valid_input = saisie_valide(nom_entreprise) ;
+                if (!valid_input) {
+                    cout << "Nom invalide" << endl << endl ;
+                } 
+                
+            } while (!valid_input);
+
+            do
+            {
+                cout << "Veuillez indiquer le code postal de votre entreprise : " ;
+                cin >> cp_entreprise ;
+                valid_input = cp_valide(cp_entreprise) ;
+                if (!valid_input) {
+                    cout << "Code postal invalide" << endl << endl ;
+                } 
+            } while (!valid_input);
+
+            if(EntrepriseListe){
+                EntrepriseListe->addEntreprise(nom_entreprise, cp_entreprise, mail_entreprise) ;
+            }else{                  // Si c'est la première entreprise créée
+                EntrepriseListe = new Entreprise(1, nom_entreprise, cp_entreprise, mail_entreprise) ;
+                EntrepriseListe->MAJDBEntreprise() ;
+            }
+
             system("clear") ;
             menu_entreprise(current_user_entreprise) ;  
         } else {
@@ -730,6 +761,7 @@ void connexion_entreprise()
             menu_principal() ;
         }
     }
+
     return ;
 }
 
@@ -1084,7 +1116,7 @@ int menu_principal(void)
     cout << "* Menu principal *" << endl ;
     cout << endl ;
 
-    cout << "vous êtes :" << endl ;
+    cout << "Vous êtes :" << endl ;
     cout << "1.Une entreprise" << endl ;
     cout << "2.Un employé" << endl ;
     cout << "3.A la recherche d'un emploi" << endl ;
