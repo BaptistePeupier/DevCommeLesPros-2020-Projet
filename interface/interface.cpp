@@ -91,6 +91,7 @@ bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur
                     //appel de la fonction de suppression du profil de personne
                 } else if (utilisateur_entreprise) {
                     //appel de la fonction de suppression du profil d'entreprise
+                    deleteProfileEntreprise(utilisateur_entreprise, &EntrepriseListe, &EmployesListe, &ChercheursListe) ;
                 }
                 cout << "Profil supprimé avec succès" << endl ;
                 option_inconnue = false ;
@@ -407,8 +408,8 @@ void type_recherche_entreprise()
     while (option_inconnue)
     {
         cout << "Vous voulez :" << endl ;
-        cout << "1.Effectuer une recherche des chercheurs d'emploi" << endl ;
-        cout << "2.Effectuer une recherche des chercheurs d'emploi avec un code postal précis " << endl ;
+        cout << "1.Effectuer une recherche des chercheurs d'emploi selon des compétences" << endl ;
+        cout << "2.Effectuer une recherche des chercheurs d'emploi selon des compétences et un code postal" << endl ;
         cout << endl ;
         cout << "Votre choix ('q' pour revenir en arrière) : ";
         cin >> choix_type ;
@@ -586,11 +587,13 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
 {
     char choix_action_entreprise ;
     bool option_unknown = true;
-    bool profil_deleted , valid_input;
-    string titre_poste ;
+    bool profil_deleted , valid_input ;
+    string titre_poste, label_competence, ans ;
+    Poste *tmpP ;
+    Competence *tmpC ;
 
     system("clear") ;
-    cout << "Bienvenue dans LuminIn !" << endl << endl;
+    cout << "Bienvenue dans LuminIn " << utilisateur_entreprise->nom() << " !" << endl << endl;
     cout << "* Menu entreprise *" << endl ;
     cout << endl ;
     
@@ -617,12 +620,54 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
                     valid_input = saisie_valide(titre_poste) ;
                     if (!valid_input) {             
                         cout << "Titre entré invalide" << endl << endl ;
-                    } 
+                    }
+                    tmpP = utilisateur_entreprise->profilPoste() ;
                     //vérifier si le titre du poste est déjà dans la base de données pour l'entreprise en question
+                    while(tmpP && valid_input){
+                        if(tmpP->Titre()==titre_poste){
+                            valid_input = false ;
+                            cout << "Saisie invalide,le poste existe déjà" << endl ;
+                        }
+                        tmpP = tmpP->next() ;
+                    }
                 } while (!valid_input);
+                if(utilisateur_entreprise->profilPoste()){
+                    utilisateur_entreprise->addPoste(new Poste(titre_poste)) ;
+                }else{      // Si c'est le premier poste
+                    utilisateur_entreprise->modifProfilPoste(new Poste(titre_poste)) ;
+                }
                 cout << "Veuillez saisir les compétences recherchées pour ce poste : " << endl ;
                 //appel de la fonction permettant d'entrer des compétences dans une liste
-                //ajout du poste à la liste des postes de l'entreprise
+                tmpP = utilisateur_entreprise->profilPoste() ;
+                while (tmpP->next()) tmpP = tmpP->next() ;
+                tmpC = tmpP->CompetencesRequises() ;
+                do
+                {
+                    cin >> label_competence ;
+                    valid_input = saisie_valide(label_competence) ;
+                    if (!valid_input) {             
+                        cout << "Compétence entrée invalide" << endl << endl ;
+                    }
+                    //vérifier si la compétence a déja été entrée
+                    while(tmpC && valid_input){
+                        if(tmpC->label()==label_competence){
+                            valid_input = false ;
+                            cout << "Saisie invalide, la compétence existe déjà" << endl ;
+                        }
+                        tmpC = tmpC->next() ;
+                    }
+                    if(valid_input){
+                        if(tmpP->CompetencesRequises()){
+                            tmpP->CompetencesRequises()->AddCompetence(label_competence) ;
+                        }else{                              // Ajout de la première compétence
+                            tmpP->modifCompetencesRequises(new Competence(label_competence)) ;
+                        }
+                        cout << "Entrer de nouvelles compétences ? (Y/N)" << endl ;
+                        cin >> ans ;
+                        if(ans == "Y") valid_input = false ;
+                    }
+                } while (!valid_input);
+
                 cout << "poste ajouté avec succès" << endl ;
                 continuer() ;
                 break;
@@ -639,6 +684,7 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
                     } 
                 } while (!valid_input);
                 //appel de la fonction de suppression de poste
+                utilisateur_entreprise->dellPoste(titre_poste) ;
                 cout << "suppression du poste" << endl ;
                 continuer() ;
                 break;
@@ -749,9 +795,13 @@ void connexion_entreprise()
 
             if(EntrepriseListe){
                 EntrepriseListe->addEntreprise(nom_entreprise, cp_entreprise, mail_entreprise) ;
+                current_user_entreprise = EntrepriseListe ;
+                while(current_user_entreprise->next()) current_user_entreprise = current_user_entreprise->next() ;
+
             }else{                  // Si c'est la première entreprise créée
                 EntrepriseListe = new Entreprise(1, nom_entreprise, cp_entreprise, mail_entreprise) ;
                 EntrepriseListe->MAJDBEntreprise() ;
+                current_user_entreprise = EntrepriseListe ;
             }
 
             system("clear") ;
@@ -1155,5 +1205,10 @@ int menu_principal(void)
         }
     } while (!valid_input);
     
+    // Dernière MAJ avant de quitter le programme (sécurité)
+    EmployesListe->MAJDBPersonne() ;
+    ChercheursListe->MAJDBPersonne() ;
+    EntrepriseListe->MAJDBEntreprise() ;
+
     return 0 ;
 }
