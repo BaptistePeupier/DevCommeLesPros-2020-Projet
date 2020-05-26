@@ -117,67 +117,7 @@ bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur
 // L'identification se fait par l'adresse mail
 Personne * saisie_personne()
 {
-    string nom,prenom,cp,mail ;
-    bool valid_input, find ;
-    Personne *tmpP = NULL ;
-
-    do
-    {
-        cout << "Veuillez indiquer le nom : " ;
-        cin >> nom ;
-        valid_input = saisie_valide(nom) ;
-        if (!valid_input) {
-            cout << "Nom invalide" << endl << endl ;
-        } 
-        
-    } while (!valid_input);
-
-    do
-    {
-        cout << "Veuillez indiquer le prénom : " ;
-        cin >> prenom ;
-        valid_input = saisie_valide(prenom) ;
-        if (!valid_input) {
-            cout << "Prénom invalide" << endl << endl ;
-        } 
-        
-    } while (!valid_input);
-    
-    do
-    {
-        cout << "Veuillez indiquer le code postal : " ; 
-        cin >> cp ;
-        valid_input = cp_valide(cp) ; 
-        if (!valid_input) {
-            cout << "Code postal invalide" << endl << endl ;
-        }
-    } while (!valid_input);
-
-    do {
-        cout << "Veuillez indiquer  l'adresse mail : " ;
-        cin >> mail ;
-        valid_input = email_valide(mail) ;
-        if (!valid_input) {
-            cout << "address mail invalide" << endl << endl ;
-        }
-        
-    } while (!valid_input);
-    //recherche dans les base de données
-    find = false ;
-    tmpP = EmployesListe ;
-    while(tmpP && !find){
-        if (tmpP->mail() == mail) find = true ;
-        tmpP = tmpP->nextP() ;
-    }
-    if(!find){
-            tmpP = ChercheursListe ;
-        while(tmpP && !find){
-            if (tmpP->mail() == mail) find = true ;
-            tmpP = tmpP->nextP() ;
-        }
-    }
-
-    return tmpP ;
+    return NULL ;
 }
 
 //menu de modification de profil
