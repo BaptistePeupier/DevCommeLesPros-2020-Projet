@@ -282,14 +282,14 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
 // Créer les listes et fait les liens avec les entreprises et ancien collègues
 void Creer_listes(Entreprise ** ListeEntreprise, Personne ** ListeEmploye, Personne ** ListeChercheurEmploi, string DBEnt, string DBP, string DBEmp, string DBC)
 {
-    *ListeEntreprise = CreerListeEntreprise(DBEnt, DBP) ;
-    *ListeEmploye = CreerListeEmploye(*ListeEntreprise, DBEmp) ;
-    *ListeChercheurEmploi = CreerListeChercheurEmploi(DBC) ;
-    InitAnciensCollegues(*ListeEmploye, *ListeChercheurEmploi, DBEmp, DBC) ;
     (*ListeEntreprise)->modifDBE(DBEnt) ;
     (*ListeEntreprise)->modifDBP(DBP) ;
     (*ListeEmploye)->modifDBE(DBEmp) ;
     (*ListeEmploye)->modifDBC(DBC) ;
+    *ListeEntreprise = CreerListeEntreprise(DBEnt, DBP) ;
+    *ListeEmploye = CreerListeEmploye(*ListeEntreprise, DBEmp) ;
+    *ListeChercheurEmploi = CreerListeChercheurEmploi(DBC) ;
+    InitAnciensCollegues(*ListeEmploye, *ListeChercheurEmploi, DBEmp, DBC) ;
 
     return ;
 }
@@ -325,8 +325,8 @@ void deleteProfileEntreprise(Entreprise *ToDellE, Entreprise **ListeEntreprise, 
     }
     // Mise à jour des DB
     (*ListeEntreprise)->MAJDBEntreprise() ;
-    (*ListeEmploye)->MAJDBPersonne(true) ;
-    (*ListeChercheurEmploi)->MAJDBPersonne(false) ;
+    (*ListeEmploye)->MAJDBPersonne() ;
+    (*ListeChercheurEmploi)->MAJDBPersonne() ;
 
     return ;
 }

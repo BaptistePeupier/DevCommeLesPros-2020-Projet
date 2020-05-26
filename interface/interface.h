@@ -55,6 +55,10 @@ void type_recherche_entreprise() ;
 //menu confirmation suppression de profil
 bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur) ;
 
+// Retourne une personne présente dans une liste de donnée (des employes ou des chercheur)
+// L'identification se fait par l'adresse mail
+Personne * saisie_personne() ;
+
 //affichage du menu correspondant au profil de chercheur d'emploi
 void menu_chercheur(Personne * utilisateur_chercheur) ;
 
@@ -68,7 +72,7 @@ void recherche_poste_pers(Personne *current_user) ;
 void recherche_collegue_pers(Personne *current_user) ;
 
 //menu de transition de profil
-bool menu_transition_pers(Personne * current_user) ;
+bool menu_transition_pers(Personne * current_user,string nouv_entreprise = "no entreprise here") ;
 
 //affichage du menu correspondant au profil d'employé
 void menu_employe(Personne * utilisateur_employe) ;
