@@ -105,8 +105,8 @@ int tests(void)
     TEST(ListeChercheurEmploi) ;
     // Grâce aux fonctions de mise à jour des DB, on teste à la fois les fonctions de création des listes et de mise à jour des DB
     ListeEntreprise->MAJDBEntreprise() ;
-    ListeEmploye->MAJDBPersonne(true) ;
-    ListeChercheurEmploi->MAJDBPersonne(false) ;
+    ListeEmploye->MAJDBPersonne() ;
+    ListeChercheurEmploi->MAJDBPersonne() ;
     TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_backup/entreprise.csv") ;
     TEST_MAJ_DB("test/FichiersDeTests/poste.csv", "test/db_backup/poste.csv") ;
     TEST_MAJ_DB("test/FichiersDeTests/employes.csv", "test/db_backup/employes.csv") ;
@@ -221,7 +221,7 @@ int tests(void)
     test_pers.modifIndex(test_chercheur->index()+1) ;
     test_chercheur->modifNextP(&test_pers) ;
     test_pers.modifPreviousP(test_chercheur) ;
-    test_chercheur->MAJDBPersonne(false) ;
+    test_chercheur->MAJDBPersonne() ;
     test_pers.deleteProfile(&ListeEmploye,&ListeChercheurEmploi) ;
     // Avec une personne au début
     test_employes = ListeEmploye ;
@@ -233,8 +233,8 @@ int tests(void)
     ListeEntreprise->next()->modifMail("eMplois@google.com") ;
     ListeEntreprise->modifCodePostal("777007707") ;
     ListeEntreprise->MAJDBEntreprise() ;
-    ListeEmploye->MAJDBPersonne(true) ;
-    ListeChercheurEmploi->MAJDBPersonne(false) ;
+    ListeEmploye->MAJDBPersonne() ;
+    ListeChercheurEmploi->MAJDBPersonne() ;
     TEST_MAJ_DB("test/FichiersDeTests/entreprise.csv", "test/db_tests_expected/entreprise.csv") ;
     // Tests sur la MAJ de la db poste
     TEST_MAJ_DB("test/FichiersDeTests/poste.csv", "test/db_tests_expected/poste.csv") ;

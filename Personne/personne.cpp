@@ -63,39 +63,20 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
         // Ajout de la personne à la liste de chercheur d'emploi
         _EntrepriseActuelle = NULL ;
         tmpP = *ListeChercheurEmploi ;
-        if (tmpP) {
-            while(tmpP->nextP()) tmpP = tmpP->nextP() ;
-            _index = tmpP->index()+1 ;
-            // Modification du chaînage
-            if(*ListeEmploye == this){
-                *ListeEmploye = (*ListeEmploye)->nextP() ;
-                (*ListeEmploye)->_previousP = NULL ;
-            }else{
-                if(_nextP) _nextP->modifPreviousP(_previousP) ;
-                if(_previousP) _previousP->modifNextP(_nextP) ;
+        while(tmpP->nextP()) tmpP = tmpP->nextP() ;
+        _index = tmpP->index()+1 ;
+        // Modification du chaînage
+        if(*ListeEmploye == this){
+            *ListeEmploye = (*ListeEmploye)->nextP() ;
+            (*ListeEmploye)->_previousP = NULL ;
+        }else{
+            if(_nextP) _nextP->modifPreviousP(_previousP) ;
+            if(_previousP) _previousP->modifNextP(_nextP) ;
 
-            }
-            _nextP = NULL ;
-            _previousP = tmpP ;
-            tmpP->modifNextP(this) ;
-        } else {
-             // Modification du chaînage
-            if (*ListeEmploye == this && !_nextP && !_previousP)
-            {
-                *ListeEmploye = NULL ;
-            } else if(*ListeEmploye == this){
-                *ListeEmploye = (*ListeEmploye)->nextP() ;
-                (*ListeEmploye)->_previousP = NULL ;
-            }else{
-                if(_nextP) _nextP->modifPreviousP(_previousP) ;
-                if(_previousP) _previousP->modifNextP(_nextP) ;
-
-            }
-            *ListeChercheurEmploi = this ; //si la  liste des chercheurs d'emploi est vide 
-            _nextP = NULL ;
-            _previousP = NULL ;
-            _index = 1 ;
         }
+        _nextP = NULL ;
+        _previousP = tmpP ;
+        tmpP->modifNextP(this) ;
         // Modification des index
         tmpP = *ListeEmploye ;
         tmpIndex = 1 ;
@@ -104,8 +85,8 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
             tmpP = tmpP->nextP() ;
         }
         // Mise a jour des DB
-        (*ListeEmploye)->MAJDBPersonne(true) ;
-        (*ListeChercheurEmploi)->MAJDBPersonne(false) ;
+        (*ListeEmploye)->MAJDBPersonne() ;
+        (*ListeChercheurEmploi)->MAJDBPersonne() ;
 
     }else if(NewEntreprise && !_EntrepriseActuelle){                    // Chercher d'emploi vers employe
         // Ajout de la personne à la liste d'employé
@@ -134,11 +115,9 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
             tmpP->_index = tmpIndex++ ;
             tmpP = tmpP->nextP() ;
         }
-
         // Mise a jour des DB
-        (*ListeEmploye)->MAJDBPersonne(true) ;   
-        (*ListeChercheurEmploi)->MAJDBPersonne(false) ;
-
+        (*ListeEmploye)->MAJDBPersonne() ;
+        (*ListeChercheurEmploi)->MAJDBPersonne() ;
     }else cout << "Error" << endl ;
 
     return ;
@@ -185,10 +164,10 @@ void Personne::deleteProfile(Personne ** ListeEmploye, Personne ** ListeChercheu
     
     if (_EntrepriseActuelle) {
         tmp_employe = *ListeEmploye;
-        tmp_employe->MAJDBPersonne(true) ;
+        tmp_employe->MAJDBPersonne() ;
     } else {
         tmp_chercheur = *ListeChercheurEmploi ;
-        tmp_chercheur->MAJDBPersonne(false) ;
+        tmp_chercheur->MAJDBPersonne() ;
     }
     
     
@@ -343,7 +322,7 @@ AncienCollegue* Personne::RechercheColleguesEntreprise(const string nomEntrepris
 // Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées
 // Si le pointeur vers une entrepise est null c'est un Chercheur d'emploi
 // Si le pointeur vers une entrepise est non null c'est un Employe
-void Personne::MAJDBPersonne(bool employe , string DBE, string DBC )
+void Personne::MAJDBPersonne(string DBE, string DBC)
 {
     Personne * tmp ;
     Competence *tmp_skill ;
@@ -357,11 +336,8 @@ void Personne::MAJDBPersonne(bool employe , string DBE, string DBC )
     string collegues_to_write ;
 
     tmp = this ;
-    if (tmp){
-        while (tmp->_previousP != NULL) tmp = tmp->previousP() ;                    //retour au début de la liste des personnes
-    }
-
-    if (employe) {                                                               //ouverture du csv chercheurEmploi ou employes selon la liste où se trouve la personne
+    while (tmp->_previousP != NULL) tmp = tmp->previousP() ;                    //retour au début de la liste des personnes
+    if (this->EntrepriseActuelle()) {                                                               //ouverture du csv chercheurEmploi ou employes selon la liste où se trouve la personne
         new_db_employes = fopen("employes_new.csv", "w") ;
         prev_db_employes = fopen(DBE.c_str(), "r") ;
         fscanf(prev_db_employes, "%127[^\n\r]", schema_db) ;                         //on recopie le schema de la base de données 
@@ -374,63 +350,60 @@ void Personne::MAJDBPersonne(bool employe , string DBE, string DBC )
         fprintf(new_db_chercheurs, "%s", schema_db) ;
     }
     
-    if (tmp)
-    {
-        if (((new_db_employes && prev_db_employes) || (new_db_chercheurs && prev_db_chercheurs))) {
-            while (tmp) {
-                tmp_skill = tmp->CompetencePropres() ;               //on parcours les compétences de la personne et on les concatène dans une string qui sera mise dans le csv
-                while (tmp_skill) {
-                    skills_to_write += tmp_skill->label();
-                    tmp_skill = tmp_skill->next() ;
-                    if (tmp_skill) {
-                        skills_to_write += ";" ;
-                    }
+    if ((new_db_employes && prev_db_employes) || (new_db_chercheurs && prev_db_chercheurs)) {
+        while (tmp) {
+            tmp_skill = tmp->CompetencePropres() ;               //on parcours les compétences de la personne et on les concatène dans une string qui sera mise dans le csv
+            while (tmp_skill) {
+                skills_to_write += tmp_skill->label();
+                tmp_skill = tmp_skill->next() ;
+                if (tmp_skill) {
+                    skills_to_write += ";" ;
                 }
-
-                tmp_collegue = tmp->ListAncienCollegues() ;          //idem pour les anciens collegues employes
-                while (tmp_collegue) {
-                    if(tmp_collegue->currentA() && tmp_collegue->currentA()->EntrepriseActuelle()){                             //attention à CurrentA qui peut être NULL et causer une segfault
-                        if (collegues_to_write.length() != 0 && collegues_to_write[collegues_to_write.length()-1] != ',') {
-                            collegues_to_write += ";" ;
-                        }
-                        collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;
-                    }
-                    tmp_collegue = tmp_collegue->nextA() ;
-                    
-                    
-                }
-                collegues_to_write += "," ;
-
-                tmp_collegue = tmp->ListAncienCollegues() ;          //on rajoute les anciens collegues chercheur d'emploi
-                while (tmp_collegue) {
-                    if(tmp_collegue->currentA() && !(tmp_collegue->currentA()->EntrepriseActuelle())){                          //idem
-                        if (collegues_to_write.length() != 0 && collegues_to_write[collegues_to_write.length()-1] != ',') {
-                            collegues_to_write += ";" ;
-                        }
-                        collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;   
-                    }
-                    tmp_collegue = tmp_collegue->nextA() ;
-                }
-
-                        
-                if (tmp->EntrepriseActuelle()) {
-                    fprintf(new_db_employes, "\n%d,%s,%s,%s,%s,%d,%s,%s", tmp->index(), tmp->nom().c_str(), tmp->prenom().c_str(), tmp->mail().c_str(),tmp->codePostal().c_str(),tmp->EntrepriseActuelle()->index(),skills_to_write.c_str(),collegues_to_write.c_str()) ; //il faut convertir la string en char* avec c_str pour utiliser fprintf
-                    skills_to_write.clear() ;       //on réinitialise les string avant de passer à la personne suivante
-                    collegues_to_write.clear() ;
-                    tmp = tmp->_nextP ;
-                } else {
-                    fprintf(new_db_chercheurs, "\n%d,%s,%s,%s,%s,%s,%s", tmp->index(), tmp->nom().c_str(), tmp->prenom().c_str(), tmp->mail().c_str(),tmp->codePostal().c_str(),skills_to_write.c_str(),collegues_to_write.c_str()) ; //il faut convertir la string en char* avec c_str pour utiliser fprintf
-                    skills_to_write.clear() ;       //on réinitialise les string avant de passer à la personne suivante
-                    collegues_to_write.clear() ;
-                    tmp = tmp->_nextP ;
-                }   
             }
-        }else{
-            cout << "Erreur d'ouverture ou de création de la nouvelle db" << endl ;
+
+            tmp_collegue = tmp->ListAncienCollegues() ;          //idem pour les anciens collegues employes
+            while (tmp_collegue) {
+                if(tmp_collegue->currentA() && tmp_collegue->currentA()->EntrepriseActuelle()){                             //attention à CurrentA qui peut être NULL et causer une segfault
+                    if (collegues_to_write.length() != 0 && collegues_to_write[collegues_to_write.length()-1] != ',') {
+                        collegues_to_write += ";" ;
+                    }
+                    collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;
+                }
+                tmp_collegue = tmp_collegue->nextA() ;
+                
+                
+            }
+            collegues_to_write += "," ;
+
+            tmp_collegue = tmp->ListAncienCollegues() ;          //on rajoute les anciens collegues chercheur d'emploi
+            while (tmp_collegue) {
+                if(tmp_collegue->currentA() && !(tmp_collegue->currentA()->EntrepriseActuelle())){                          //idem
+                    if (collegues_to_write.length() != 0 && collegues_to_write[collegues_to_write.length()-1] != ',') {
+                        collegues_to_write += ";" ;
+                    }
+                    collegues_to_write += to_string(tmp_collegue->currentA()->index()) ;   
+                }
+                tmp_collegue = tmp_collegue->nextA() ;
+            }
+
+                    
+            if (tmp->EntrepriseActuelle()) {
+                fprintf(new_db_employes, "\n%d,%s,%s,%s,%s,%d,%s,%s", tmp->index(), tmp->nom().c_str(), tmp->prenom().c_str(), tmp->mail().c_str(),tmp->codePostal().c_str(),tmp->EntrepriseActuelle()->index(),skills_to_write.c_str(),collegues_to_write.c_str()) ; //il faut convertir la string en char* avec c_str pour utiliser fprintf
+                skills_to_write.clear() ;       //on réinitialise les string avant de passer à la personne suivante
+                collegues_to_write.clear() ;
+                tmp = tmp->_nextP ;
+            } else {
+                fprintf(new_db_chercheurs, "\n%d,%s,%s,%s,%s,%s,%s", tmp->index(), tmp->nom().c_str(), tmp->prenom().c_str(), tmp->mail().c_str(),tmp->codePostal().c_str(),skills_to_write.c_str(),collegues_to_write.c_str()) ; //il faut convertir la string en char* avec c_str pour utiliser fprintf
+                skills_to_write.clear() ;       //on réinitialise les string avant de passer à la personne suivante
+                collegues_to_write.clear() ;
+                tmp = tmp->_nextP ;
+            }   
         }
+    }else{
+        cout << "Erreur d'ouverture ou de création de la nouvelle db" << endl ;
     }
     
-    if (employe) {
+    if (this->EntrepriseActuelle()) {
         fclose(new_db_employes);
         fclose(prev_db_employes) ;
         remove(DBE.c_str()) ;
@@ -676,16 +649,10 @@ void AncienCollegue::addAncienCollegue(Personne * NewAncienCollegue,Personne * b
     AncienCollegue * tmp_collegue = this ;
     while (tmp_collegue->nextA()) tmp_collegue = tmp_collegue->nextA() ;                //parcours jusqu'à la fin de la liste
     tmp_collegue->modifNextA(new AncienCollegue(NewAncienCollegue,NULL,tmp_collegue)) ; //ajout du nouveau collègue
-    if (base_pers->EntrepriseActuelle())
-    {
-        base_pers->MAJDBPersonne(true) ;                                                        //mise à jour de la base de données à partir de la personne qui a la liste d'anciens collègues 
+    base_pers->MAJDBPersonne() ;                                                        //mise à jour de la base de données à partir de la personne qui a la liste d'anciens collègues 
                                                                                         //pour éviter de mettre à jour le mauvais csv 
                                                                                         //on passe en paramètre l'addresse de celle-ci pour éviter de faire des parcours de liste
-    } else {
-        base_pers->MAJDBPersonne(false) ;
-    }
-    
-        return ;
+    return ;
 }
 
 // Retire une personne de la liste
@@ -732,16 +699,9 @@ void AncienCollegue::dellAncienCollegue(Personne * AncienCollegueToDell,Personne
         }     
     }
     
-    if (base_pers->EntrepriseActuelle() ) {
-        base_pers->MAJDBPersonne(true) ; //mise à jour de la base de données à partir de la personne qui a la liste d'anciens collègues 
+    base_pers->MAJDBPersonne() ; //mise à jour de la base de données à partir de la personne qui a la liste d'anciens collègues 
                                  //pour éviter de mettre à jour le mauvais csv 
                                  //on passe en paramètre l'addresse de celle-ci pour éviter de faire des parcours de liste
-    }else {
-        base_pers->MAJDBPersonne(false) ;
-    }
-    
-    
-    
     return ;
 }
 
