@@ -51,14 +51,14 @@ class Personne
         AncienCollegue * ListAncienCollegues(void){return _ListAncienCollegues ;} ;
         Entreprise * EntrepriseActuelle(void){return _EntrepriseActuelle ;} ;
     // Modifieurs
-        void modifIndex(int Newindex){_index = Newindex ; MAJDBPersonne() ; return ;} ;
-        void modifNom(const string Newnom){_nom = Newnom ; MAJDBPersonne() ; return ;} ;
-        void modifPrenom(const string Newprenom){_prenom = Newprenom ; MAJDBPersonne() ; return ;} ;
-        void modifMail(const string Newmail){_mail = Newmail ; MAJDBPersonne() ; return ;} ;
-        void modifCodePostal(const string NewCodePostal){_codePostal = NewCodePostal ; MAJDBPersonne() ; return ;} ;
+        void modifIndex(int Newindex){_index = Newindex ; if(_EntrepriseActuelle){MAJDBPersonne(true);} else{MAJDBPersonne(false);}   return ;} ;
+        void modifNom(const string Newnom){_nom = Newnom ; if(_EntrepriseActuelle){MAJDBPersonne(true);} else{MAJDBPersonne(false);} return ;} ;
+        void modifPrenom(const string Newprenom){_prenom = Newprenom ; if(_EntrepriseActuelle){MAJDBPersonne(true);} else{MAJDBPersonne(false);} return ;} ;
+        void modifMail(const string Newmail){_mail = Newmail ; if(_EntrepriseActuelle){MAJDBPersonne(true);} else{MAJDBPersonne(false);} return ;} ;
+        void modifCodePostal(const string NewCodePostal){_codePostal = NewCodePostal ; if(_EntrepriseActuelle){MAJDBPersonne(true);} else{MAJDBPersonne(false);} return ;} ;
         void modifPreviousP(Personne * NewPreviousP){_previousP = NewPreviousP ; return ;} ;
         void modifNextP(Personne * NewNextP){_nextP = NewNextP ; return ;} ;
-        void modifEntreprise(Entreprise * NewEntreprise){_EntrepriseActuelle = NewEntreprise ; MAJDBPersonne() ; return ;} ;
+        void modifEntreprise(Entreprise * NewEntreprise){_EntrepriseActuelle = NewEntreprise ; if(_EntrepriseActuelle){MAJDBPersonne(true);} else{MAJDBPersonne(false);} return ;} ;
         void modifCompetencePropres(Competence * NewListeCompetence){_CompetencesPropres = NewListeCompetence ; return ;} ;
         void modifAncienCollegues(AncienCollegue * NewListCollegues){_ListAncienCollegues = NewListCollegues ; return ;} ;
         static void modifDBE(string NewDBE){_DBE = NewDBE ; return ;} ;
@@ -68,7 +68,7 @@ class Personne
                                                                                                                             // Ajoute les anciens collègues si besoin
                                                                                                                             // NewEntreprise est le pointeur vers l'entreprise en cas de recrutement, NULL sinon
         void deleteProfile(Personne ** ListeEmploye, Personne ** ListeChercheurEmploi) ;
-        void MAJDBPersonne(string DBE=_DBE, string DBC=_DBC) ;              // Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées
+        void MAJDBPersonne(bool employe,string DBE=_DBE, string DBC=_DBC) ;              // Met à jour la base de donnée des checheurs d'emplois ou des entreprises, est appelée à chaque fois que des données sont modifiées
                                                                             // Si le pointeur vers une entrepise est null c'est un Chercheur d'emploi
                                                                             // Si le pointeur vers une entrepise est non null c'est un Employe
         Entreprise* RecherchePosteCompetence(Entreprise * listeEntreprises) ;           // Retourne une liste d'entreprise avec les postes correspondant aux compétences de la personne
