@@ -325,8 +325,8 @@ void deleteProfileEntreprise(Entreprise *ToDellE, Entreprise **ListeEntreprise, 
     }
     // Mise à jour des DB
     (*ListeEntreprise)->MAJDBEntreprise() ;
-    (*ListeEmploye)->MAJDBPersonne() ;
-    (*ListeChercheurEmploi)->MAJDBPersonne() ;
+     (*ListeEmploye)->MAJDBPersonne(true) ;
+    (*ListeChercheurEmploi)->MAJDBPersonne(false) ;
 
     return ;
 }
