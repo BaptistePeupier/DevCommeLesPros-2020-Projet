@@ -1244,7 +1244,7 @@ void connexion_employe()
             }else {
                 EmployesListe = current_user_employe ;   
             }
-            EmployesListe->MAJDBPersonne(true,"Database/employes.csv", "Database/chercheurEmploi.csv") ;
+            EmployesListe->MAJDBPersonne(true) ;
             system("clear") ;
             menu_employe(current_user_employe) ; 
         } else {
