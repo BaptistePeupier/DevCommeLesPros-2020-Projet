@@ -167,7 +167,7 @@ Competence * saisie_competence()
     return liste_comp ;
 }
 
-//fonction de saisie pour la création de profil
+//fonction de saisie pour la création de profil d'une personne 
 Personne * saisie_personne(bool employe)
 {
     string nom,prenom,cp,mail,entreprise_pers ;
