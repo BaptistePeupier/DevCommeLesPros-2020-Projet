@@ -1247,6 +1247,7 @@ void connexion_employe()
             EmployesListe->MAJDBPersonne(true) ;
             system("clear") ;
             menu_employe(current_user_employe) ; 
+            
         } else {
             system("clear") ;
             menu_principal() ;
