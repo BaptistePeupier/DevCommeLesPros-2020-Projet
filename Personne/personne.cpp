@@ -324,7 +324,7 @@ AncienCollegue* Personne::RechercheColleguesEntreprise(const string nomEntrepris
 // Si le pointeur vers une entrepise est non null c'est un Employe
 void Personne::MAJDBPersonne(string DBE, string DBC)
 {
-    Personne * tmp ;
+    Personne * tmp, *tmp2 ;
     Competence *tmp_skill ;
     AncienCollegue * tmp_collegue ;
     FILE *prev_db_chercheurs ;
@@ -335,14 +335,14 @@ void Personne::MAJDBPersonne(string DBE, string DBC)
     string skills_to_write ;
     string collegues_to_write ;
 
-    tmp = this ;
-    while (tmp->_previousP != NULL) tmp = tmp->previousP() ;                    //retour au début de la liste des personnes
-    if (this->EntrepriseActuelle()) {                                                               //ouverture du csv chercheurEmploi ou employes selon la liste où se trouve la personne
+    tmp = tmp2 = this ;
+    while (tmp && tmp->_previousP != NULL) tmp = tmp->previousP() ;                    //retour au début de la liste des personnes
+    if (tmp2 && this->EntrepriseActuelle()) {                                                               //ouverture du csv chercheurEmploi ou employes selon la liste où se trouve la personne
         new_db_employes = fopen("employes_new.csv", "w") ;
         prev_db_employes = fopen(DBE.c_str(), "r") ;
         fscanf(prev_db_employes, "%127[^\n\r]", schema_db) ;                         //on recopie le schema de la base de données 
         fprintf(new_db_employes, "%s", schema_db) ;
-    }else {
+    }else if(tmp2 && !this->EntrepriseActuelle()) {
         new_db_chercheurs = fopen("chercheurEmploi_new.csv", "w") ; 
         prev_db_chercheurs = fopen(DBC.c_str(), "r") ;
         
@@ -403,12 +403,12 @@ void Personne::MAJDBPersonne(string DBE, string DBC)
         cout << "Erreur d'ouverture ou de création de la nouvelle db" << endl ;
     }
     
-    if (this->EntrepriseActuelle()) {
+    if (tmp2 && this->EntrepriseActuelle()) {
         fclose(new_db_employes);
         fclose(prev_db_employes) ;
         remove(DBE.c_str()) ;
         rename("employes_new.csv", DBE.c_str()) ;
-    } else {
+    } else if(tmp2 && !this->EntrepriseActuelle()) {
         fclose(new_db_chercheurs) ;
         fclose(prev_db_chercheurs) ;
         remove(DBC.c_str()) ;
