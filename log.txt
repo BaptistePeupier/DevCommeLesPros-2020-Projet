@@ -1,0 +1,4 @@
+[2020-05-27 19:55:01.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-27 19:55:19.000] ChercheurCompetence appelée avec 'C ' comme paramètre.
+[2020-05-27 19:56:28.000] Créer Employe appelée avec 'baptiste.peupier@mail.com' comme paramètre.
+[2020-05-27 19:57:45.000] addAncienCollegue appelée avec 'mail@gmail.com' comme paramètre.

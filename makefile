@@ -12,27 +12,36 @@ clean:
 build:
 	mkdir -p build
 
-# Crée ...
+# Bibliothèque des fonctions pour les Entreprises
 libEntreprise.a: Entreprise/entreprise.cpp Entreprise/entreprise.h | build
 	${CC} -g -c Entreprise/entreprise.cpp -o build/entreprise.o
 	ar crs build/libEntreprise.a build/entreprise.o
 
-# Crée ...
+# Bibliothèque des fonctions pour les Personnes
+# Liée avec la bibliothèque des fonctions pour les Entreprises
 libPersonne.a: libEntreprise.a Entreprise/entreprise.h Personne/personne.cpp | build
 	${CC} -g -c Personne/personne.cpp -I ./Entreprise -o build/personne.o
 	ar crs build/libPersonne.a build/personne.o
 
-# Crée ...
+# Bibliothèque des fonctions générales (création, suppression, ... des listes de données)
+# Compile également les bibliothèques des Entreprises et des Personnes
+# Liée avec les bibliothèques des fonctions pour les Entreprises et les Personnes
 libGeneral.a: libEntreprise.a libPersonne.a General/general.h General/general.cpp | build
 	${CC} -g -c General/general.cpp -I ./Entreprise -I ./Personne -o build/general.o
 	ar crs build/libGeneral.a build/general.o
 
-tests.o: test/tests.cpp test/tests.h | build
+# Programme de test
+# Compile également la biliothèque Général et donc les autres
+tests.o: libGeneral.a test/tests.cpp test/tests.h | build
 	${CC} -g -c test/tests.cpp -I ./Entreprise -I ./Personne -I ./General -o build/tests.o
 
-interface.o: interface/interface.cpp interface/interface.h | build
+# Interface du programme
+# Compile également la biliothèque Général et donc les autres
+interface.o: libGeneral.a interface/interface.cpp interface/interface.h | build
 	${CC} -g -c interface/interface.cpp -I ./Entreprise -I ./Personne -I ./General -o build/interface.o
 
+# Menu principal de l'application
+# On peut ainsi choisir de lancer les batteries de tests ou l'application en elle-même
 main.o: main.cpp tests.o interface.o | build
 	${CC} -g -c main.cpp -I ./Entreprise -I ./Personne -I ./General -I ./test -I ./interface -o build/main.o
 
@@ -41,7 +50,7 @@ main.o: main.cpp tests.o interface.o | build
 all: libGeneral.a main.o
 	${CC} build/main.o build/tests.o build/interface.o -Lbuild/ -lEntreprise -lPersonne -lGeneral -o build/LuminIn
 
-# Lance le programme de test.
+# Lance l'application.
 check: all
 	./build/LuminIn
 
