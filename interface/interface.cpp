@@ -17,8 +17,16 @@ extern Entreprise * EntrepriseListe ;
 
 // Fonction permettant de générer le journal d'utilisation de l'application
 // le nom de la fonction utilisée ainsi la valeur de ses arguments sont passées en paramètre dans des strings
-void log(string fonction, string arguments)
+void Logs(string fonction, string arguments)
 {
+    char time_s[100] ;
+    time_t now = time(0) ;
+
+    FILE * FichierLogs = fopen("log.txt", "a") ;
+    strftime(time_s, 100, "%Y-%m-%d %H:%M:%S.000", localtime(&now)) ;
+    if(arguments == "none") fprintf(FichierLogs, "[%s] %s appelée.\n", time_s, fonction.c_str()) ;
+    else fprintf(FichierLogs, "[%s] %s appelée avec '%s' comme paramètre.\n", time_s, fonction.c_str(), arguments.c_str()) ;
+    fclose(FichierLogs) ;
 
     return ;
 }
@@ -99,6 +107,7 @@ bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur
                     //appel de la fonction de suppression du profil de personne
                 } else if (utilisateur_entreprise) {
                     //appel de la fonction de suppression du profil d'entreprise
+                    Logs("deleteProfileEntreprise", utilisateur_entreprise->mail()) ;
                     deleteProfileEntreprise(utilisateur_entreprise, &EntrepriseListe, &EmployesListe, &ChercheursListe) ;
                 }
                 cout << "Profil supprimé avec succès" << endl ;
@@ -301,20 +310,20 @@ void modif_profil_pers(Personne *current_user)
                             cout << "Label entré invalide" << endl << endl ;
                         } else {
                             tmp_skill_pers = new Competence(new_skill) ;
-
+                            //vérifier si la compétence est pas déjà dans la liste
                             if (current_user->CompetencePropres() && tmp_skill_pers->IsInList(current_user->CompetencePropres())) {
                                 valid_input = false ;
                                 cout << "La compétence recherchée est déjà associée à votre profil" << endl << endl ; 
                                 delete tmp_skill_pers ;
                             }
                         }
-                        //vérifier si la compétence est pas déjà dans la liste
                     } while (!valid_input);
                     if (current_user->CompetencePropres()) {
                         current_user->CompetencePropres()->AddCompetence(new_skill) ;
                     } else {
                         current_user->modifCompetencePropres(tmp_skill_pers) ;  
                     }
+                    Logs("AddCompetence", new_skill) ;
                                   
                     option_inconnue = true ;
                     while (option_inconnue)
@@ -366,16 +375,14 @@ void modif_profil_pers(Personne *current_user)
                             nouv_collegue = nouv_collegue->nextP() ;
                         }
                     }
-                    
                     if (nouv_collegue) {
-                        
                         if (current_user->ListAncienCollegues()) {
                             current_user->ListAncienCollegues()->addAncienCollegue(nouv_collegue,current_user) ;
                         } else {
                             nouveau_collegue = new AncienCollegue(nouv_collegue) ;
                             current_user->modifAncienCollegues(nouveau_collegue) ;
                         }
-                        
+                        Logs("addAncienCollegue", ancien_collegue_mail) ;
                     } else{
                         cout << "La personne que vous recherchez est introuvable" << endl ;
                         continuer() ;
@@ -413,6 +420,8 @@ void modif_profil_pers(Personne *current_user)
                         cout << "Code postal invalide" << endl << endl ;
                     } 
                 } while (!valid_input);
+                current_user->modifCodePostal(nouv_cp) ;
+                Logs("modifCodePostal", nouv_cp) ;
                 break;
             
             case '4':
@@ -436,6 +445,7 @@ void modif_profil_pers(Personne *current_user)
                         }
                         
                     } while (!valid_input);
+                    Logs("modifEntreprise", tmp_ent->mail()) ;
                     current_user->modifEntreprise(tmp_ent) ;
                 }
                 break;
@@ -497,6 +507,7 @@ bool menu_transition_pers(Personne * current_user,string nouv_entreprise)
                 
                 if (current_user) {
                     if ( current_user->EntrepriseActuelle()) {
+                        Logs("TransitionStatut", current_user->mail()) ;
                         current_user->TransitionStatut(&EmployesListe,&ChercheursListe) ;
                     } else {
                         do
@@ -517,7 +528,8 @@ bool menu_transition_pers(Personne * current_user,string nouv_entreprise)
                                 }
                             }
                             
-                        } while (!valid_input);
+                        } while (!valid_input) ;
+                        Logs("TransitionStatut", current_user->mail()+"->"+tmp_ent->mail()) ;
                         current_user->TransitionStatut(&EmployesListe,&ChercheursListe,tmp_ent) ;
                     }
                 }
@@ -547,8 +559,9 @@ void type_recherche_entreprise()
     char choix_type ;
     bool option_inconnue = true , valid_input;
     string cp_chercheurs ;
-    Competence *listeComp ;
+    Competence *listeComp, *tmpC ;
     Personne *tmpP ;
+    string listeComp_string ;
 
     system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
@@ -572,9 +585,15 @@ void type_recherche_entreprise()
                 cout << "Veuillez saisir les compétences recherchées" << endl ;
                 //appel de la fonction de saisie des compétence dans une liste
                 listeComp = saisie_competence() ;
-                
+                tmpC = listeComp ;
+                while(tmpC){
+                    listeComp_string += tmpC->label()+" " ;
+                    tmpC = tmpC->next() ;
+                }
+
                 cout << "Voici le résultat de la recherche :" << endl << endl;
                 //appel de la recherche selon les compétences
+                Logs("ChercheurCompetence", listeComp_string) ;
                 tmpP = ChercheursListe->ChercheurCompetence(listeComp) ;
                 if (!tmpP) {
                     cout << "-----------------------------------------------" << endl ;
@@ -594,6 +613,10 @@ void type_recherche_entreprise()
                 cout << "Veuillez saisir les compétences recherchées" << endl ;
                 //appel de la fonction de saisie des compétence dans une liste
                 listeComp = saisie_competence() ;
+                while(tmpC){
+                    listeComp_string += tmpC->label()+" " ;
+                    tmpC = tmpC->next() ;
+                }
                 do
                 {
                     cout << "Veuillez entrer le code postal que vous recherchez :" ;
@@ -606,6 +629,7 @@ void type_recherche_entreprise()
 
                 cout << "Voici le résultat de la recherche :" << endl << endl;
                 //appel de la recherche selon les compétences et le code postal
+                Logs("ChercheurCompetence", listeComp_string+" | "+cp_chercheurs) ;
                 tmpP = ChercheursListe->ChercheurCompetenceCodePostal(listeComp, cp_chercheurs) ;
                 if (!tmpP) {
                     cout << "-----------------------------------------------" << endl ;
@@ -665,6 +689,7 @@ void recherche_poste_pers(Personne *current_user)
                 option_inconnue = false ;
                 cout << "Voici les entreprise disposant de postes à pourvoir correspondant à vos compétences" << endl ;
                 resultat_recherche = current_user->RecherchePosteCompetence(EntrepriseListe) ;
+                Logs("RecherchePosteCompetence", current_user->mail()) ;
                 tmpE = resultat_recherche ;
                 if (!tmpE) {
                     cout << "-----------------------------------------------" << endl ;
@@ -682,6 +707,7 @@ void recherche_poste_pers(Personne *current_user)
                 option_inconnue = false ;
                 cout << "Voici les les entreprise disposant de postes à pourvoir correspondant à vos compétences proche de chez vous :" << endl ;
                 resultat_recherche = current_user->RecherchePosteCompetenceCodePostal(EntrepriseListe) ;
+                Logs("RecherchePosteCompetence", current_user->mail()+" | Cp : "+current_user->codePostal()) ;
                 tmpE = resultat_recherche ;
                 if (!tmpE) {
                     cout << "-----------------------------------------------" << endl ;
@@ -720,7 +746,8 @@ void recherche_collegue_pers(Personne *current_user)
     string entreprise_collegue, collegue_skill ;
     Entreprise * tmp_ent ;
     AncienCollegue * resultat_recherche , *tmpA;
-    Competence * comp_recherchees = NULL;
+    Competence * comp_recherchees = NULL, *tmpC ;
+    string comp_recherchees_string ;
 
     system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
@@ -769,6 +796,7 @@ void recherche_collegue_pers(Personne *current_user)
                         }
                     } while (!valid_input);
                 cout << "Voici les anciens collègues employés dans l'entreprise " << entreprise_collegue << endl ;
+                Logs("RechercheColleguesEntreprise", current_user->mail()+" | Entreprise :"+entreprise_collegue) ;
                 resultat_recherche = current_user->RechercheColleguesEntreprise(entreprise_collegue) ;
                 tmpA = resultat_recherche ;
                 if (!tmpA) {
@@ -788,6 +816,12 @@ void recherche_collegue_pers(Personne *current_user)
                 comp_recherchees = saisie_competence() ;
                 if (current_user->EntrepriseActuelle()) {
                     cout << "Voici les anciens collègues disposant des compétences recherchées :" << endl ;
+                    tmpC = comp_recherchees ;
+                    while(tmpC){
+                        comp_recherchees_string += tmpC->label()+" " ;
+                        tmpC = tmpC->next() ;
+                    }
+                    Logs("EmployeRechercheColleguesCompetence", current_user->mail()+" | Compétences : "+comp_recherchees_string) ;
                     resultat_recherche = current_user->EmployeRechercheColleguesCompetence(comp_recherchees) ;
                     tmpA = resultat_recherche ;
                     if (!tmpA) {
@@ -876,6 +910,7 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
                 }else{      // Si c'est le premier poste
                     utilisateur_entreprise->modifProfilPoste(new Poste(titre_poste)) ;
                 }
+                Logs("addPoste", titre_poste) ;
                 cout << "Veuillez saisir les compétences recherchées pour ce poste : " << endl ;
                 //appel de la fonction permettant d'entrer des compétences dans une liste
                 tmpP = utilisateur_entreprise->profilPoste() ;
@@ -925,6 +960,7 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
                 } while (!valid_input);
                 //appel de la fonction de suppression de poste
                 utilisateur_entreprise->dellPoste(titre_poste) ;
+                Logs("dellPoste", titre_poste) ;
                 cout << "suppression du poste" << endl ;
                 continuer() ;
                 break;
@@ -994,6 +1030,7 @@ void connexion_entreprise()
     }
     if (current_user_entreprise) {
         system("clear") ;
+        Logs("connexion_entreprise", current_user_entreprise->mail()) ;
         menu_entreprise(current_user_entreprise) ;         
         
     } else {
@@ -1043,7 +1080,7 @@ void connexion_entreprise()
                 EntrepriseListe->MAJDBEntreprise() ;
                 current_user_entreprise = EntrepriseListe ;
             }
-
+            Logs("addEntreprise", mail_entreprise) ;
             system("clear") ;
             menu_entreprise(current_user_entreprise) ;  
         } else {
@@ -1195,6 +1232,7 @@ void connexion_chercheur()
     //recherche dans la BDD du profil de l'utilisateur
     if (current_user_chercheur) {
         system("clear") ;
+        Logs("connexion_chercheur", mail_chercheur) ;
         menu_chercheur(current_user_chercheur) ;      
         
     } else {
@@ -1325,6 +1363,7 @@ void connexion_employe()
 
     if (current_user_employe) {
         system("clear") ;
+        Logs("connexion_employe", mail_employe) ;
         menu_employe(current_user_employe) ;       
         
     } else {
@@ -1358,6 +1397,7 @@ void connexion_employe()
             }
             EmployesListe->MAJDBPersonne(true) ;
             system("clear") ;
+            Logs("Créer Employe", mail_employe) ;
             menu_employe(current_user_employe) ; 
             
         } else {
