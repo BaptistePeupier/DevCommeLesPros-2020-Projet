@@ -2,3 +2,4 @@ id,nom,prenom,mail,code_postal,competences,collegues_employes,collegues_chercheu
 1,Duval,Jean,DVJ@gmail.com,13013,C++;C;PHP,,
 2,Duval,Etienne,DVE@gmail.com,13012,C;C++;PHP,,
 2,Mailla,Abeille,MA@gmail.com,13012,PHP;C;C++,,
+2,Mailla,Bourdon,MB@gmail.com,13012,Test;Test2,,
