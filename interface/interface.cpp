@@ -119,7 +119,7 @@ Competence * saisie_competence()
     Competence * liste_comp = NULL , *tmp_skill_list;
     string label_comp ;
     bool fin_saisie = false , unknown_ans, valid_input;
-    int choix ;
+    string choix ;
 
     while (!fin_saisie)
     {
@@ -153,10 +153,10 @@ Competence * saisie_competence()
             cout << "2.Non" << endl ;
             cout << "Votre choix : " ;
             cin >> choix ;
-            if (choix == 1) {
+            if (choix == "1") {
                 fin_saisie = false ;
                 unknown_ans = false ;
-            } else if (choix == 2) {
+            } else if (choix == "2") {
                 fin_saisie = true ;
                 unknown_ans = false ;
             } else {
@@ -539,6 +539,8 @@ void type_recherche_entreprise()
     char choix_type ;
     bool option_inconnue = true , valid_input;
     string cp_chercheurs ;
+    Competence *listeComp ;
+    Personne *tmpP ;
 
     system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
@@ -561,15 +563,29 @@ void type_recherche_entreprise()
                 option_inconnue = false ;
                 cout << "Veuillez saisir les compétences recherchées" << endl ;
                 //appel de la fonction de saisie des compétence dans une liste
+                listeComp = saisie_competence() ;
                 
                 cout << "Voici le résultat de la recherche :" << endl << endl;
                 //appel de la recherche selon les compétences
+                tmpP = ChercheursListe->ChercheurCompetence(listeComp) ;
+                if (!tmpP) {
+                    cout << "-----------------------------------------------" << endl ;
+                    cout << "Aucun résultat trouvé" << endl ;
+                }
+                while (tmpP) {
+                    cout << "-----------------------------------------------" << endl ;
+                    cout << "Nom : " << tmpP->nom() << " | Prénom : " << tmpP->prenom() << " | mail : " << tmpP->mail() << endl ;
+                    tmpP = tmpP->nextP() ;
+                }
+                cout << "-----------------------------------------------" << endl ;                
+
                 break;
 
             case '2':
                 option_inconnue = false ;
                 cout << "Veuillez saisir les compétences recherchées" << endl ;
                 //appel de la fonction de saisie des compétence dans une liste
+                listeComp = saisie_competence() ;
                 do
                 {
                     cout << "Veuillez entrer le code postal que vous recherchez :" ;
@@ -582,6 +598,17 @@ void type_recherche_entreprise()
 
                 cout << "Voici le résultat de la recherche :" << endl << endl;
                 //appel de la recherche selon les compétences et le code postal
+                tmpP = ChercheursListe->ChercheurCompetenceCodePostal(listeComp, cp_chercheurs) ;
+                if (!tmpP) {
+                    cout << "-----------------------------------------------" << endl ;
+                    cout << "Aucun résultat trouvé" << endl ;
+                }
+                while (tmpP) {
+                    cout << "-----------------------------------------------" << endl ;
+                    cout << "Nom : " << tmpP->nom() << " | Prénom : " << tmpP->prenom() << " | mail : " << tmpP->mail() << endl ;
+                    tmpP = tmpP->nextP() ;
+                }
+                cout << "-----------------------------------------------" << endl ;     
                 break;
 
             case 'q':
