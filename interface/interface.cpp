@@ -15,6 +15,14 @@ extern Personne * EmployesListe ;
 extern Personne * ChercheursListe ;
 extern Entreprise * EntrepriseListe ;
 
+// Fonction permettant de générer le journal d'utilisation de l'application
+// le nom de la fonction utilisée ainsi la valeur de ses arguments sont passées en paramètre dans des strings
+void log(string fonction, string arguments)
+{
+
+    return ;
+}
+
 //fonction de vérification de l'addresse mail entrée
 bool email_valide(string email)
 {
