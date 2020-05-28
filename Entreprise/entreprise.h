@@ -34,7 +34,7 @@ class Entreprise
         Entreprise * _next ;
         Entreprise * _previous ;
         Poste * _profilPoste ;
-        static string _DBE, _DBP ;          // Chaine de caractère statique à la classe dénottant les DB à utiliser
+        static string _DBEnt, _DBP ;          // Chaine de caractère statique à la classe dénottant les DB à utiliser
                                             // Modifier ces variables pour passer des DB du programme de test à celle de l'application
     public:
     // Les constructeurs
@@ -58,13 +58,13 @@ class Entreprise
         void modifNext(Entreprise * next){_next = next ; return ;} ;
         void modifPrevious(Entreprise * previous){_previous = previous ; return ;} ;
         void modifProfilPoste(Poste * NewListePoste){_profilPoste = NewListePoste ; return ;} ; // Modifie le pointeur vers la liste de postes à fournir
-        static void modifDBE(string NewDBE){_DBE = NewDBE ; return ;} ;
+        static void modifDBEnt(string NewDBEnt){_DBEnt = NewDBEnt ; return ;} ;
         static void modifDBP(string NewDBP){_DBP = NewDBP ; return ;} ;
         // Fonctionnalités
         void addEntreprise(const string nom, const string codePostal, const string mail) ;      // Ajoute une entreprise à la liste
         void addPoste(Poste * ToAdd) ;                                                          // Ajoute un poste à la liste des postes à fournir
         void dellPoste(const string TitrePoste) ;                                               // Supprime un poste à la liste des postes à fournir
-        void MAJDBEntreprise(string DBE=_DBE, string DBP=_DBP) ;                                // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées ou ajoutées
+        void MAJDBEntreprise(string DBEnt=_DBEnt, string DBP=_DBP) ;                                // Met à jour la base de donnée des entreprises, est appelée à chaque fois que des données sont modifiées ou ajoutées
                                                                                                 // Met également à jour la base de données des postes
 } ;
 

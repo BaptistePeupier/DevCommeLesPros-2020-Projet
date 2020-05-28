@@ -34,7 +34,8 @@ void Logs(string fonction, string arguments)
 //fonction de vérification de l'addresse mail entrée
 bool email_valide(string email)
 {
-    if (regex_match(email, regex("([a-zA-Z]+)([_.a-zA-Z0-9]*)([a-zA-Z0-9]+)(@)([a-zA-Z]+)([.a-zA-Z]+)([a-zA-Z]+)"))) 
+    const regex pattern_mail("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+") ;
+    if (regex_match(email, pattern_mail)) 
         return true;
 
     return false;
@@ -614,6 +615,7 @@ void type_recherche_entreprise()
                 option_inconnue = false ;
                 cout << "Veuillez saisir les compétences recherchées" << endl ;
                 listeComp = saisie_competence() ;
+                tmpC = listeComp ;
                 while(tmpC){
                     listeComp_string += tmpC->label()+" " ;
                     tmpC = tmpC->next() ;

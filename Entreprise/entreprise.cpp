@@ -11,7 +11,7 @@
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-string Entreprise::_DBE = "test/FichiersDeTests/entreprise.csv" ;
+string Entreprise::_DBEnt = "test/FichiersDeTests/entreprise.csv" ;
 string Entreprise::_DBP = "test/FichiersDeTests/poste.csv" ;
 
 // Le destructeur
@@ -89,7 +89,7 @@ void Entreprise::MAJDBEntreprise(string DBE, string DBP)
     fclose(prev_db_poste) ;
     remove(DBE.c_str()) ;
     rename("entrepriseNew.csv", DBE.c_str()) ;
-    remove("test/FichiersDeTests/poste.csv") ;
+    remove(DBP.c_str()) ;
     rename("posteNew.csv", DBP.c_str()) ;
 
     return ;
