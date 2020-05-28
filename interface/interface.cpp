@@ -105,6 +105,7 @@ bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur
                 
                 if (utilisateur) {
                     //appel de la fonction de suppression du profil de personne
+                    utilisateur->deleteProfile(&EmployesListe,&ChercheursListe) ;
                 } else if (utilisateur_entreprise) {
                     //appel de la fonction de suppression du profil d'entreprise
                     Logs("deleteProfileEntreprise", utilisateur_entreprise->mail()) ;
@@ -466,7 +467,7 @@ void modif_profil_pers(Personne *current_user)
 }
 
 //menu de transition de profil
-bool menu_transition_pers(Personne * current_user,string nouv_entreprise)
+bool menu_transition_pers(Personne * current_user)
 {
     int confirmation_ans ;
     bool option_inconnue = true , succes_transition , valid_input ;
@@ -583,7 +584,6 @@ void type_recherche_entreprise()
             case '1':
                 option_inconnue = false ;
                 cout << "Veuillez saisir les compétences recherchées" << endl ;
-                //appel de la fonction de saisie des compétence dans une liste
                 listeComp = saisie_competence() ;
                 tmpC = listeComp ;
                 while(tmpC){
@@ -592,6 +592,7 @@ void type_recherche_entreprise()
                 }
 
                 cout << "Voici le résultat de la recherche :" << endl << endl;
+
                 //appel de la recherche selon les compétences
                 Logs("ChercheurCompetence", listeComp_string) ;
                 tmpP = ChercheursListe->ChercheurCompetence(listeComp) ;
@@ -611,7 +612,6 @@ void type_recherche_entreprise()
             case '2':
                 option_inconnue = false ;
                 cout << "Veuillez saisir les compétences recherchées" << endl ;
-                //appel de la fonction de saisie des compétence dans une liste
                 listeComp = saisie_competence() ;
                 while(tmpC){
                     listeComp_string += tmpC->label()+" " ;
@@ -628,6 +628,7 @@ void type_recherche_entreprise()
                 } while (!valid_input);
 
                 cout << "Voici le résultat de la recherche :" << endl << endl;
+
                 //appel de la recherche selon les compétences et le code postal
                 Logs("ChercheurCompetence", listeComp_string+" | "+cp_chercheurs) ;
                 tmpP = ChercheursListe->ChercheurCompetenceCodePostal(listeComp, cp_chercheurs) ;
@@ -697,7 +698,7 @@ void recherche_poste_pers(Personne *current_user)
                 }
                 while (tmpE) {
                     cout << "-----------------------------------------------" << endl ;
-                    cout << "Nom de l'entreprise: " << tmpE->nom() << " | mail de l'entreprise : " << tmpE->mail() << " | code postal de l'entreprise : "  << tmpE->codePostal() << endl ;
+                    cout << "Titre du poste: " << tmpE->profilPoste()->Titre() << " | Nom de l'entreprise: " << tmpE->nom() << " | mail de l'entreprise : " << tmpE->mail() << " | code postal de l'entreprise : "  << tmpE->codePostal() << endl ;
                     tmpE = tmpE->next() ;
                 }
                 cout << "-----------------------------------------------" << endl ;
@@ -715,8 +716,8 @@ void recherche_poste_pers(Personne *current_user)
                 }
                 
                 while (tmpE) {
-                    cout << "-----------------------------------------------" << endl ;     //manque le titre du poste
-                    cout << "Nom de l'entreprise: " << tmpE->nom() << " | mail de l'entreprise : " << tmpE->mail() << " | code postal de l'entreprise : "  << tmpE->codePostal() << endl ;
+                    cout << "-----------------------------------------------" << endl ;   
+                    cout << "Titre du poste: " << tmpE->profilPoste()->Titre() << " | Nom de l'entreprise: " << tmpE->nom() << " | mail de l'entreprise : " << tmpE->mail() << " | code postal de l'entreprise : "  << tmpE->codePostal() << endl ;
                     tmpE = tmpE->next() ;
                 }
                 cout << "-----------------------------------------------" << endl ;
@@ -836,7 +837,18 @@ void recherche_collegue_pers(Personne *current_user)
                     cout << "-----------------------------------------------" << endl ;
                 }else {
                     cout << "Voici les anciens collègues employés dans les entreprises recherchant les compétences saisies :" << endl ;
-                    //appel de la recherche de poste par compétence et code postal
+                    resultat_recherche = current_user->ChercheurRechercheColleguesCompetence(comp_recherchees) ;
+                    tmpA = resultat_recherche ;
+                    if (!tmpA) {
+                        cout << "-----------------------------------------------" << endl ;
+                        cout << "Aucun résultat trouvé" << endl ;
+                    }
+                    while (tmpA) {
+                        cout << "-----------------------------------------------" << endl ;
+                        cout << "Nom : " << tmpA->currentA()->nom() << " | Prénom : " << tmpA->currentA()->prenom() << " | mail : " << tmpA->currentA()->mail() << endl;
+                        tmpA = tmpA->nextA() ;
+                    }
+                    cout << "-----------------------------------------------" << endl ;
                 }
                 break;
 
@@ -1096,8 +1108,7 @@ void connexion_entreprise()
 void menu_chercheur(Personne * utilisateur_chercheur)
 {
     char choix_action_chercheur ;
-    bool option_unknown = true , deleted_profil , transition_success , valid_input;
-    string nouv_entreprise ;
+    bool option_unknown = true , deleted_profil , transition_success ;
 
     system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
@@ -1125,17 +1136,7 @@ void menu_chercheur(Personne * utilisateur_chercheur)
 
             case '2':
                 option_unknown = false ;
-                do
-                {
-                    cout << "Veuillez indiquer votre nouvelle entreprise : " ;
-                    cin >> nouv_entreprise ;
-                    valid_input = saisie_valide(nouv_entreprise) ;
-                    if (!valid_input) {
-                        cout << "Nom d'entreprise invalide" << endl << endl ;
-                    } 
-                    
-                } while (!valid_input);
-                transition_success = menu_transition_pers(utilisateur_chercheur,nouv_entreprise) ; 
+                transition_success = menu_transition_pers(utilisateur_chercheur) ; 
                 break;
 
             case '3':
@@ -1150,7 +1151,6 @@ void menu_chercheur(Personne * utilisateur_chercheur)
             
             case '5':
                 option_unknown = false ;
-                //suppression du profil 
                 deleted_profil = menu_supp_profil(NULL, utilisateur_chercheur) ;
                 break;
             
@@ -1181,44 +1181,13 @@ void connexion_chercheur()
     Personne * current_user_chercheur = NULL;
     char choix_chercheur ;
     bool valid_input ;
-    string nom_chercheur , prenom_chercheur , cp_chercheur , mail_chercheur ;
+    string mail_chercheur ;
+    Personne * tmp ;
 
     system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
     cout << "* Menu chercheur d'emploi *" << endl ;
     cout << endl ;
-
-    do
-    {
-        cout << "Veuillez indiquer votre nom : " ;
-        cin >> nom_chercheur ;
-        valid_input = saisie_valide(nom_chercheur) ;
-        if (!valid_input) {
-            cout << "Nom invalide" << endl << endl ;
-        } 
-        
-    } while (!valid_input);
-
-    do
-    {
-        cout << "Veuillez indiquer votre prénom : " ;
-        cin >> prenom_chercheur ;
-        valid_input = saisie_valide(prenom_chercheur) ;
-        if (!valid_input) {
-            cout << "Prénom invalide" << endl << endl ;
-        } 
-        
-    } while (!valid_input);
-    
-    do
-    {
-        cout << "Veuillez indiquer votre code postal : " ; 
-        cin >> cp_chercheur ;
-        valid_input = cp_valide(cp_chercheur) ; 
-        if (!valid_input) {
-            cout << "Code postal invalide" << endl << endl ;
-        }
-    } while (!valid_input);
 
     do {
         cout << "Veuillez indiquer votre adresse mail : " ;
@@ -1229,7 +1198,12 @@ void connexion_chercheur()
         }
         
     } while (!valid_input);
-    //recherche dans la BDD du profil de l'utilisateur
+
+    current_user_chercheur = ChercheursListe ;
+    while (current_user_chercheur && mail_chercheur != current_user_chercheur->mail()) {
+        current_user_chercheur = current_user_chercheur->nextP() ;
+    }
+
     if (current_user_chercheur) {
         system("clear") ;
         Logs("connexion_chercheur", mail_chercheur) ;
@@ -1251,11 +1225,22 @@ void connexion_chercheur()
         } while (choix_chercheur != '1' && choix_chercheur != '2');
         
         if (choix_chercheur == '1') {
-            //appel de la fonction de création du profil
+            current_user_chercheur = saisie_personne(false) ;
+            tmp = ChercheursListe ;
+            if (tmp) {
+                while (tmp->nextP()) {
+                    tmp = tmp->nextP() ;
+                }
+                current_user_chercheur->modifIndex(tmp->index()+1) ;
+                tmp->modifNextP(current_user_chercheur) ;
+                current_user_chercheur->modifPreviousP(tmp) ;
+            }else {
+                ChercheursListe = current_user_chercheur ;   
+            }
+            ChercheursListe->MAJDBPersonne(false) ;
             system("clear") ;
             menu_chercheur(current_user_chercheur) ;   
         } else {
-            
             menu_principal() ;
         }
     }

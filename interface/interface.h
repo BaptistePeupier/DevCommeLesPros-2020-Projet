@@ -77,7 +77,7 @@ void recherche_poste_pers(Personne *current_user) ;
 void recherche_collegue_pers(Personne *current_user) ;
 
 //menu de transition de profil
-bool menu_transition_pers(Personne * current_user,string nouv_entreprise = "no entreprise here") ;
+bool menu_transition_pers(Personne * current_user) ;
 
 //affichage du menu correspondant au profil d'employé
 void menu_employe(Personne * utilisateur_employe) ;
