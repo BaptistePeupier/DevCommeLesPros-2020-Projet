@@ -105,6 +105,7 @@ bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur
             case 1:
                 
                 if (utilisateur) {
+                    //appel de la fonction de suppression du profil de personne
                     Logs("deleteProfile", utilisateur->mail()) ;
                     utilisateur->deleteProfile(&EmployesListe,&ChercheursListe) ;
                 } else if (utilisateur_entreprise) {
@@ -463,8 +464,8 @@ void modif_profil_pers(Personne *current_user)
                         }
                         
                     } while (!valid_input);
-                    Logs("modifEntreprise", tmp_ent->mail()) ;
                     current_user->modifEntreprise(tmp_ent) ;
+                    Logs("modifEntreprise", tmp_ent->mail()) ;
                 }
                 break;
 
@@ -525,8 +526,8 @@ bool menu_transition_pers(Personne * current_user)
                 
                 if (current_user) {
                     if ( current_user->EntrepriseActuelle()) {
-                        Logs("TransitionStatut", current_user->mail()) ;
                         current_user->TransitionStatut(&EmployesListe,&ChercheursListe) ;
+                        Logs("TransitionStatut", current_user->mail()) ;
                     } else {
                         do
                         {
@@ -630,6 +631,7 @@ void type_recherche_entreprise()
                 option_inconnue = false ;
                 cout << "Veuillez saisir les compétences recherchées" << endl ;
                 listeComp = saisie_competence() ;
+                tmpC = listeComp ;
                 while(tmpC){
                     listeComp_string += tmpC->label()+" " ;
                     tmpC = tmpC->next() ;
@@ -839,8 +841,8 @@ void recherche_collegue_pers(Personne *current_user)
                         comp_recherchees_string += tmpC->label()+" " ;
                         tmpC = tmpC->next() ;
                     }
-                    Logs("EmployeRechercheColleguesCompetence", current_user->mail()+" | Compétences : "+comp_recherchees_string) ;
                     resultat_recherche = current_user->EmployeRechercheColleguesCompetence(comp_recherchees) ;
+                    Logs("EmployeRechercheColleguesCompetence", current_user->mail()+" | Compétences : "+comp_recherchees_string) ;
                     tmpA = resultat_recherche ;
                     if (!tmpA) {
                         cout << "-----------------------------------------------" << endl ;
@@ -855,6 +857,7 @@ void recherche_collegue_pers(Personne *current_user)
                 }else {
                     cout << "Voici les anciens collègues employés dans les entreprises recherchant les compétences saisies :" << endl ;
                     resultat_recherche = current_user->ChercheurRechercheColleguesCompetence(comp_recherchees) ;
+                    Logs("ChercheurRechercheColleguesCompetence", current_user->mail()+" | Compétences : "+comp_recherchees_string) ;
                     tmpA = resultat_recherche ;
                     if (!tmpA) {
                         cout << "-----------------------------------------------" << endl ;
@@ -1255,6 +1258,7 @@ void connexion_chercheur()
                 ChercheursListe = current_user_chercheur ;   
             }
             ChercheursListe->MAJDBPersonne(false) ;
+            Logs("Créer Chercheur d'Emploi", current_user_chercheur->mail()) ;
             system("clear") ;
             menu_chercheur(current_user_chercheur) ;   
         } else {
@@ -1400,7 +1404,7 @@ void connexion_employe()
                 }
                 EmployesListe->MAJDBPersonne(true) ;
                 system("clear") ;
-                Logs("Créer Employe", mail_employe) ;
+                Logs("Créer Employe", current_user_employe->mail()) ;
                 menu_employe(current_user_employe) ; 
             } else {
                 cout << "Création de profil annulée retour au menu principal" << endl ;
