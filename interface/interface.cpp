@@ -34,7 +34,8 @@ void Logs(string fonction, string arguments)
 //fonction de vérification de l'addresse mail entrée
 bool email_valide(string email)
 {
-    if (regex_match(email, regex("([a-z]+)([_.a-z0-9]*)([a-z0-9]+)(@)([a-z]+)([.a-z]+)([a-z]+)"))) 
+    const regex pattern_mail("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+") ;
+    if (regex_match(email, pattern_mail)) 
         return true;
 
     return false;
@@ -104,10 +105,9 @@ bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur
             case 1:
                 
                 if (utilisateur) {
-                    //appel de la fonction de suppression du profil de personne
+                    Logs("deleteProfile", utilisateur->mail()) ;
                     utilisateur->deleteProfile(&EmployesListe,&ChercheursListe) ;
                 } else if (utilisateur_entreprise) {
-                    //appel de la fonction de suppression du profil d'entreprise
                     Logs("deleteProfileEntreprise", utilisateur_entreprise->mail()) ;
                     deleteProfileEntreprise(utilisateur_entreprise, &EntrepriseListe, &EmployesListe, &ChercheursListe) ;
                 }
@@ -189,7 +189,7 @@ Competence * saisie_competence()
 //fonction de saisie pour la création de profil
 Personne * saisie_personne(bool employe)
 {
-    string nom,prenom,cp,mail,entreprise_pers ;
+    string nom,prenom,cp,mail,entreprise_pers , choix_annulation ;
     bool valid_input ;
     Entreprise * tmp_ent ;
     Personne * resultat_saisie ;
@@ -249,14 +249,31 @@ Personne * saisie_personne(bool employe)
                     tmp_ent = tmp_ent->next() ;
                 }
                 if (!tmp_ent) {
-                    valid_input = false ;
-                    cout << "L'entreprise recherchée est introuvable" << endl << endl ; 
+                    
+                    cout << "L'entreprise recherchée est introuvable" << endl << endl ;
+                    cout << "Voulez vous rééssayer ?" << endl ;
+                    cout << "1.Oui" << endl ;
+                    cout << "2.Non" << endl ;
+                    cout << "Votre choix : " ;
+                    cin >> choix_annulation ;
+                    if (choix_annulation == "1") {
+                        valid_input = false ;
+                    } else if (choix_annulation == "2") {
+                        valid_input = true ;
+                    }
+                } else if(tmp_ent){
+                    valid_input = true ;
                 }
             }
         } while (!valid_input);
+
     }
     if (employe) {
-        resultat_saisie = new Personne(1,nom,prenom,mail,cp,NULL,NULL,NULL,NULL,tmp_ent) ;
+        if (tmp_ent) {
+             resultat_saisie = new Personne(1,nom,prenom,mail,cp,NULL,NULL,NULL,NULL,tmp_ent) ;
+        } else {
+            resultat_saisie = NULL ;
+        }
     } else {
         resultat_saisie = new Personne(1,nom,prenom,mail,cp) ;
     }
@@ -1111,7 +1128,7 @@ void menu_chercheur(Personne * utilisateur_chercheur)
     bool option_unknown = true , deleted_profil , transition_success ;
 
     system("clear") ;
-    cout << "Bienvenue dans LuminIn !" << endl << endl;
+    cout << "Bienvenue dans LuminIn " << utilisateur_chercheur->prenom() <<" " << utilisateur_chercheur->nom() << " !" << endl << endl;
     cout << "* Menu chercheur d'emploi *" << endl ;
     cout << endl ;
     
@@ -1253,7 +1270,7 @@ void menu_employe(Personne * utilisateur_employe)
     char choix_action_employe ;
     bool option_unknown = true , deleted_profil , transition_success;
 
-    cout << "Bienvenue dans LuminIn !" << endl << endl;
+     cout << "Bienvenue dans LuminIn " << utilisateur_employe->prenom() <<" " << utilisateur_employe->nom() << " !" << endl << endl;
     cout << "* Menu employé *" << endl ;
     cout << endl ;
     
@@ -1369,22 +1386,28 @@ void connexion_employe()
         
         if (choix_employe == '1') {
             current_user_employe = saisie_personne(1) ;
-            tmp = EmployesListe ;
-            if (tmp) {
-                while (tmp->nextP()) {
-                    tmp = tmp->nextP() ;
+            if (current_user_employe) {
+                tmp = EmployesListe ;
+                if (tmp) {
+                    while (tmp->nextP()) {
+                        tmp = tmp->nextP() ;
+                    }
+                    current_user_employe->modifIndex(tmp->index()+1) ;
+                    tmp->modifNextP(current_user_employe) ;
+                    current_user_employe->modifPreviousP(tmp) ;
+                }else {
+                    EmployesListe = current_user_employe ;   
                 }
-                current_user_employe->modifIndex(tmp->index()+1) ;
-                tmp->modifNextP(current_user_employe) ;
-                current_user_employe->modifPreviousP(tmp) ;
-            }else {
-                EmployesListe = current_user_employe ;   
-            }
-            EmployesListe->MAJDBPersonne(true) ;
-            system("clear") ;
-            Logs("Créer Employe", mail_employe) ;
-            menu_employe(current_user_employe) ; 
-            
+                EmployesListe->MAJDBPersonne(true) ;
+                system("clear") ;
+                Logs("Créer Employe", mail_employe) ;
+                menu_employe(current_user_employe) ; 
+            } else {
+                cout << "Création de profil annulée retour au menu principal" << endl ;
+                continuer() ;
+                system("clear") ;
+                menu_principal() ;
+            }  
         } else {
             system("clear") ;
             menu_principal() ;
