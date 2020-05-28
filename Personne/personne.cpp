@@ -11,7 +11,7 @@
 // Polytech Marseille, informatique 3A                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-string Personne::_DBE = "test/FichiersDeTests/employes.csv" ;
+string Personne::_DBEmp = "test/FichiersDeTests/employes.csv" ;
 string Personne::_DBC = "test/FichiersDeTests/chercheurEmploi.csv" ;
 
 
@@ -54,8 +54,21 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
                     tmpA = tmpA->nextA() ;
                 }
                 if(!inList && tmpP!=this){
-                    ListAncienCollegues()->addAncienCollegue(tmpP, this) ;
-                    tmpP->ListAncienCollegues()->addAncienCollegue(this, tmpP) ;
+                    if(ListAncienCollegues()){
+                        ListAncienCollegues()->addAncienCollegue(tmpP, this) ;
+                        if(tmpP->ListAncienCollegues()){
+                            tmpP->ListAncienCollegues()->addAncienCollegue(this, tmpP) ;
+                        }else{      // Si c'est le premier collègue de tmpP
+                            tmpP->modifAncienCollegues(new AncienCollegue(this)) ;
+                        }
+                    }else{          // Si c'est le premier collègue de this
+                        modifAncienCollegues(new AncienCollegue(tmpP)) ;
+                        if(tmpP->ListAncienCollegues()){
+                            tmpP->ListAncienCollegues()->addAncienCollegue(this, tmpP) ;
+                        }else{      // Si c'est le premier collègue de tmpP
+                            tmpP->modifAncienCollegues(new AncienCollegue(this)) ;
+                        }
+                    }
                 }
             }
             tmpP = tmpP->nextP() ;

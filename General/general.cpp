@@ -68,7 +68,7 @@ Entreprise * CreerListeEntreprise(string DBEnt, string DBP)
                 tmp->modifProfilPoste(NewPoste) ;
             }
         }
-        fclose(db_poste);
+        fclose(db_poste) ;
     }else{
         cout << "Erreur d'ouverture de la base de donnée des postes" << endl ;
     }
@@ -126,7 +126,7 @@ Personne * CreerListeEmploye(Entreprise * ListeEntreprise, string DBEmp)
 }
 
 // Construit la liste des Chercheurs d'emploi à partir d'une base de donnée (chercheurEmplois)
-Personne * CreerListeChercheurEmploi(string DBEmp)
+Personne * CreerListeChercheurEmploi(string DBC)
 {
     Personne * ListeChercheurEmploi = NULL, * tmp = NULL ;
     int tmpindex ;
@@ -136,7 +136,7 @@ Personne * CreerListeChercheurEmploi(string DBEmp)
     char tmpcodePostal[128] ;
     char tmpcompetence[128] ;
 
-    FILE *db_chercheur_emploi = fopen(DBEmp.c_str(), "r") ;
+    FILE *db_chercheur_emploi = fopen(DBC.c_str(), "r") ;
     if(db_chercheur_emploi){
         fscanf(db_chercheur_emploi, "%*s") ;
         // id,nom,prenom,mail,code_postal,competences,collegues_employes,collegues_chercheur_d'emploi
@@ -177,15 +177,16 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
     AncienCollegue * tmpA ;
     char tmpIndexCollegue[128] ;
     int indexCollegue ;
-
     FILE *db_employe = fopen(DBEmp.c_str(), "r") ;
     FILE *db_chercheur_emploi = fopen(DBC.c_str(), "r") ;
+
     if(db_employe && db_chercheur_emploi){
         fscanf(db_employe, "%*s") ;
         // id,nom,prenom,mail,code_postal,entreprise,competences,collegues_employes,collegues_chercheur_d'emploi
         tmp = ListeEmploye ;
         while(tmp){
-            fscanf(db_employe, "%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],") ;
+            fscanf(db_employe, "%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,]") ;
+            fscanf(db_employe, ",") ;
             // Recherche des collegues employes
             while(fscanf(db_employe, "%127[^;,];", tmpIndexCollegue) == 1){
                 indexCollegue = atoi(tmpIndexCollegue) ;
@@ -230,7 +231,8 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
         // id,nom,prenom,mail,code_postal,competences,collegues_employes,collegues_chercheur_d'emploi
         tmp = ListeChercheurEmploi ;
         while(tmp){
-            fscanf(db_chercheur_emploi, "%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],") ;
+            fscanf(db_chercheur_emploi, "%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,]") ;
+            fscanf(db_chercheur_emploi, ",") ;
             // Recherche des collegues employes
             while(fscanf(db_chercheur_emploi, "%127[^;,];", tmpIndexCollegue) == 1){
                 indexCollegue = atoi(tmpIndexCollegue) ;
@@ -282,9 +284,9 @@ void InitAnciensCollegues(Personne * ListeEmploye, Personne * ListeChercheurEmpl
 // Créer les listes et fait les liens avec les entreprises et ancien collègues
 void Creer_listes(Entreprise ** ListeEntreprise, Personne ** ListeEmploye, Personne ** ListeChercheurEmploi, string DBEnt, string DBP, string DBEmp, string DBC)
 {
-    (*ListeEntreprise)->modifDBE(DBEnt) ;
+    (*ListeEntreprise)->modifDBEnt(DBEnt) ;
     (*ListeEntreprise)->modifDBP(DBP) ;
-    (*ListeEmploye)->modifDBE(DBEmp) ;
+    (*ListeEmploye)->modifDBEmp(DBEmp) ;
     (*ListeEmploye)->modifDBC(DBC) ;
     *ListeEntreprise = CreerListeEntreprise(DBEnt, DBP) ;
     *ListeEmploye = CreerListeEmploye(*ListeEntreprise, DBEmp) ;
