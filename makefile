@@ -47,7 +47,8 @@ main.o: main.cpp tests.o interface.o | build
 
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
-all: libGeneral.a main.o
+# On lance également une restoration des DB de tests (sécurité)
+all: RestoreDB libGeneral.a main.o
 	${CC} build/main.o build/tests.o build/interface.o -Lbuild/ -lEntreprise -lPersonne -lGeneral -o build/LuminIn
 
 # Lance l'application.
@@ -60,4 +61,3 @@ RestoreDB:
 	cp test/db_backup/employes.csv test/FichiersDeTests/employes.csv
 	cp test/db_backup/entreprise.csv test/FichiersDeTests/entreprise.csv
 	cp test/db_backup/poste.csv test/FichiersDeTests/poste.csv
-
