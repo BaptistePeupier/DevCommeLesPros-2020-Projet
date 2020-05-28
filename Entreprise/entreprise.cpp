@@ -116,13 +116,15 @@ void Entreprise::dellPoste(const string TitrePoste)
     
     tmp = _profilPoste ;
     while(tmp && tmp->Titre()!=TitrePoste) tmp = tmp->next() ;
-    if(tmp->next()) tmp->next()->modifPrevious(tmp->previous()) ;
-    if(tmp->previous()) tmp->previous()->modifNext(tmp->next()) ;
-    if(tmp == _profilPoste) _profilPoste = _profilPoste->next() ;
-    tmp->modifNext(nullptr) ;
-    tmp->modifPrevious(nullptr) ;
-    delete tmp ;
-    MAJDBEntreprise() ;
+    if (tmp){                                                           // Si on a trouvé le poste, sinon rien à faire
+        if(tmp->next()) tmp->next()->modifPrevious(tmp->previous()) ;
+        if(tmp->previous()) tmp->previous()->modifNext(tmp->next()) ;
+        if(tmp == _profilPoste) _profilPoste = _profilPoste->next() ;
+        tmp->modifNext(nullptr) ;
+        tmp->modifPrevious(nullptr) ;
+        delete tmp ;
+        MAJDBEntreprise() ;
+    }
 
     return ;
 }

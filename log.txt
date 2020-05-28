@@ -2,3 +2,29 @@
 [2020-05-27 19:55:19.000] ChercheurCompetence appelée avec 'C ' comme paramètre.
 [2020-05-27 19:56:28.000] Créer Employe appelée avec 'baptiste.peupier@mail.com' comme paramètre.
 [2020-05-27 19:57:45.000] addAncienCollegue appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-28 10:32:38.000] Créer Chercheur d'Emploi appelée avec 'OV@mail.com' comme paramètre.
+[2020-05-28 10:32:59.000] AddCompetence appelée avec 'Discours' comme paramètre.
+[2020-05-28 10:33:10.000] AddCompetence appelée avec 'Calcul' comme paramètre.
+[2020-05-28 10:33:30.000] RecherchePosteCompetence appelée avec 'OV@mail.com' comme paramètre.
+[2020-05-28 10:33:40.000] AddCompetence appelée avec 'C' comme paramètre.
+[2020-05-28 10:33:44.000] AddCompetence appelée avec 'HP' comme paramètre.
+[2020-05-28 10:33:50.000] RecherchePosteCompetence appelée avec 'OV@mail.com' comme paramètre.
+[2020-05-28 10:34:15.000] addEntreprise appelée avec 'google@mail.com' comme paramètre.
+[2020-05-28 10:37:34.000] connexion_entreprise appelée avec 'google@mail.com' comme paramètre.
+[2020-05-28 10:40:47.000] connexion_entreprise appelée avec 'google@mail.com' comme paramètre.
+[2020-05-28 10:40:51.000] dellPoste appelée avec 'Programmeur' comme paramètre.
+[2020-05-28 10:40:59.000] addPoste appelée avec 'Programmeur' comme paramètre.
+[2020-05-28 10:41:26.000] connexion_chercheur appelée avec 'OV@mail.com' comme paramètre.
+[2020-05-28 10:41:33.000] RecherchePosteCompetence appelée avec 'OV@mail.com' comme paramètre.
+[2020-05-28 10:41:39.000] AddCompetence appelée avec 'C++' comme paramètre.
+[2020-05-28 10:41:46.000] RecherchePosteCompetence appelée avec 'OV@mail.com' comme paramètre.
+[2020-05-28 10:42:58.000] connexion_chercheur appelée avec 'OV@mail.com' comme paramètre.
+[2020-05-28 10:43:21.000] AddCompetence appelée avec 'PHP' comme paramètre.
+[2020-05-28 10:43:27.000] AddCompetence appelée avec 'iscours' comme paramètre.
+[2020-05-28 10:43:36.000] AddCompetence appelée avec 'alcul' comme paramètre.
+[2020-05-28 10:43:46.000] connexion_entreprise appelée avec 'google@mail.com' comme paramètre.
+[2020-05-28 10:44:29.000] addPoste appelée avec 'Test' comme paramètre.
+[2020-05-28 10:44:47.000] dellPoste appelée avec 'Programmeur' comme paramètre.
+[2020-05-28 10:44:52.000] addPoste appelée avec 'Programmeur' comme paramètre.
+[2020-05-28 10:46:33.000] connexion_chercheur appelée avec 'OV@mail.com' comme paramètre.
+[2020-05-28 10:46:35.000] RecherchePosteCompetence appelée avec 'OV@mail.com' comme paramètre.
