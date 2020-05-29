@@ -21,9 +21,9 @@ int main()
     int code ;
 
     system("clear") ;
-    cout << "Bienvenue dans LuminIn !" << endl << "(Tapez 0 pour lancer le programme de tests, n'importe quelle autre touche sinon.)" << endl ;
-    // cin >> code ;
-    code = 0 ;          // On n'exécute que les tests pour l'instant
+    cout << "Bienvenue dans LuminIn !" << endl ;    //<< "(Tapez 0 pour lancer le programme de tests, n'importe quelle autre touche sinon.)" << endl ;
+    // code = 0 ;           // On n'exécute que les tests
+    code = 1 ;              // On n'exécute que l'application
     if(code == 0){
         code = tests() ;
         if(code != 0) cout << "Echec du programme de test" << endl ;

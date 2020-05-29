@@ -244,7 +244,7 @@ int tests(void)
     TEST_MAJ_DB("test/FichiersDeTests/chercheurEmploi.csv", "test/db_tests_expected/chercheurEmploi.csv") ;
 
 // Fin des tests
-    cout << endl << "Appel des destructeurs :" << endl ;
+    // cout << endl << "Appel des destructeurs :" << endl ;
     delete ListeEntreprise ;
     delete ListeEmploye ;
     delete ListeChercheurEmploi ;

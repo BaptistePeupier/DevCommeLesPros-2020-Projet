@@ -1627,6 +1627,7 @@ void menu_principal(void)
     do
     {
         cout << "Votre choix ('q' pour quitter) : " ;
+        cin.clear() ;
         cin >> noskipws >> choix ;
         cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin au cas où l'utilisateur a mis une chaîne de caractères le premier caractère reste dans la variable de choix
         switch (choix)

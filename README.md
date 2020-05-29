@@ -1,6 +1,7 @@
 ![](https://github.com/BaptistePeupier/DevCommeLesPros-2020-Projet/workflows/Test%20master/badge.svg)
 
 # Bonjour et bienvenue dans LunminIn !
+Pour lancer l'application entrez la commande : "./build/LuminIn"
 Cette application a pour but de rapprocher les entreprises, les employés et les chercheurs d'emplois pour vous aider dans vos démarches professionnelles.
 Ce manuel vous aidera à naviguer dans notre application.
 
