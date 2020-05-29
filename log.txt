@@ -109,3 +109,16 @@
 [2020-05-29 15:18:01.000] deleteProfileEntreprise appelée avec 'babylone@mail.tot' comme paramètre.
 [2020-05-29 15:28:29.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.
 [2020-05-29 15:28:31.000] deleteProfileEntreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 15:32:12.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 15:32:31.000] connexion_employe appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 15:35:00.000] connexion_employe appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 15:35:02.000] TransitionStatut appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 15:35:08.000] connexion_chercheur appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 15:35:17.000] TransitionStatut appelée avec 'mail@gmail.com->babylone@mail.tot' comme paramètre.
+[2020-05-29 15:35:55.000] connexion_chercheur appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 15:36:36.000] connexion_chercheur appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 15:36:45.000] TransitionStatut appelée avec 'mail@gmail.com->babylone@mail.tot' comme paramètre.
+[2020-05-29 15:37:32.000] connexion_chercheur appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 15:37:38.000] TransitionStatut appelée avec 'mail@gmail.com->babylone@mail.tot' comme paramètre.
+[2020-05-29 15:38:59.000] connexion_chercheur appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 15:39:05.000] TransitionStatut appelée avec 'mail@gmail.com->babylone@mail.tot' comme paramètre.

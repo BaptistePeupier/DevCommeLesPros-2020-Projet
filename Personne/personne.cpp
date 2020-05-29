@@ -122,21 +122,6 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
         (*ListeChercheurEmploi)->MAJDBPersonne(false) ;
 
     }else if(NewEntreprise && !_EntrepriseActuelle){                    // Chercheur d'emploi vers employe
-        // _EntrepriseActuelle = NewEntreprise ;
-        // tmpP = *ListeEmploye ;
-        // while(tmpP->nextP()) tmpP = tmpP->nextP() ;
-        // if(_nextP) _nextP->modifPreviousP(_previousP) ;
-        // if(_previousP) _previousP->modifNextP(_nextP) ;
-        // _index = tmpP->index()+1 ;
-        // // Modification du chaînage
-        // if(*ListeChercheurEmploi == this){
-        //     *ListeChercheurEmploi = (*ListeChercheurEmploi)->nextP() ;
-        //     (*ListeChercheurEmploi)->_previousP = NULL ;
-        // }else{
-        //     if(_nextP) _nextP->modifPreviousP(_previousP) ;
-        //     if(_previousP) _previousP->modifNextP(_nextP) ;
-        // }
-
         // Ajout de la personne à la liste d'employé
         _EntrepriseActuelle = NewEntreprise ;
         tmpP = *ListeEmploye ;
@@ -174,12 +159,6 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
             _previousP = NULL ;
             _index = 1 ;
         }
-
-
-
-        _nextP = NULL ;
-        _previousP = tmpP ;
-        tmpP->modifNextP(this) ;
         // Modification des index
         tmpP = *ListeChercheurEmploi ;
         tmpIndex = 1 ;
