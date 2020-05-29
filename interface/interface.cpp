@@ -289,7 +289,7 @@ void modif_profil_pers(Personne *current_user)
     string new_skill , nouv_cp , nouv_entreprise , ancien_collegue_mail ;
     Personne * nouv_collegue = NULL;
     Competence * tmp_skill_pers ;
-    AncienCollegue * nouveau_collegue ;
+    AncienCollegue * nouveau_collegue, *tmpA ;
     Entreprise * tmp_ent ;
 
     system("clear") ;
@@ -381,6 +381,14 @@ void modif_profil_pers(Personne *current_user)
                         if (ancien_collegue_mail == current_user->mail()) {
                             valid_input = false ;
                             cout << "Vous ne pouvez pas vous ajouter à votre liste d'anciens collègues" << endl ;
+                        }
+                        tmpA = current_user->ListAncienCollegues() ;
+                        while(tmpA && valid_input){
+                            if (tmpA->currentA()->mail() == ancien_collegue_mail){
+                                cout << "Cette personne est déjà dans votre liste d'anciens collègues" << endl ;
+                                valid_input = false ;
+                            }
+                            tmpA = tmpA->nextA() ;
                         }
                         
                     } while (!valid_input);
@@ -812,7 +820,7 @@ void recherche_collegue_pers(Personne *current_user)
         if (current_user->EntrepriseActuelle()) {
             cout << "2. Rechercher les anciens collègues disposant de certaines compétences" << endl ;
         }else {
-            cout << "2. Rechercher les anciens collègues employés dans les entreprises recherchant certaines compétences" << endl ;
+            cout << "2. Rechercher les anciens collègues employés dans les entreprises recherchant vos compétences" << endl ;
         }
         cout << endl ;
         cout << "Votre choix ('q' pour revenir en arrière) : ";
@@ -858,8 +866,8 @@ void recherche_collegue_pers(Personne *current_user)
 
             case '2':
                 option_inconnue = false ;
-                comp_recherchees = saisie_competence() ;
                 if (current_user->EntrepriseActuelle()) {
+                    comp_recherchees = saisie_competence() ;
                     cout << "Voici les anciens collègues disposant des compétences recherchées :" << endl ;
                     tmpC = comp_recherchees ;
                     while(tmpC){
@@ -880,8 +888,13 @@ void recherche_collegue_pers(Personne *current_user)
                     }
                     cout << "-----------------------------------------------" << endl ;
                 }else {
-                    cout << "Voici les anciens collègues employés dans les entreprises recherchant les compétences saisies :" << endl ;
-                    resultat_recherche = current_user->ChercheurRechercheColleguesCompetence(comp_recherchees) ;
+                    cout << "Voici les anciens collègues employés dans les entreprises recherchant vos compétences :" << endl ;
+                    tmpC = current_user->CompetencePropres() ;
+                    while(tmpC){
+                        comp_recherchees_string += tmpC->label()+" " ;
+                        tmpC = tmpC->next() ;
+                    }
+                    resultat_recherche = current_user->ChercheurRechercheColleguesCompetence(current_user->CompetencePropres()) ;
                     Logs("ChercheurRechercheColleguesCompetence", current_user->mail()+" | Compétences : "+comp_recherchees_string) ;
                     tmpA = resultat_recherche ;
                     if (!tmpA) {
