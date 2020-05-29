@@ -590,6 +590,7 @@ void type_recherche_entreprise(Entreprise  * utilisateur_entreprise)
     Competence *listeComp, *tmpC ;
     Personne *tmpP ;
     string listeComp_string, titre_poste ;
+    string ans ;
     Poste *tmpPoste ;
 
     system("clear") ;
@@ -618,27 +619,44 @@ void type_recherche_entreprise(Entreprise  * utilisateur_entreprise)
                     if (!valid_input) {
                         cout << "Titre invalide" << endl << endl ;
                     }
-                } while (!valid_input);
-                tmpPoste = utilisateur_entreprise->profilPoste() ;
-                find = false ;
-                while(tmpPoste && !find){
-                    if(tmpPoste->Titre() == titre_poste){
-                        listeComp = tmpPoste->CompetencesRequises() ;
-                        find = true ;
+                    else{
+                        tmpPoste = utilisateur_entreprise->profilPoste() ;
+                        find = false ;
+                        while(tmpPoste && !find){
+                            if(tmpPoste->Titre() == titre_poste){
+                                listeComp = tmpPoste->CompetencesRequises() ;
+                                find = true ;
+                            }
+                            tmpPoste = tmpPoste->next() ;
+                        }
+                        if(!find){
+                            cout << "Poste introuvable, recherche annulée" << endl ;
+                            cout << "Voulez-vous réessayer ?" << endl << "1.Oui" << endl << "2.non" << endl ;
+                            // ans.clear() ;
+                            // getline(cin, ans) ;
+                            cin >> ans ;
+                            if(ans == "1") valid_input = false ;
+                            else if (ans == "2") ;
+                            else{
+                                cout << "Option inconnue, retour au menu" << endl ;
+                                ans.clear() ;
+                                continuer() ;
+                                system("clear") ;
+                            }
+                        }
                     }
-                    tmpPoste = tmpPoste->next() ;
-                }
-                if(!find) cout << "Poste introuvable, recherche annulée" << endl ;
-                else{
+                } while (!valid_input);
+
+                if(find){
                     tmpC = listeComp ;
                     while(tmpC){
                         listeComp_string += tmpC->label()+" " ;
                         tmpC = tmpC->next() ;
                     }
-
                     cout << "Voici le résultat de la recherche :" << endl << endl;
                     //appel de la recherche selon les compétences
-                    tmpP = ChercheursListe->ChercheurCompetence(listeComp) ;
+                    if (listeComp) tmpP = ChercheursListe->ChercheurCompetence(listeComp) ;
+                    else tmpP = NULL ;
                     Logs("ChercheurCompetence", titre_poste+" : "+listeComp_string) ;
                     if (!tmpP) {
                         cout << "-----------------------------------------------" << endl ;
