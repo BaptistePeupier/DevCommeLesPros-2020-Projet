@@ -122,3 +122,7 @@
 [2020-05-29 15:37:38.000] TransitionStatut appelée avec 'mail@gmail.com->babylone@mail.tot' comme paramètre.
 [2020-05-29 15:38:59.000] connexion_chercheur appelée avec 'mail@gmail.com' comme paramètre.
 [2020-05-29 15:39:05.000] TransitionStatut appelée avec 'mail@gmail.com->babylone@mail.tot' comme paramètre.
+[2020-05-29 15:43:51.000] connexion_employe appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 15:43:56.000] TransitionStatut appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 15:47:57.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 15:50:31.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.

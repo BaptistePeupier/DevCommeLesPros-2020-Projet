@@ -19,7 +19,7 @@ string Personne::_DBC = "test/FichiersDeTests/chercheurEmploi.csv" ;
 // Détruit la liste de Personne
 Personne::~Personne(void)
 {
-    cout << "Destructeur Personne" << endl ;
+    // cout << "Destructeur Personne" << endl ;
     if(_CompetencesPropres) delete _CompetencesPropres ;
     if(_ListAncienCollegues) delete _ListAncienCollegues ;
     if(_nextP) delete _nextP ;
@@ -727,7 +727,7 @@ Personne* Personne::ChercheurCompetenceCodePostal (Competence * listeComp ,const
 // Le destructeur
 AncienCollegue::~AncienCollegue(void)
 {
-    cout << "Destructeur AncienCollegue" << endl ;
+    // cout << "Destructeur AncienCollegue" << endl ;
     if(_nextA) delete _nextA ;
     _nextA = _previousA = nullptr ;
     _currentA = nullptr ;

@@ -1,2 +1,4 @@
 id,nom,prenom,mail,code_postal,entreprise,competences,collegues_employes,collegues_chercheur_d'emploi
-1,onsepatro,mr,mail@gmail.com,69420,1,C++;PHP,,
+1,onsepatro,mr,mail@gmail.com,69420,1,C++;PHP,2,6
+2,Hasarus,Magnatis,MH@mail.com,2002,1,Eau;Feu;Air;Terre;Energie,3,6
+3,Peupier,Baptiste,baptiste.peupier@mail.com,13013,1,LUA;C++;C;Python,1;2,6

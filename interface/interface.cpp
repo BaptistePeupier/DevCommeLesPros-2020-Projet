@@ -22,7 +22,7 @@ void Logs(string fonction, string arguments)
     char time_s[100] ;
     time_t now = time(0) ;
 
-    FILE * FichierLogs = fopen("log.txt", "a") ;
+    FILE * FichierLogs = fopen("logs.log", "a") ;
     strftime(time_s, 100, "%Y-%m-%d %H:%M:%S.000", localtime(&now)) ;
     if(arguments == "none") fprintf(FichierLogs, "[%s] %s appelée.\n", time_s, fonction.c_str()) ;
     else fprintf(FichierLogs, "[%s] %s appelée avec '%s' comme paramètre.\n", time_s, fonction.c_str(), arguments.c_str()) ;
