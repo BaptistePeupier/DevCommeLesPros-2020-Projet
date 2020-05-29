@@ -17,7 +17,7 @@ string Entreprise::_DBP = "test/FichiersDeTests/poste.csv" ;
 // Le destructeur
 Entreprise::~Entreprise(void)
 {
-    cout << "Destructeur Entreprise" << endl ;
+    // cout << "Destructeur Entreprise" << endl ;
     if(_profilPoste) delete _profilPoste ;
     if(_next) delete _next ;
     _profilPoste = nullptr ;
@@ -145,7 +145,7 @@ void Entreprise::dellPoste(const string TitrePoste)
 // Détruit seulement le Poste "this"
 Poste::~Poste(void)
 {
-    cout << "Destructeur Poste" << endl ;
+    // cout << "Destructeur Poste" << endl ;
     if (_CompetencesRequises) delete _CompetencesRequises ;
     if (_next) delete _next ;
     _CompetencesRequises = nullptr ;
@@ -170,7 +170,7 @@ Poste::~Poste(void)
 // Détruit la liste de compétence
 Competence::~Competence(void)
 {
-    cout << "Destructeur Competence" << endl ;
+    // cout << "Destructeur Competence" << endl ;
     if(_next) delete _next ;
     _next = _previous = nullptr ;
 

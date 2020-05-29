@@ -19,7 +19,7 @@ string Personne::_DBC = "test/FichiersDeTests/chercheurEmploi.csv" ;
 // Détruit la liste de Personne
 Personne::~Personne(void)
 {
-    cout << "Destructeur Personne" << endl ;
+    // cout << "Destructeur Personne" << endl ;
     if(_CompetencesPropres) delete _CompetencesPropres ;
     if(_ListAncienCollegues) delete _ListAncienCollegues ;
     if(_nextP) delete _nextP ;
@@ -80,7 +80,9 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
             while(tmpP->nextP()) tmpP = tmpP->nextP() ;
             _index = tmpP->index()+1 ;
             // Modification du chaînage
-            if(*ListeEmploye == this){
+            if(*ListeEmploye == this && !_nextP && !_previousP){
+                *ListeEmploye = NULL ;
+            }else if(*ListeEmploye == this){
                 *ListeEmploye = (*ListeEmploye)->nextP() ;
                 (*ListeEmploye)->_previousP = NULL ;
             }else{
@@ -93,8 +95,7 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
             tmpP->modifNextP(this) ;
         } else {
              // Modification du chaînage
-            if (*ListeEmploye == this && !_nextP && !_previousP)
-            {
+            if (*ListeEmploye == this && !_nextP && !_previousP){
                 *ListeEmploye = NULL ;
             } else if(*ListeEmploye == this){
                 *ListeEmploye = (*ListeEmploye)->nextP() ;
@@ -124,22 +125,40 @@ void Personne::TransitionStatut(Personne ** ListeEmploye, Personne ** ListeCherc
         // Ajout de la personne à la liste d'employé
         _EntrepriseActuelle = NewEntreprise ;
         tmpP = *ListeEmploye ;
-        while(tmpP->nextP()) tmpP = tmpP->nextP() ;
-        if(_nextP) _nextP->modifPreviousP(_previousP) ;
-        if(_previousP) _previousP->modifNextP(_nextP) ;
-        _index = tmpP->index()+1 ;
-        // Modification du chaînage
-        if(*ListeChercheurEmploi == this){
-            *ListeChercheurEmploi = (*ListeChercheurEmploi)->nextP() ;
-            (*ListeChercheurEmploi)->_previousP = NULL ;
-        }else{
-            if(_nextP) _nextP->modifPreviousP(_previousP) ;
-            if(_previousP) _previousP->modifNextP(_nextP) ;
+        if (tmpP) {
+            while(tmpP->nextP()) tmpP = tmpP->nextP() ;
+            _index = tmpP->index()+1 ;
+            // Modification du chaînage
+            if(*ListeChercheurEmploi == this && !_nextP && !_previousP){
+                *ListeChercheurEmploi = NULL ;
+            }else if(*ListeChercheurEmploi == this){
+                *ListeChercheurEmploi = (*ListeChercheurEmploi)->nextP() ;
+                (*ListeChercheurEmploi)->_previousP = NULL ;
+            }else{
+                if(_nextP) _nextP->modifPreviousP(_previousP) ;
+                if(_previousP) _previousP->modifNextP(_nextP) ;
 
+            }
+            _nextP = NULL ;
+            _previousP = tmpP ;
+            tmpP->modifNextP(this) ;
+        } else {
+             // Modification du chaînage
+            if (*ListeChercheurEmploi == this && !_nextP && !_previousP){
+                *ListeChercheurEmploi = NULL ;
+            } else if(*ListeChercheurEmploi == this){
+                *ListeChercheurEmploi = (*ListeChercheurEmploi)->nextP() ;
+                (*ListeChercheurEmploi)->_previousP = NULL ;
+            }else{
+                if(_nextP) _nextP->modifPreviousP(_previousP) ;
+                if(_previousP) _previousP->modifNextP(_nextP) ;
+
+            }
+            *ListeEmploye = this ; //si la  liste des chercheurs d'emploi est vide 
+            _nextP = NULL ;
+            _previousP = NULL ;
+            _index = 1 ;
         }
-        _nextP = NULL ;
-        _previousP = tmpP ;
-        tmpP->modifNextP(this) ;
         // Modification des index
         tmpP = *ListeChercheurEmploi ;
         tmpIndex = 1 ;
@@ -708,7 +727,7 @@ Personne* Personne::ChercheurCompetenceCodePostal (Competence * listeComp ,const
 // Le destructeur
 AncienCollegue::~AncienCollegue(void)
 {
-    cout << "Destructeur AncienCollegue" << endl ;
+    // cout << "Destructeur AncienCollegue" << endl ;
     if(_nextA) delete _nextA ;
     _nextA = _previousA = nullptr ;
     _currentA = nullptr ;

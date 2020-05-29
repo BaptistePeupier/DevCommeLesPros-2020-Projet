@@ -39,8 +39,11 @@ bool saisie_valide(string saisie) ;
 //fonction demandant à l'utilisateur de continuer en appuyant sur une touche
 void continuer() ;
 
+//lancement de l'interface pour éviter les mises à jour de BDD inutiles
+int lancement_interface() ;
+
 //affichage du menu principal
-int menu_principal(void) ;
+void menu_principal(void) ;
 
 //connexion des employés
 void connexion_employe() ;
@@ -55,7 +58,7 @@ void connexion_entreprise() ;
 void menu_entreprise(Entreprise * utilisateur_entreprise) ;
 
 //menu permettant de sélectionner le type de recherche parmis les chercheurs d'emploi
-void type_recherche_entreprise() ;
+void type_recherche_entreprise(Entreprise * utilisateur_entreprise) ;
 
 //menu confirmation suppression de profil
 bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur) ;
