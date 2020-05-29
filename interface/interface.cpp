@@ -575,14 +575,14 @@ bool menu_transition_pers(Personne * current_user)
 }
 
 //menu permettant de sélectionner le type de recherche parmis les chercheurs d'emploi
-void type_recherche_entreprise()
+void type_recherche_entreprise(Entreprise  * utilisateur_entreprise)
 {
     char choix_type ;
-    bool option_inconnue = true , valid_input;
-    string cp_chercheurs ;
+    bool option_inconnue = true , valid_input, find ;
     Competence *listeComp, *tmpC ;
     Personne *tmpP ;
-    string listeComp_string ;
+    string listeComp_string, titre_poste ;
+    Poste *tmpPoste ;
 
     system("clear") ;
     cout << "Bienvenue dans LuminIn !" << endl << endl;
@@ -592,8 +592,8 @@ void type_recherche_entreprise()
     while (option_inconnue)
     {
         cout << "Vous voulez :" << endl ;
-        cout << "1.Effectuer une recherche des chercheurs d'emploi selon des compétences" << endl ;
-        cout << "2.Effectuer une recherche des chercheurs d'emploi selon des compétences et un code postal" << endl ;
+        cout << "1.Effectuer une recherche des chercheurs d'emploi selon des compétences pour un poste" << endl ;
+        cout << "2.Effectuer une recherche des chercheurs d'emploi selon des compétences pour un poste et un code postal (celui votre entreprise)" << endl ;
         cout << endl ;
         cout << "Votre choix ('q' pour revenir en arrière) : ";
         cin >> choix_type ;
@@ -603,66 +603,89 @@ void type_recherche_entreprise()
         {
             case '1':
                 option_inconnue = false ;
-                cout << "Veuillez saisir les compétences recherchées" << endl ;
-                listeComp = saisie_competence() ;
-                tmpC = listeComp ;
-                while(tmpC){
-                    listeComp_string += tmpC->label()+" " ;
-                    tmpC = tmpC->next() ;
+                do {
+                    cout << "Veuillez saisir le titre du poste à pourvoir" << endl ;
+                    cin >> titre_poste ;
+                    valid_input = saisie_valide(titre_poste) ;
+                    if (!valid_input) {
+                        cout << "Titre invalide" << endl << endl ;
+                    }
+                } while (!valid_input);
+                tmpPoste = utilisateur_entreprise->profilPoste() ;
+                find = false ;
+                while(tmpPoste && !find){
+                    if(tmpPoste->Titre() == titre_poste){
+                        listeComp = tmpPoste->CompetencesRequises() ;
+                        find = true ;
+                    }
+                    tmpPoste = tmpPoste->next() ;
                 }
+                if(!find) cout << "Poste introuvable, recherche annulée" << endl ;
+                else{
+                    tmpC = listeComp ;
+                    while(tmpC){
+                        listeComp_string += tmpC->label()+" " ;
+                        tmpC = tmpC->next() ;
+                    }
 
-                cout << "Voici le résultat de la recherche :" << endl << endl;
-
-                //appel de la recherche selon les compétences
-                Logs("ChercheurCompetence", listeComp_string) ;
-                tmpP = ChercheursListe->ChercheurCompetence(listeComp) ;
-                if (!tmpP) {
-                    cout << "-----------------------------------------------" << endl ;
-                    cout << "Aucun résultat trouvé" << endl ;
+                    cout << "Voici le résultat de la recherche :" << endl << endl;
+                    //appel de la recherche selon les compétences
+                    tmpP = ChercheursListe->ChercheurCompetence(listeComp) ;
+                    Logs("ChercheurCompetence", titre_poste+" : "+listeComp_string) ;
+                    if (!tmpP) {
+                        cout << "-----------------------------------------------" << endl ;
+                        cout << "Aucun résultat trouvé" << endl ;
+                    }
+                    while (tmpP) {
+                        cout << "-----------------------------------------------" << endl ;
+                        cout << "Nom : " << tmpP->nom() << " | Prénom : " << tmpP->prenom() << " | mail : " << tmpP->mail() << endl ;
+                        tmpP = tmpP->nextP() ;
+                    }
+                    cout << "-----------------------------------------------" << endl ;                
                 }
-                while (tmpP) {
-                    cout << "-----------------------------------------------" << endl ;
-                    cout << "Nom : " << tmpP->nom() << " | Prénom : " << tmpP->prenom() << " | mail : " << tmpP->mail() << endl ;
-                    tmpP = tmpP->nextP() ;
-                }
-                cout << "-----------------------------------------------" << endl ;                
-
                 break;
 
             case '2':
                 option_inconnue = false ;
-                cout << "Veuillez saisir les compétences recherchées" << endl ;
-                listeComp = saisie_competence() ;
-                tmpC = listeComp ;
-                while(tmpC){
-                    listeComp_string += tmpC->label()+" " ;
-                    tmpC = tmpC->next() ;
-                }
-                do
-                {
-                    cout << "Veuillez entrer le code postal que vous recherchez :" ;
-                    cin >> cp_chercheurs ;
-                    valid_input = cp_valide(cp_chercheurs) ; 
+                do {
+                    cout << "Veuillez saisir le titre du poste à pourvoir" << endl ;
+                    cin >> titre_poste ;
+                    valid_input = saisie_valide(titre_poste) ;
                     if (!valid_input) {
-                        cout << "Code postal invalide" << endl << endl ;
+                        cout << "Titre invalide" << endl << endl ;
                     }
                 } while (!valid_input);
-
-                cout << "Voici le résultat de la recherche :" << endl << endl;
-
-                //appel de la recherche selon les compétences et le code postal
-                Logs("ChercheurCompetence", listeComp_string+" | "+cp_chercheurs) ;
-                tmpP = ChercheursListe->ChercheurCompetenceCodePostal(listeComp, cp_chercheurs) ;
-                if (!tmpP) {
-                    cout << "-----------------------------------------------" << endl ;
-                    cout << "Aucun résultat trouvé" << endl ;
+                tmpPoste = utilisateur_entreprise->profilPoste() ;
+                find = false ;
+                while(tmpPoste && !find){
+                    if(tmpPoste->Titre() == titre_poste){
+                        listeComp = tmpPoste->CompetencesRequises() ;
+                        find = true ;
+                    }
+                    tmpPoste = tmpPoste->next() ;
                 }
-                while (tmpP) {
+                if(!find) cout << "Poste introuvable, recherche annulée" << endl ;
+                else{
+                    tmpC = listeComp ;
+                    while(tmpC){
+                        listeComp_string += tmpC->label()+" " ;
+                        tmpC = tmpC->next() ;
+                    }
+                    cout << "Voici le résultat de la recherche :" << endl << endl;
+                    //appel de la recherche selon les compétences et le code postal
+                    tmpP = ChercheursListe->ChercheurCompetenceCodePostal(listeComp, utilisateur_entreprise->codePostal()) ;
+                    Logs("ChercheurCompetence", listeComp_string+" | "+listeComp_string+" | "+utilisateur_entreprise->codePostal()) ;
+                    if (!tmpP) {
+                        cout << "-----------------------------------------------" << endl ;
+                        cout << "Aucun résultat trouvé" << endl ;
+                    }
+                    while (tmpP) {
+                        cout << "-----------------------------------------------" << endl ;
+                        cout << "Nom : " << tmpP->nom() << " | Prénom : " << tmpP->prenom() << " | mail : " << tmpP->mail() << endl ;
+                        tmpP = tmpP->nextP() ;
+                    }
                     cout << "-----------------------------------------------" << endl ;
-                    cout << "Nom : " << tmpP->nom() << " | Prénom : " << tmpP->prenom() << " | mail : " << tmpP->mail() << endl ;
-                    tmpP = tmpP->nextP() ;
                 }
-                cout << "-----------------------------------------------" << endl ;     
                 break;
 
             case 'q':
@@ -1001,7 +1024,7 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
 
             case '3':
                 option_unknown = false ;
-                type_recherche_entreprise() ;
+                type_recherche_entreprise(utilisateur_entreprise) ;
                 break;
             
             case '4':
@@ -1083,6 +1106,16 @@ void connexion_entreprise()
         } while (choix_entreprise != '1' && choix_entreprise != '2');
         
         if (choix_entreprise == '1') {
+            do {
+                cout << "Veuillez indiquer l'adresse mail de votre entreprise : " ;
+                cin >> mail_entreprise ;
+                valid_input = email_valide(mail_entreprise) ;
+                if (!valid_input) {
+                    cout << "address email invalide" << endl << endl ;
+                }
+                
+            } while (!valid_input);
+
             do
             {
                 cout << "Veuillez indiquer le nom de votre entreprise : " ;

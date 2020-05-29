@@ -89,3 +89,15 @@
 [2020-05-29 11:31:38.000] modifEntreprise appelée avec 'babylone@mail.tot' comme paramètre.
 [2020-05-29 11:31:46.000] modifEntreprise appelée avec 'google@mail.com' comme paramètre.
 [2020-05-29 11:31:53.000] modifEntreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 13:54:12.000] addEntreprise appelée avec 'samsung@mail.com' comme paramètre.
+[2020-05-29 14:02:01.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 14:04:43.000] addEntreprise appelée avec 'samsung@mail.com' comme paramètre.
+[2020-05-29 14:11:40.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 14:22:11.000] addPoste appelée avec 'test' comme paramètre.
+[2020-05-29 14:24:00.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 14:26:05.000] addPoste appelée avec 'Gardien' comme paramètre.
+[2020-05-29 14:30:54.000] dellPoste appelée avec 'Gardien' comme paramètre.
+[2020-05-29 15:00:12.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 15:00:18.000] ChercheurCompetence appelée avec 'Aurique : Eau Feu Air ' comme paramètre.
+[2020-05-29 15:00:39.000] ChercheurCompetence appelée avec 'Tactique  | Tactique  | 2002' comme paramètre.
+[2020-05-29 15:06:51.000] deleteProfileEntreprise appelée avec 'babylone@mail.tot' comme paramètre.

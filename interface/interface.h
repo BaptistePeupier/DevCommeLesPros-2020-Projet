@@ -55,7 +55,7 @@ void connexion_entreprise() ;
 void menu_entreprise(Entreprise * utilisateur_entreprise) ;
 
 //menu permettant de sélectionner le type de recherche parmis les chercheurs d'emploi
-void type_recherche_entreprise() ;
+void type_recherche_entreprise(Entreprise * utilisateur_entreprise) ;
 
 //menu confirmation suppression de profil
 bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur) ;
