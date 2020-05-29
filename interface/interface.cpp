@@ -53,7 +53,7 @@ bool cp_valide(string code_postal)
 //fonction de vérification des saisies
 bool saisie_valide(string saisie) 
 {
-    if (regex_match(saisie, regex("[^,;]+"))) 
+    if (regex_match(saisie, regex("[^,;\\s]+"))) 
         return true;
 
     return false;
@@ -97,9 +97,9 @@ bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur
         cout << "2. Non" << endl ;
         cout << endl ;
         cout << "Votre choix : " ;
-        cin >> confirmation_ans ;
+        cin >> noskipws >> confirmation_ans ;
         cout << endl ;
-
+        cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin par sécurité
         switch (confirmation_ans)
         {
             case 1:
@@ -125,6 +125,7 @@ bool menu_supp_profil(Entreprise *utilisateur_entreprise, Personne * utilisateur
 
             default:
                 cout << "option inconnue veuillez recommencer" << endl ;
+                confirmation_ans = '\0' ;
                 break;
         }
     }
@@ -146,10 +147,11 @@ Competence * saisie_competence()
         do
         {
             cout << "Veuillez entrer les compétence dans la liste:" << endl ;
-            cin >> label_comp ;
+            getline(cin,label_comp) ;
             valid_input = saisie_valide(label_comp) ;
             if (!valid_input) {             
                 cout << "Label entré invalide" << endl << endl ;
+                label_comp.clear() ;
             } else {
                 tmp_skill_list = new Competence(label_comp) ;
 
@@ -171,7 +173,8 @@ Competence * saisie_competence()
             cout << "1.Oui" << endl ;
             cout << "2.Non" << endl ;
             cout << "Votre choix : " ;
-            cin >> choix ;
+            cin >> noskipws >> choix ;
+            cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin par sécurité
             if (choix == "1") {
                 fin_saisie = false ;
                 unknown_ans = false ;
@@ -180,6 +183,7 @@ Competence * saisie_competence()
                 unknown_ans = false ;
             } else {
                 cout << "choix inconnue " << endl ;
+                choix = '\0' ;
                 unknown_ans = true ;
             }
         }
@@ -191,17 +195,18 @@ Competence * saisie_competence()
 Personne * saisie_personne(bool employe)
 {
     string nom,prenom,cp,mail,entreprise_pers , choix_annulation ;
-    bool valid_input ;
+    bool valid_input , confirm_valid;
     Entreprise * tmp_ent ;
     Personne * resultat_saisie ;
 
     do
     {
         cout << "Veuillez indiquer le nom : " ;
-        cin >> nom ;
+        getline(cin,nom) ;
         valid_input = saisie_valide(nom) ;
         if (!valid_input) {
             cout << "Nom invalide" << endl << endl ;
+            nom.clear() ;
         } 
         
     } while (!valid_input);
@@ -209,10 +214,11 @@ Personne * saisie_personne(bool employe)
     do
     {
         cout << "Veuillez indiquer le prénom : " ;
-        cin >> prenom ;
+        getline(cin,prenom) ;
         valid_input = saisie_valide(prenom) ;
         if (!valid_input) {
             cout << "Prénom invalide" << endl << endl ;
+            prenom.clear() ;
         } 
         
     } while (!valid_input);
@@ -220,19 +226,21 @@ Personne * saisie_personne(bool employe)
     do
     {
         cout << "Veuillez indiquer le code postal : " ; 
-        cin >> cp ;
+        getline(cin,cp) ;
         valid_input = cp_valide(cp) ; 
         if (!valid_input) {
             cout << "Code postal invalide" << endl << endl ;
+            cp.clear() ;
         }
     } while (!valid_input);
 
     do {
         cout << "Veuillez indiquer  l'adresse mail : " ;
-        cin >> mail ;
+        getline(cin,mail) ;
         valid_input = email_valide(mail) ;
         if (!valid_input) {
             cout << "address mail invalide" << endl << endl ;
+            mail.clear() ;
         }
         
     } while (!valid_input);
@@ -240,28 +248,40 @@ Personne * saisie_personne(bool employe)
     if (employe) {
         do {
             cout << "Veuillez indiquer  l'entreprise: " ;
-            cin >> entreprise_pers ;
+            getline(cin,entreprise_pers) ;
             valid_input = saisie_valide(entreprise_pers) ;
             if (!valid_input) {
                 cout << "nom d'entreprise invalide" << endl << endl ;
+                entreprise_pers.clear() ;
             } else {
                 tmp_ent = EntrepriseListe ;
                 while (tmp_ent && tmp_ent->nom() != entreprise_pers) {
                     tmp_ent = tmp_ent->next() ;
                 }
                 if (!tmp_ent) {
+                    do
+                    {
+                        cout << "L'entreprise recherchée est introuvable" << endl << endl ;
+                        cout << "Voulez vous rééssayer ?" << endl ;
+                        cout << "1.Oui" << endl ;
+                        cout << "2.Non" << endl ;
+                        cout << "Votre choix : " ;
+                        getline(cin,choix_annulation) ;
+                        if (choix_annulation == "1") {
+                            confirm_valid = true ;
+                            valid_input = false ;
+                        } else if (choix_annulation == "2") {
+                            confirm_valid = true ;
+                            valid_input = true ;
+                        } else {
+                            cout << "option inconnue veuillez recommencer " << endl ;
+                            choix_annulation.clear() ;
+                            valid_input = false ;
+                            confirm_valid = false ;
+                        }
+                    } while (!confirm_valid);
                     
-                    cout << "L'entreprise recherchée est introuvable" << endl << endl ;
-                    cout << "Voulez vous rééssayer ?" << endl ;
-                    cout << "1.Oui" << endl ;
-                    cout << "2.Non" << endl ;
-                    cout << "Votre choix : " ;
-                    cin >> choix_annulation ;
-                    if (choix_annulation == "1") {
-                        valid_input = false ;
-                    } else if (choix_annulation == "2") {
-                        valid_input = true ;
-                    }
+                    
                 } else if(tmp_ent){
                     valid_input = true ;
                 }
@@ -284,8 +304,8 @@ Personne * saisie_personne(bool employe)
 //menu de modification de profil
 void modif_profil_pers(Personne *current_user)
 {
-    char choix_modif , choix_ajout;
-    bool option_inconnue = true ,  end_saisie = false , valid_input ;
+    char choix_modif , choix_ajout, confirmation_retry ;
+    bool option_inconnue = true ,  end_saisie = false , valid_input , confirm_valid ;
     string new_skill , nouv_cp , nouv_entreprise , ancien_collegue_mail ;
     Personne * nouv_collegue = NULL;
     Competence * tmp_skill_pers ;
@@ -313,8 +333,8 @@ void modif_profil_pers(Personne *current_user)
             cout << "4.Modifier l'entreprise actuelle" << endl ;
         }
         cout << "Votre choix ('q' pour revenir en arrière) : ";
-        cin >> choix_modif ;
-
+        cin >> noskipws >> choix_modif ;
+        cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin par sécurité
         switch (choix_modif)
         {
             case '1':
@@ -323,10 +343,11 @@ void modif_profil_pers(Personne *current_user)
                     do
                     {
                         cout << "Veuillez entrer les compétences que vous souhaitez ajouter" << endl ;
-                        cin >> new_skill ;
+                        getline(cin,new_skill) ;
                         valid_input = saisie_valide(new_skill) ;
                         if (!valid_input) {             
                             cout << "Label entré invalide" << endl << endl ;
+                            new_skill.clear() ;
                         } else {
                             tmp_skill_pers = new Competence(new_skill) ;
                             //vérifier si la compétence est pas déjà dans la liste
@@ -352,7 +373,8 @@ void modif_profil_pers(Personne *current_user)
                         cout << "2. Non" << endl ;
                         cout << endl ;
                         cout << "Votre choix : " ;
-                        cin >> choix_ajout ;
+                        cin >> noskipws >> choix_ajout ;
+                        cin.ignore(numeric_limits<streamsize>::max(),'\n');
                         if (choix_ajout == '1') {
                             option_inconnue = false ;
                             continuer() ;
@@ -361,6 +383,7 @@ void modif_profil_pers(Personne *current_user)
                             end_saisie = true ;
                         } else {
                             cout << "option inconnue veuillez recommencer" << endl ;
+                            choix_ajout = '\0' ;
                         }
                     }
                 }
@@ -373,10 +396,11 @@ void modif_profil_pers(Personne *current_user)
                 {
                     do {
                         cout << "Veuillez indiquer  l'adresse mail : " ;
-                        cin >>  ancien_collegue_mail ;
+                        getline(cin,ancien_collegue_mail) ;
                         valid_input = email_valide(ancien_collegue_mail) ;
                         if (!valid_input) {
                             cout << "addresse mail invalide" << endl << endl ;
+                            ancien_collegue_mail.clear() ;
                         }
                         if (ancien_collegue_mail == current_user->mail()) {
                             valid_input = false ;
@@ -422,7 +446,8 @@ void modif_profil_pers(Personne *current_user)
                         cout << "2. Non" << endl ;
                         cout << endl ;
                         cout << "Votre choix : " ;
-                        cin >> choix_ajout ;
+                        cin >> noskipws >> choix_ajout ;
+                        cin.ignore(numeric_limits<streamsize>::max(),'\n');
                         if (choix_ajout == '1') {
                             option_inconnue = false ;
                             continuer() ;
@@ -431,6 +456,7 @@ void modif_profil_pers(Personne *current_user)
                             end_saisie = true ;
                         } else {
                             cout << "option inconnue veuillez recommencer" << endl ;
+                            choix_ajout = '\0' ;
                         }
                     }
                 }
@@ -441,10 +467,11 @@ void modif_profil_pers(Personne *current_user)
                 do
                 {
                     cout << "Veuillez indiquer votre nouveau code postal : " ;
-                    cin >> nouv_cp ;
+                    getline(cin,nouv_cp) ;
                     valid_input = cp_valide(nouv_cp) ;
                     if (!valid_input) {
                         cout << "Code postal invalide" << endl << endl ;
+                        nouv_cp.clear() ;
                     } 
                 } while (!valid_input);
                 current_user->modifCodePostal(nouv_cp) ;
@@ -452,11 +479,12 @@ void modif_profil_pers(Personne *current_user)
                 break;
             
             case '4':
+                option_inconnue = false ;
                 if (current_user->EntrepriseActuelle()) {
                     do
                     {
                         cout << "Veuillez indiquer votre nouvelle entreprise : " ;
-                        cin >> nouv_entreprise ;
+                        cin >> noskipws >> nouv_entreprise ;
                         valid_input = saisie_valide(nouv_entreprise) ;
                         if (!valid_input) {
                             cout << "Nom d'entreprise invalide" << endl << endl ;
@@ -467,15 +495,40 @@ void modif_profil_pers(Personne *current_user)
                             }
                             if (!tmp_ent) {
                                 valid_input = false ;
-                                cout << "L'entreprise recherchée est introuvable" << endl << endl ; 
+                                cout << "L'entreprise recherchée est introuvable" << endl << endl ;
+                                do
+                                {
+                                    confirmation_retry = '\0' ;
+                                    cout << "Voulez-vous ressayer ?" << endl ;
+                                    cout << "1.Oui" << endl ;
+                                    cout << "2.Non" << endl ;
+                                    cout << "Votre choix :" ;
+                                    cin >> noskipws >> confirmation_retry ;
+                                    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                                    if (confirmation_retry == '1') {
+                                        valid_input = false ;
+                                        confirm_valid = true ;
+                                    } else if (confirmation_retry == '2') {
+                                        valid_input = true ;
+                                        option_inconnue = true ;
+                                        confirm_valid = true ;
+                                    } else {
+                                        confirm_valid = false ;
+                                        cout << "option inconnue veuillez recommencer" << endl ;
+                                    }
+                                } while (!confirm_valid);  
                             }
                         }
                         
                     } while (!valid_input);
                     // On transitionne 2 fois pour pouvoir ajouter les anciens collègues de l'entreprise précédente et changer l'entreprise
-                    current_user->TransitionStatut(&EmployesListe, &ChercheursListe) ;
-                    current_user->TransitionStatut(&EmployesListe, &ChercheursListe, tmp_ent) ;
-                    Logs("modifEntreprise", tmp_ent->mail()) ;
+                    if (!option_inconnue){
+                        current_user->TransitionStatut(&EmployesListe, &ChercheursListe) ;
+                        current_user->TransitionStatut(&EmployesListe, &ChercheursListe, tmp_ent) ;
+                        Logs("modifEntreprise", tmp_ent->mail()) ;
+                    } else {
+                        cout << "retour en arrière" << endl ;
+                    }
                 }
                 break;
 
@@ -485,6 +538,7 @@ void modif_profil_pers(Personne *current_user)
 
             default:
                 cout << "option inconnue veuillez recommencer" << endl ;
+                choix_modif = '\0' ;
                 break;
         }
     }
@@ -498,7 +552,8 @@ void modif_profil_pers(Personne *current_user)
 bool menu_transition_pers(Personne * current_user)
 {
     int confirmation_ans ;
-    bool option_inconnue = true , succes_transition , valid_input ;
+    char confirmation_retry ;
+    bool option_inconnue = true , succes_transition , valid_input , confirm_valid ;
     Entreprise * tmp_ent ;
     string nouvelle_entreprise ;
 
@@ -527,13 +582,13 @@ bool menu_transition_pers(Personne * current_user)
         cout << "2. Non" << endl ;
         cout << endl ;
         cout << "Votre choix : " ;
-        cin >> confirmation_ans ;
+        cin >> noskipws >> confirmation_ans ;
         cout << endl ;
-
+        cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin par sécurité
         switch (confirmation_ans)
         {
             case 1:
-                
+                option_inconnue = false ;
                 if (current_user) {
                     if ( current_user->EntrepriseActuelle()) {
                         current_user->TransitionStatut(&EmployesListe,&ChercheursListe) ;
@@ -542,10 +597,11 @@ bool menu_transition_pers(Personne * current_user)
                         do
                         {
                             cout << "Veuillez indiquer votre nouvelle entreprise : " ;
-                            cin >> nouvelle_entreprise ;
+                            getline(cin,nouvelle_entreprise) ;
                             valid_input = saisie_valide(nouvelle_entreprise) ;
                             if (!valid_input) {
                                 cout << "Nom d'entreprise invalide" << endl << endl ;
+                                nouvelle_entreprise.clear() ;
                             } else {
                                 tmp_ent = EntrepriseListe ;
                                 while (tmp_ent && tmp_ent->nom() != nouvelle_entreprise) {
@@ -553,18 +609,45 @@ bool menu_transition_pers(Personne * current_user)
                                 }
                                 if (!tmp_ent) {
                                     valid_input = false ;
-                                    cout << "L'entreprise recherchée est introuvable" << endl << endl ; 
+                                    cout << "L'entreprise recherchée est introuvable" << endl << endl ;
+                                    do
+                                    {
+                                        cout << "Voulez-vous ressayer ?" << endl ;
+                                        cout << "1.Oui" << endl ;
+                                        cout << "2.Non" << endl ;
+                                        cout << "Votre choix :" ;
+                                        cin >> noskipws >> confirmation_retry ;
+                                        cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                                        if (confirmation_retry == '1') {
+                                            valid_input = false ;
+                                            confirm_valid = true ;
+                                        } else if (confirmation_retry == '2') {
+                                            valid_input = true ;
+                                            option_inconnue = true ;
+                                            confirm_valid = true ;
+                                        } else {
+                                            confirm_valid = false ;
+                                            cout << "option inconnue veuillez recommencer" << endl ;
+                                        }
+                                    } while (!confirm_valid); 
                                 }
                             }
                             
                         } while (!valid_input) ;
-                        Logs("TransitionStatut", current_user->mail()+"->"+tmp_ent->mail()) ;
-                        current_user->TransitionStatut(&EmployesListe,&ChercheursListe,tmp_ent) ;
+                        if (!option_inconnue) {
+                            Logs("TransitionStatut", current_user->mail()+"->"+tmp_ent->mail()) ;
+                            current_user->TransitionStatut(&EmployesListe,&ChercheursListe,tmp_ent) ;
+                        }
                     }
                 }
-                cout << "Transition effectuée avec succès" << endl ;
-                option_inconnue = false ;
-                succes_transition = true ;
+                
+                if (option_inconnue) {
+                    cout << "retour en arrière" << endl ;
+                    succes_transition = false ;
+                } else {
+                    cout << "Transition effectuée avec succès" << endl ;
+                    succes_transition = true ;
+                }
                 break;
             
             case 2:
@@ -575,6 +658,7 @@ bool menu_transition_pers(Personne * current_user)
 
             default:
                 cout << "option inconnue veuillez recommencer" << endl ;
+                confirmation_ans = '\0' ;
                 break;
         }
     }
@@ -590,7 +674,6 @@ void type_recherche_entreprise(Entreprise  * utilisateur_entreprise)
     Competence *listeComp, *tmpC ;
     Personne *tmpP ;
     string listeComp_string, titre_poste ;
-    string ans ;
     Poste *tmpPoste ;
 
     system("clear") ;
@@ -605,19 +688,21 @@ void type_recherche_entreprise(Entreprise  * utilisateur_entreprise)
         cout << "2.Effectuer une recherche des chercheurs d'emploi selon des compétences pour un poste et un code postal (celui votre entreprise)" << endl ;
         cout << endl ;
         cout << "Votre choix ('q' pour revenir en arrière) : ";
-        cin >> choix_type ;
+        cin >> noskipws >> choix_type ;
         cout << endl ;
-
+        cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin par sécurité
         switch (choix_type)
         {
             case '1':
                 option_inconnue = false ;
                 do {
                     cout << "Veuillez saisir le titre du poste à pourvoir" << endl ;
-                    cin >> titre_poste ;
+                    getline(cin,titre_poste) ;
                     valid_input = saisie_valide(titre_poste) ;
                     if (!valid_input) {
                         cout << "Titre invalide" << endl << endl ;
+                        titre_poste.clear() ;
+                        cin >> ws ;
                     }
                     else{
                         tmpPoste = utilisateur_entreprise->profilPoste() ;
@@ -630,19 +715,7 @@ void type_recherche_entreprise(Entreprise  * utilisateur_entreprise)
                             tmpPoste = tmpPoste->next() ;
                         }
                         if(!find){
-                            cout << "Poste introuvable, recherche annulée" << endl ;
-                            cout << "Voulez-vous réessayer ?" << endl << "1.Oui" << endl << "2.non" << endl ;
-                            // ans.clear() ;
-                            // getline(cin, ans) ;
-                            cin >> ans ;
-                            if(ans == "1") valid_input = false ;
-                            else if (ans == "2") ;
-                            else{
-                                cout << "Option inconnue, retour au menu" << endl ;
-                                ans.clear() ;
-                                continuer() ;
-                                system("clear") ;
-                            }
+                            cout << "Poste introuvable, recherche annulée" << endl ;      
                         }
                     }
                 } while (!valid_input);
@@ -675,10 +748,11 @@ void type_recherche_entreprise(Entreprise  * utilisateur_entreprise)
                 option_inconnue = false ;
                 do {
                     cout << "Veuillez saisir le titre du poste à pourvoir" << endl ;
-                    cin >> titre_poste ;
+                    getline(cin,titre_poste) ;
                     valid_input = saisie_valide(titre_poste) ;
                     if (!valid_input) {
                         cout << "Titre invalide" << endl << endl ;
+                        titre_poste.clear() ;
                     }
                 } while (!valid_input);
                 tmpPoste = utilisateur_entreprise->profilPoste() ;
@@ -720,6 +794,7 @@ void type_recherche_entreprise(Entreprise  * utilisateur_entreprise)
 
             default:
                 cout << "option inconnue veuillez recommencer" << endl ;
+                choix_type = '\0' ;
                 break;
         }
     }
@@ -752,8 +827,8 @@ void recherche_poste_pers(Personne *current_user)
         cout << "2. Rechercher les postes à pourvoir correspondant à vos compétences proche de chez vous" << endl ;
         cout << endl ;
         cout << "Votre choix ('q' pour revenir en arrière) : ";
-        cin >> choix_type_recherche ;
-
+        cin >> noskipws >> choix_type_recherche ;
+        cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin par sécurité
         switch (choix_type_recherche)
         {
             case '1':
@@ -800,6 +875,7 @@ void recherche_poste_pers(Personne *current_user)
 
             default:
                 cout << "option inconnue veuillez recommencer" << endl ;
+                choix_type_recherche = '\0' ;
                 break;
         }
     }
@@ -812,8 +888,8 @@ void recherche_poste_pers(Personne *current_user)
 //menu recherche parmis les anciens collègues
 void recherche_collegue_pers(Personne *current_user)
 {
-    char choix_type_recherche ;
-    bool option_inconnue = true , valid_input;
+    char choix_type_recherche , confirmation_retry ;
+    bool option_inconnue = true , valid_input , confirm_valid;
     string entreprise_collegue, collegue_skill ;
     Entreprise * tmp_ent ;
     AncienCollegue * resultat_recherche , *tmpA;
@@ -842,44 +918,68 @@ void recherche_collegue_pers(Personne *current_user)
         }
         cout << endl ;
         cout << "Votre choix ('q' pour revenir en arrière) : ";
-        cin >> choix_type_recherche ;
-
+        cin >> noskipws >> choix_type_recherche ;
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
         switch (choix_type_recherche)
         {
             case '1':
                 option_inconnue = false ;
                 do
-                    {
-                        cout << "Veuillez indiquer l'entreprise recherchée : " ;
-                        cin >> entreprise_collegue ;
-                        valid_input = saisie_valide(entreprise_collegue) ;
-                        if (!valid_input) {
-                            cout << "Nom d'entreprise invalide" << endl << endl ;
-                        } else {
-                            tmp_ent = EntrepriseListe ;
-                            while (tmp_ent && tmp_ent->nom() != entreprise_collegue) {
-                                tmp_ent = tmp_ent->next() ;
-                            }
-                            if (!tmp_ent) {
-                                valid_input = false ;
-                                cout << "L'entreprise recherchée est introuvable" << endl << endl ; 
-                            }
+                {
+                    cout << "Veuillez indiquer l'entreprise recherchée : " ;
+                    getline(cin,entreprise_collegue) ;
+                    valid_input = saisie_valide(entreprise_collegue) ;
+                    if (!valid_input) {
+                        cout << "Nom d'entreprise invalide" << endl << endl ;
+                        entreprise_collegue.clear() ;
+                    } else {
+                        tmp_ent = EntrepriseListe ;
+                        while (tmp_ent && tmp_ent->nom() != entreprise_collegue) {
+                            tmp_ent = tmp_ent->next() ;
                         }
-                    } while (!valid_input);
-                cout << "Voici les anciens collègues employés dans l'entreprise " << entreprise_collegue << endl ;
-                Logs("RechercheColleguesEntreprise", current_user->mail()+" | Entreprise :"+entreprise_collegue) ;
-                resultat_recherche = current_user->RechercheColleguesEntreprise(entreprise_collegue) ;
-                tmpA = resultat_recherche ;
-                if (!tmpA) {
+                        if (!tmp_ent) {
+                            
+                            cout << "L'entreprise recherchée est introuvable" << endl << endl ; 
+                            do
+                            {
+                                cout << "Voulez-vous ressayer ?" << endl ;
+                                cout << "1.Oui" << endl ;
+                                cout << "2.Non" << endl ;
+                                cout << "Votre choix :" ;
+                                cin >> noskipws >> confirmation_retry ;
+                                cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                                if (confirmation_retry == '1') {
+                                    valid_input = false ;
+                                    confirm_valid = true ;
+                                } else if (confirmation_retry == '2') {
+                                    valid_input = true ;
+                                    option_inconnue = true ;
+                                    confirm_valid = true ;
+                                } else {
+                                    confirm_valid = false ;
+                                    cout << "option inconnue veuillez recommencer" << endl ;
+                                }
+                            } while (!confirm_valid);
+                        }
+                    }
+                } while (!valid_input);
+                if (!option_inconnue)
+                {
+                    cout << "Voici les anciens collègues employés dans l'entreprise " << entreprise_collegue << endl ;
+                    Logs("RechercheColleguesEntreprise", current_user->mail()+" | Entreprise :"+entreprise_collegue) ;
+                    resultat_recherche = current_user->RechercheColleguesEntreprise(entreprise_collegue) ;
+                    tmpA = resultat_recherche ;
+                    if (!tmpA) {
+                        cout << "-----------------------------------------------" << endl ;
+                        cout << "Aucun résultat trouvé" << endl ;
+                    }
+                    while (tmpA) {
+                        cout << "-----------------------------------------------" << endl ;
+                        cout << "Nom : " << tmpA->currentA()->nom() << " | Prénom : " << tmpA->currentA()->prenom() << " | mail : " << tmpA->currentA()->mail() << endl;
+                        tmpA = tmpA->nextA() ;
+                    }
                     cout << "-----------------------------------------------" << endl ;
-                    cout << "Aucun résultat trouvé" << endl ;
                 }
-                while (tmpA) {
-                    cout << "-----------------------------------------------" << endl ;
-                    cout << "Nom : " << tmpA->currentA()->nom() << " | Prénom : " << tmpA->currentA()->prenom() << " | mail : " << tmpA->currentA()->mail() << endl;
-                    tmpA = tmpA->nextA() ;
-                }
-                cout << "-----------------------------------------------" << endl ;
                 break;
 
             case '2':
@@ -935,6 +1035,7 @@ void recherche_collegue_pers(Personne *current_user)
 
             default:
                 cout << "option inconnue veuillez recommencer" << endl ;
+                choix_type_recherche = '\0' ;
                 break;
         }
     }
@@ -967,9 +1068,9 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
         cout << "4. Supprimer votre profil" << endl ;
         cout << endl ;
         cout << "Votre choix ('q' pour revenir au menu principal) : ";
-        cin >> choix_action_entreprise ;
+        cin >> noskipws >> choix_action_entreprise ;
         cout << endl ;
-
+        cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin par sécurité
         switch (choix_action_entreprise)
         {
             case '1':
@@ -978,10 +1079,11 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
                 do
                 {
                     cout << "Veuillez entrer le titre du poste à ajouter : ";
-                    cin >> titre_poste ;
+                    getline(cin,titre_poste) ;
                     valid_input = saisie_valide(titre_poste) ;
                     if (!valid_input) {             
                         cout << "Titre entré invalide" << endl << endl ;
+                        titre_poste.clear() ;
                     }
                     tmpP = utilisateur_entreprise->profilPoste() ;
                     //vérifier si le titre du poste est déjà dans la base de données pour l'entreprise en question
@@ -1006,10 +1108,11 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
                 tmpC = tmpP->CompetencesRequises() ;
                 do
                 {
-                    cin >> label_competence ;
+                    getline(cin,label_competence) ;
                     valid_input = saisie_valide(label_competence) ;
                     if (!valid_input) {             
                         cout << "Compétence entrée invalide" << endl << endl ;
+                        label_competence.clear() ;
                     }
                     //vérifier si la compétence a déja été entrée
                     while(tmpC && valid_input){
@@ -1040,10 +1143,11 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
                 do
                 {
                     cout << "Veuillez entrer le titre du poste à supprimer : " ;
-                    cin >> titre_poste ;
+                    getline(cin,titre_poste) ;
                     valid_input = saisie_valide(titre_poste) ;
                     if (!valid_input) {
                         cout << "Titre entré invalide" << endl << endl ;
+                        titre_poste.clear() ;
                     } 
                 } while (!valid_input);
                 //appel de la fonction de suppression de poste
@@ -1071,6 +1175,7 @@ void menu_entreprise(Entreprise * utilisateur_entreprise)
 
             default:
                 cout << "option inconnue veuillez recommencer" << endl ;
+                choix_action_entreprise = '\0' ;
                 break;
         }
     }
@@ -1099,10 +1204,11 @@ void connexion_entreprise()
 
     do {
         cout << "Veuillez indiquer l'adresse mail de votre entreprise : " ;
-        cin >> mail_entreprise ;
+        getline(cin,mail_entreprise) ;
         valid_input = email_valide(mail_entreprise) ;
         if (!valid_input) {
             cout << "address email invalide" << endl << endl ;
+            mail_entreprise.clear() ;
         }
         
     } while (!valid_input);
@@ -1130,9 +1236,11 @@ void connexion_entreprise()
             cout << "1.Oui" << endl ;
             cout << "2.Non" << endl ;
             cout << "Votre choix :" ;
-            cin >> choix_entreprise ;
+            cin >> noskipws >> choix_entreprise ;
             if (choix_entreprise != '1' && choix_entreprise != '2') {
                 cout << "Choix inconnu veuillez recommencer" << endl ;
+                cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin au cas où l'utilisateur a mis une chaîne de caractères
+                choix_entreprise = '\0' ;
             }
         } while (choix_entreprise != '1' && choix_entreprise != '2');
         
@@ -1150,10 +1258,11 @@ void connexion_entreprise()
             do
             {
                 cout << "Veuillez indiquer le nom de votre entreprise : " ;
-                cin >> nom_entreprise ;
+                getline(cin,nom_entreprise) ;
                 valid_input = saisie_valide(nom_entreprise) ;
                 if (!valid_input) {
                     cout << "Nom invalide" << endl << endl ;
+                    nom_entreprise.clear() ;
                 } 
                 
             } while (!valid_input);
@@ -1161,10 +1270,11 @@ void connexion_entreprise()
             do
             {
                 cout << "Veuillez indiquer le code postal de votre entreprise : " ;
-                cin >> cp_entreprise ;
+                getline(cin,cp_entreprise) ;
                 valid_input = cp_valide(cp_entreprise) ;
                 if (!valid_input) {
                     cout << "Code postal invalide" << endl << endl ;
+                    cp_entreprise.clear() ;
                 } 
             } while (!valid_input);
 
@@ -1210,9 +1320,9 @@ void menu_chercheur(Personne * utilisateur_chercheur)
         cout << "5. Supprimer votre profil" << endl ;
         cout << endl ;
         cout << "Votre choix ('q' pour revenir au menu principal) : " ;
-        cin >> choix_action_chercheur ;
+        cin >> noskipws >> choix_action_chercheur ;
         cout << endl ;
-
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
         switch (choix_action_chercheur)
         {
             case '1':
@@ -1246,6 +1356,7 @@ void menu_chercheur(Personne * utilisateur_chercheur)
 
             default:
                 cout << "option inconnue veuillez recommencer" << endl ;
+                choix_action_chercheur = '\0' ;
                 break;
         }
     }
@@ -1277,10 +1388,11 @@ void connexion_chercheur()
 
     do {
         cout << "Veuillez indiquer votre adresse mail : " ;
-        cin >> mail_chercheur ;
+        getline(cin,mail_chercheur) ;
         valid_input = email_valide(mail_chercheur) ;
         if (!valid_input) {
             cout << "address email invalide" << endl << endl ;
+            mail_chercheur.clear() ;
         }
         
     } while (!valid_input);
@@ -1297,19 +1409,21 @@ void connexion_chercheur()
         
     } else {
         //création de profil
+        system("clear") ;
         do
         {
-            system("clear") ;
             cout << "Votre profil est introuvable , voulez-vous créer un profil ?" << endl ;
             cout << "1.Oui" << endl ;
             cout << "2.Non" << endl ;
             cout << "Votre choix : " ;
-            cin >> choix_chercheur ;
+            cin >> noskipws >> choix_chercheur ;
             if (choix_chercheur != '1' && choix_chercheur != '2') {
-                cout << "Choix inconnu veuillez recommencer" << endl ;
+                cout << "Choix inconnu veuillez recommencer" << endl << endl ;
+                cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin au cas où l'utilisateur a mis une chaîne de caractères
+                choix_chercheur = '\0' ;
             }
         } while (choix_chercheur != '1' && choix_chercheur != '2');
-        
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
         if (choix_chercheur == '1') {
             current_user_chercheur = saisie_personne(false) ;
             tmp = ChercheursListe ;
@@ -1353,13 +1467,15 @@ void menu_employe(Personne * utilisateur_employe)
         cout << "5. Supprimer votre profil" << endl ;
         cout << endl ;
         cout << "Votre choix ('q' pour revenir au menu principal) : " ;
-        cin >> choix_action_employe ;
+        cin >> noskipws >> choix_action_employe ;
         cout << endl ;
 
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');  //par sécurité on vide le buffer
         switch (choix_action_employe)
         {
             case '1':
                 option_unknown = false ;
+                
                 modif_profil_pers(utilisateur_employe) ;
                 break;
 
@@ -1389,6 +1505,7 @@ void menu_employe(Personne * utilisateur_employe)
                 break;
             default:
                 cout << "option inconnue veuillez recommencer" << endl ;
+                choix_action_employe = '\0' ;
                 break;
         }
     }
@@ -1420,10 +1537,11 @@ void connexion_employe()
 
     do {
         cout << "Veuillez indiquer votre adresse mail : " ;
-        cin >> mail_employe ;
+        getline(cin,mail_employe) ;
         valid_input = email_valide(mail_employe) ;
         if (!valid_input) {
             cout << "address email invalide" << endl << endl ;
+            mail_employe.clear() ;
         }
         
     } while (!valid_input);
@@ -1441,19 +1559,23 @@ void connexion_employe()
     } else {
         //création de profil 
         //attention à l'entreprise vérifier qu'elle existe
+        system("clear") ;
         do
         {
-            system("clear") ;
+            
             cout << "Votre profil est introuvable , voulez-vous créer un profil ?" << endl ;
             cout << "1.Oui" << endl ;
             cout << "2.Non" << endl ;
             cout << "Votre choix : " ;
-            cin >> choix_employe ;
+            cin >> noskipws >> choix_employe ;
             if (choix_employe != '1' && choix_employe != '2') {
-                cout << "Choix inconnu veuillez recommencer" << endl ;
+                cout << "Choix inconnu veuillez recommencer" << endl << endl ;
+                cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin au cas où l'utilisateur a mis une chaîne de caractères
+                choix_employe = '\0' ;
             }
         } while (choix_employe != '1' && choix_employe != '2');
         
+        cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin
         if (choix_employe == '1') {
             current_user_employe = saisie_personne(1) ;
             if (current_user_employe) {
@@ -1487,7 +1609,7 @@ void connexion_employe()
 }
 
 //affichage du menu principal
-int menu_principal(void)
+void menu_principal(void)
 {
     char choix ;
     bool valid_input = false ;
@@ -1501,11 +1623,12 @@ int menu_principal(void)
     cout << "2.Un employé" << endl ;
     cout << "3.A la recherche d'un emploi" << endl ;
     cout << endl ;
-    cout << "Votre choix ('q' pour quitter) : " ;
     
     do
     {
-        cin >> choix ;
+        cout << "Votre choix ('q' pour quitter) : " ;
+        cin >> noskipws >> choix ;
+        cin.ignore(numeric_limits<streamsize>::max(),'\n'); //on efface tout dans le buffer cin au cas où l'utilisateur a mis une chaîne de caractères le premier caractère reste dans la variable de choix
         switch (choix)
         {
         case '1':
@@ -1531,14 +1654,22 @@ int menu_principal(void)
 
         default:
             cout << "option inconnue" << endl ;
+            choix = '\0' ;
             break;
         }
     } while (!valid_input);
+
+    return ;
+}
+
+int lancement_interface()
+{
+    //lancement du menu principal
+    menu_principal() ;
     
     // Dernière MAJ avant de quitter le programme (sécurité)
     EmployesListe->MAJDBPersonne(true) ;
     ChercheursListe->MAJDBPersonne(false) ;
     EntrepriseListe->MAJDBEntreprise() ;
-
     return 0 ;
 }

@@ -39,8 +39,11 @@ bool saisie_valide(string saisie) ;
 //fonction demandant à l'utilisateur de continuer en appuyant sur une touche
 void continuer() ;
 
+//lancement de l'interface pour éviter les mises à jour de BDD inutiles
+int lancement_interface() ;
+
 //affichage du menu principal
-int menu_principal(void) ;
+void menu_principal(void) ;
 
 //connexion des employés
 void connexion_employe() ;
