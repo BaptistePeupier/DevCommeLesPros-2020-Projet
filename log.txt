@@ -101,3 +101,11 @@
 [2020-05-29 15:00:18.000] ChercheurCompetence appelée avec 'Aurique : Eau Feu Air ' comme paramètre.
 [2020-05-29 15:00:39.000] ChercheurCompetence appelée avec 'Tactique  | Tactique  | 2002' comme paramètre.
 [2020-05-29 15:06:51.000] deleteProfileEntreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 15:11:27.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 15:11:30.000] deleteProfileEntreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 15:15:17.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 15:15:20.000] deleteProfileEntreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 15:17:58.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 15:18:01.000] deleteProfileEntreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 15:28:29.000] connexion_entreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 15:28:31.000] deleteProfileEntreprise appelée avec 'babylone@mail.tot' comme paramètre.
