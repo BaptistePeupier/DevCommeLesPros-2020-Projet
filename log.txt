@@ -2,3 +2,90 @@
 [2020-05-27 19:55:19.000] ChercheurCompetence appelée avec 'C ' comme paramètre.
 [2020-05-27 19:56:28.000] Créer Employe appelée avec 'baptiste.peupier@mail.com' comme paramètre.
 [2020-05-27 19:57:45.000] addAncienCollegue appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 10:36:05.000] connexion_employe appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:36:08.000] TransitionStatut appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:36:36.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:36:48.000] ChercheurRechercheColleguesCompetence appelée avec 'MirH@mail.com | Compétences : ' comme paramètre.
+[2020-05-29 10:37:13.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:37:23.000] RecherchePosteCompetence appelée avec 'MirH@mail.com | Cp : 2002' comme paramètre.
+[2020-05-29 10:37:40.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:37:48.000] AddCompetence appelée avec 'Feu' comme paramètre.
+[2020-05-29 10:37:52.000] AddCompetence appelée avec 'au' comme paramètre.
+[2020-05-29 10:38:07.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:38:13.000] RecherchePosteCompetence appelée avec 'MirH@mail.com | Cp : 2002' comme paramètre.
+[2020-05-29 10:38:18.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:40:07.000] AddCompetence appelée avec 'Air' comme paramètre.
+[2020-05-29 10:40:14.000] AddCompetence appelée avec 'nergie' comme paramètre.
+[2020-05-29 10:40:24.000] AddCompetence appelée avec 'actique' comme paramètre.
+[2020-05-29 10:40:30.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:41:19.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:41:24.000] RecherchePosteCompetence appelée avec 'MirH@mail.com | Cp : 2002' comme paramètre.
+[2020-05-29 10:41:49.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:41:53.000] RecherchePosteCompetence appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:44:23.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:44:27.000] RecherchePosteCompetence appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:45:34.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:45:37.000] RecherchePosteCompetence appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:46:03.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:46:05.000] RecherchePosteCompetence appelée avec 'MirH@mail.com | Cp : 2002' comme paramètre.
+[2020-05-29 10:49:54.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:50:06.000] RecherchePosteCompetence appelée avec 'MirH@mail.com | Cp : 2002' comme paramètre.
+[2020-05-29 10:50:54.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:51:00.000] RecherchePosteCompetence appelée avec 'MirH@mail.com | Cp : 2002' comme paramètre.
+[2020-05-29 10:54:09.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:58:34.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:58:40.000] RecherchePosteCompetence appelée avec 'MirH@mail.com | Cp : 2002' comme paramètre.
+[2020-05-29 10:59:20.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:59:24.000] RecherchePosteCompetence appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 10:59:41.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 11:00:04.000] ChercheurRechercheColleguesCompetence appelée avec 'MirH@mail.com | Compétences : ' comme paramètre.
+[2020-05-29 11:08:53.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 11:09:12.000] ChercheurRechercheColleguesCompetence appelée avec 'MirH@mail.com | Compétences : ' comme paramètre.
+[2020-05-29 11:09:40.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 11:09:45.000] RecherchePosteCompetence appelée avec 'MirH@mail.com | Cp : 2002' comme paramètre.
+[2020-05-29 11:09:53.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 11:10:03.000] RechercheColleguesEntreprise appelée avec 'MirH@mail.com | Entreprise :BabylonCorp' comme paramètre.
+[2020-05-29 11:16:31.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 11:16:48.000] ChercheurRechercheColleguesCompetence appelée avec 'MirH@mail.com | Compétences : ' comme paramètre.
+[2020-05-29 11:17:02.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 11:17:14.000] RecherchePosteCompetence appelée avec 'MirH@mail.com | Cp : 2002' comme paramètre.
+[2020-05-29 11:17:17.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 11:17:20.000] RecherchePosteCompetence appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 11:17:24.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 11:17:35.000] ChercheurRechercheColleguesCompetence appelée avec 'MirH@mail.com | Compétences : ' comme paramètre.
+[2020-05-29 11:17:40.000] connexion_chercheur appelée avec 'MirH@mail.com' comme paramètre.
+[2020-05-29 11:17:47.000] ChercheurRechercheColleguesCompetence appelée avec 'MirH@mail.com | Compétences : ' comme paramètre.
+[2020-05-29 11:18:00.000] connexion_employe appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:18:06.000] RecherchePosteCompetence appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:18:16.000] connexion_employe appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:18:22.000] AddCompetence appelée avec 'Eau' comme paramètre.
+[2020-05-29 11:18:24.000] AddCompetence appelée avec 'eu' comme paramètre.
+[2020-05-29 11:18:27.000] AddCompetence appelée avec 'ir' comme paramètre.
+[2020-05-29 11:18:32.000] AddCompetence appelée avec 'erre' comme paramètre.
+[2020-05-29 11:18:34.000] AddCompetence appelée avec 'nergie' comme paramètre.
+[2020-05-29 11:18:41.000] connexion_employe appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:18:44.000] RecherchePosteCompetence appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:19:34.000] connexion_employe appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:19:37.000] RecherchePosteCompetence appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:19:42.000] connexion_employe appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:19:44.000] RecherchePosteCompetence appelée avec 'MH@mail.com | Cp : 2002' comme paramètre.
+[2020-05-29 11:19:46.000] connexion_employe appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:19:55.000] EmployeRechercheColleguesCompetence appelée avec 'MH@mail.com | Compétences : Tactique ' comme paramètre.
+[2020-05-29 11:20:08.000] connexion_employe appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:20:24.000] RechercheColleguesEntreprise appelée avec 'MH@mail.com | Entreprise :BabylonCorp' comme paramètre.
+[2020-05-29 11:20:29.000] connexion_employe appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:21:14.000] connexion_employe appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 11:21:18.000] deleteProfile appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 11:21:59.000] connexion_employe appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:22:02.000] deleteProfile appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:22:56.000] connexion_employe appelée avec 'MH@mail.com' comme paramètre.
+[2020-05-29 11:23:48.000] addAncienCollegue appelée avec 'mail@gmail.com' comme paramètre.
+[2020-05-29 11:26:23.000] connexion_employe appelée avec 'baptiste.peupier@mail.com' comme paramètre.
+[2020-05-29 11:26:42.000] AddCompetence appelée avec 'C++' comme paramètre.
+[2020-05-29 11:26:47.000] AddCompetence appelée avec 'C' comme paramètre.
+[2020-05-29 11:27:00.000] AddCompetence appelée avec 'Python' comme paramètre.
+[2020-05-29 11:31:05.000] connexion_employe appelée avec 'baptiste.peupier@mail.com' comme paramètre.
+[2020-05-29 11:31:14.000] modifEntreprise appelée avec 'google@mail.com' comme paramètre.
+[2020-05-29 11:31:38.000] modifEntreprise appelée avec 'babylone@mail.tot' comme paramètre.
+[2020-05-29 11:31:46.000] modifEntreprise appelée avec 'google@mail.com' comme paramètre.
+[2020-05-29 11:31:53.000] modifEntreprise appelée avec 'babylone@mail.tot' comme paramètre.

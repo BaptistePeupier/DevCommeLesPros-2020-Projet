@@ -464,7 +464,9 @@ void modif_profil_pers(Personne *current_user)
                         }
                         
                     } while (!valid_input);
-                    current_user->modifEntreprise(tmp_ent) ;
+                    // On transitionne 2 fois pour pouvoir ajouter les anciens collègues de l'entreprise précédente et changer l'entreprise
+                    current_user->TransitionStatut(&EmployesListe, &ChercheursListe) ;
+                    current_user->TransitionStatut(&EmployesListe, &ChercheursListe, tmp_ent) ;
                     Logs("modifEntreprise", tmp_ent->mail()) ;
                 }
                 break;

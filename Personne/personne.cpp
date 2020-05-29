@@ -245,8 +245,8 @@ Entreprise* Personne::RecherchePosteCompetence(Entreprise * listeEntreprises)
             if (competences_dispo_pers == nbcompetences_poste) {
                 if(ListeToReturn){
                     tmpE->modifNext(new Entreprise(tmp_entreprise->index(), tmp_entreprise->nom(), tmp_entreprise->codePostal(), tmp_entreprise->mail(), NULL, tmpE)) ;
-                    tmpE->modifProfilPoste(tmp_poste) ;
                     tmpE = tmpE->next() ;
+                    tmpE->modifProfilPoste(tmp_poste) ;
                 }else{
                     ListeToReturn = new Entreprise(tmp_entreprise->index(), tmp_entreprise->nom(), tmp_entreprise->codePostal(), tmp_entreprise->mail(), NULL, NULL) ;
                     ListeToReturn->modifProfilPoste(tmp_poste) ;
@@ -306,8 +306,8 @@ Entreprise* Personne::RecherchePosteCompetenceCodePostal(Entreprise * listeEntre
                 if (competences_dispo_pers == nbcompetences_poste) {
                     if(ListeToReturn){
                         tmpE->modifNext(new Entreprise(tmp_entreprise->index(), tmp_entreprise->nom(), tmp_entreprise->codePostal(), tmp_entreprise->mail(), NULL, tmpE)) ;
-                        tmpE->modifProfilPoste(tmp_poste) ;
                         tmpE = tmpE->next() ;
+                        tmpE->modifProfilPoste(tmp_poste) ;
                     }else{
                         ListeToReturn = new Entreprise(tmp_entreprise->index(), tmp_entreprise->nom(), tmp_entreprise->codePostal(), tmp_entreprise->mail(), NULL, NULL) ;
                         ListeToReturn->modifProfilPoste(tmp_poste) ;
@@ -331,16 +331,23 @@ Entreprise* Personne::RecherchePosteCompetenceCodePostal(Entreprise * listeEntre
 AncienCollegue* Personne::RechercheColleguesEntreprise(const string nomEntreprise)
 {
     AncienCollegue *ListeToReturn = NULL, *tmpA ;
-    AncienCollegue * tmp ;
+    AncienCollegue * tmp, *tmp2 ;
+    bool alreadyIn ;
 
     tmp = this->ListAncienCollegues() ;
     while (tmp) {
         if (tmp->currentA()->EntrepriseActuelle()) {
             if (tmp->currentA()->EntrepriseActuelle()->nom() == nomEntreprise) {
-                if(ListeToReturn){
+                tmp2 = ListeToReturn ;
+                alreadyIn = false ;
+                while (tmp2 && !alreadyIn){         // On vérife si la personne n'a pas déjà été trouvée
+                    if(tmp2->currentA()->mail() == tmp->currentA()->mail()) alreadyIn = true ;
+                    tmp2 = tmp2->nextA() ;
+                }
+                if(ListeToReturn and !alreadyIn){
                     tmpA->modifNextA(new AncienCollegue(tmp->currentA(), NULL, tmpA)) ;
                     tmpA = tmpA->nextA() ;
-                }else{
+                }else if (!alreadyIn){
                     ListeToReturn = new AncienCollegue(tmp->currentA(), NULL, NULL) ;
                     tmpA = ListeToReturn ;
                 }
@@ -462,9 +469,10 @@ AncienCollegue* Personne::ChercheurRechercheColleguesCompetence(Competence * Lis
     Competence * tmp_comp , *tmp_comp_entreprise;
     AncienCollegue *ListeToReturn = NULL, *tmpA ;
     AncienCollegue * tmp_collegue ;
+    AncienCollegue *tmp2 ;
     Poste * tmp_poste ;
     string label_skill_liste ;
-    bool displayed ;
+    bool displayed, alreadyIn ;
 
     tmp_comp = ListeCompetence ;
     tmp_collegue = _ListAncienCollegues ;                                       // Initialisation des pointeurs
@@ -478,10 +486,16 @@ AncienCollegue* Personne::ChercheurRechercheColleguesCompetence(Competence * Lis
                     tmp_comp_entreprise = tmp_poste->CompetencesRequises() ;    // Parcours des compétences requises pour un poste
                     while (tmp_comp_entreprise) {
                         if (tmp_comp_entreprise->label() == label_skill_liste && !displayed) {
-                            if(ListeToReturn){
+                            tmp2 = ListeToReturn ;
+                            alreadyIn = false ;
+                            while (tmp2 && !alreadyIn){         // On vérife si la personne n'a pas déjà été trouvée
+                                if(tmp2->currentA()->mail() == tmp_collegue->currentA()->mail()) alreadyIn = true ;
+                                tmp2 = tmp2->nextA() ;
+                            }
+                            if(ListeToReturn && !alreadyIn){
                                 tmpA->modifNextA(new AncienCollegue(tmp_collegue->currentA(), NULL, tmpA)) ;
                                 tmpA = tmpA->nextA() ;
-                            }else{
+                            }else if (!alreadyIn){
                                 ListeToReturn = new AncienCollegue(tmp_collegue->currentA(), NULL, NULL) ;
                                 tmpA = ListeToReturn ;
                             }
@@ -506,11 +520,12 @@ AncienCollegue* Personne::ChercheurRechercheColleguesCompetence(Competence * Lis
 AncienCollegue* Personne::EmployeRechercheColleguesCompetence(Competence * ListeCompetence)
 {
     assert(this->_EntrepriseActuelle) ;
-    AncienCollegue *ListeToReturn = NULL, *tmpA ;
+    AncienCollegue *ListeToReturn = NULL, *tmpA, *tmp2 ;
     AncienCollegue * tmp_collegue = _ListAncienCollegues;
     Competence * tmp_comp_collegue , *tmp_comp = ListeCompetence;           //initialisation des pointeurs
     string label_skill_collegue , entreprise_pers , entreprise_collegue;
     int nb_skill_liste = 0 ,  nb_skill_match;
+    bool alreadyIn ;
 
     entreprise_pers = _EntrepriseActuelle->nom() ;
 
@@ -544,10 +559,16 @@ AncienCollegue* Personne::EmployeRechercheColleguesCompetence(Competence * Liste
                 }
 
                 if (nb_skill_liste == nb_skill_match) {
-                    if(ListeToReturn){
+                    tmp2 = ListeToReturn ;
+                    alreadyIn = false ;
+                    while (tmp2 && !alreadyIn){         // On vérife si la personne n'a pas déjà été trouvée
+                        if(tmp2->currentA()->mail() == tmp_collegue->currentA()->mail()) alreadyIn = true ;
+                        tmp2 = tmp2->nextA() ;
+                    }
+                    if(ListeToReturn && !alreadyIn){
                         tmpA->modifNextA(new AncienCollegue(tmp_collegue->currentA(), NULL, tmpA)) ;
                         tmpA = tmpA->nextA() ;
-                    }else{
+                    }else if(!alreadyIn){
                         ListeToReturn = new AncienCollegue(tmp_collegue->currentA(), NULL, NULL) ;
                         tmpA = ListeToReturn ;
                     }
@@ -564,10 +585,12 @@ AncienCollegue* Personne::EmployeRechercheColleguesCompetence(Competence * Liste
 Personne* Personne::ChercheurCompetence (Competence * listeComp)
 {
     Competence * tmp_comp = listeComp , *tmp_comp_pers;
-    Personne * tmp_pers = this ;
+    Personne * tmp_pers = this, *tmp2 ;
     Personne *ListeToReturn = NULL, *tmpP ;
     string label_skill_pers, label_skill_liste ;
     int nb_skill_match , nb_skill_liste = 0;
+    bool alreadyIn ;
+
     assert(!(this->_EntrepriseActuelle)) ;
 
     while (tmp_pers->_previousP != NULL) tmp_pers = tmp_pers->previousP() ; //retour au début de la liste des personnes
@@ -593,10 +616,16 @@ Personne* Personne::ChercheurCompetence (Competence * listeComp)
             tmp_comp_pers = tmp_comp_pers->next() ; 
         }
         if (nb_skill_liste == nb_skill_match) {
-            if(ListeToReturn){
+            tmp2 = ListeToReturn ;
+            alreadyIn = false ;
+            while (tmp2 && !alreadyIn){         // On vérife si la personne n'a pas déjà été trouvée
+                if(tmp2->mail() == tmp_pers->mail()) alreadyIn = true ;
+                tmp2 = tmp2->nextP() ;
+            }
+            if(ListeToReturn && !alreadyIn){
                 tmpP->modifNextP(new Personne(tmp_pers->index(), tmp_pers->nom(), tmp_pers->prenom(), tmp_pers->mail(), tmp_pers->codePostal(), NULL, tmpP, NULL, NULL, tmp_pers->EntrepriseActuelle())) ;
                 tmpP = tmpP->nextP() ;
-            }else{
+            }else if (!alreadyIn){
                 ListeToReturn = new Personne(tmp_pers->index(), tmp_pers->nom(), tmp_pers->prenom(), tmp_pers->mail(), tmp_pers->codePostal(), NULL, NULL, NULL, NULL, tmp_pers->EntrepriseActuelle()) ;
                 tmpP = ListeToReturn ;
             }
@@ -611,10 +640,12 @@ Personne* Personne::ChercheurCompetence (Competence * listeComp)
 Personne* Personne::ChercheurCompetenceCodePostal (Competence * listeComp ,const string CodePostalRecherche)
 {
     Competence * tmp_comp = listeComp , *tmp_comp_pers;
-    Personne *ListeToReturn = NULL, *tmpP ;
+    Personne *ListeToReturn = NULL, *tmpP, *tmp2 ;
     Personne * tmp_pers = this ;
     string label_skill_pers, label_skill_liste , cp_recherche = CodePostalRecherche, cp_pers ;
     int nb_skill_match , nb_skill_liste = 0;
+    bool alreadyIn ;
+    
     assert(!(this->_EntrepriseActuelle)) ;
 
     while (tmp_pers->_previousP != NULL) tmp_pers = tmp_pers->previousP() ; //retour au début de la liste des personnes
@@ -642,6 +673,12 @@ Personne* Personne::ChercheurCompetenceCodePostal (Competence * listeComp ,const
                 tmp_comp_pers = tmp_comp_pers->next() ; 
             }
             if (nb_skill_liste == nb_skill_match) {
+                tmp2 = ListeToReturn ;
+                alreadyIn = false ;
+                while (tmp2 && !alreadyIn){         // On vérife si la personne n'a pas déjà été trouvée
+                    if(tmp2->mail() == tmp_pers->mail()) alreadyIn = true ;
+                    tmp2 = tmp2->nextP() ;
+                }
                 if(ListeToReturn){
                     tmpP->modifNextP(new Personne(tmp_pers->index(), tmp_pers->nom(), tmp_pers->prenom(), tmp_pers->mail(), tmp_pers->codePostal(), NULL, tmpP, NULL, NULL, tmp_pers->EntrepriseActuelle())) ;
                     tmpP = tmpP->nextP() ;
